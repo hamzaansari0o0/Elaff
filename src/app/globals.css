@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Tailwind v4 Custom Theme Colors */
+@theme {
+  --color-brand-navy: #0F172A;
+  --color-brand-cyan: #0EA5E9;
+  --color-brand-green: #16A34A;
+  --color-brand-amber: #D97706;
+  --color-brand-slate: #F8FAFC;
+}
+
+/* Global Root Variables */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Custom Font Family Overrides */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-fraunces), serif !important;
+}
+
+body, p, span, button, input, select {
+  font-family: var(--font-bricolage), sans-serif !important;
+}
