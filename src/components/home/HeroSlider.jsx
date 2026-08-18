@@ -24,7 +24,7 @@ export default function HeroSlider() {
             loop={true}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
             pagination={{ clickable: true }}
-            className="w-full h-full hero-swiper [&_.swiper-pagination-bullet-active]:bg-[#D9822B] [&_.swiper-pagination-bullet]:bg-white"
+            className="w-full h-full hero-swiper [&_.swiper-pagination-bullet-active]:bg-brand-amber [&_.swiper-pagination-bullet]:bg-white"
           >
             {HERO_SLIDES.map((slide) => (
               <SwiperSlide key={slide.id}>
@@ -39,7 +39,7 @@ export default function HeroSlider() {
                   <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-transparent"></div>
 
                   <div className="relative z-10 max-w-xl text-white">
-                    <span className="inline-block bg-[#D9822B] text-white text-[10px] md:text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest mb-3 md:mb-4 shadow-sm">
+                    <span className="inline-block bg-brand-amber text-white text-[10px] md:text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest mb-3 md:mb-4 shadow-sm">
                       {slide.badge}
                     </span>
                     <h4 className="font-bricolage text-xs md:text-sm font-bold tracking-widest text-amber-400 mb-1.5 md:mb-2 uppercase">
@@ -53,7 +53,7 @@ export default function HeroSlider() {
                     </p>
                     <Link
                       href={slide.btnLink}
-                      className="inline-flex items-center gap-2 bg-[#6B0018] hover:bg-[#80001d] text-white font-bold text-[11px] md:text-xs px-5 md:px-6 py-2.5 md:py-3 rounded-lg uppercase tracking-wider transition-all transform hover:-translate-y-0.5 shadow-lg"
+                      className="inline-flex items-center gap-2 bg-brand-cta hover:bg-brand-cta-hover text-white font-bold text-[11px] md:text-xs px-5 md:px-6 py-2.5 md:py-3 rounded-lg uppercase tracking-wider transition-all transform hover:-translate-y-0.5 shadow-lg"
                     >
                       <span>{slide.btnText}</span>
                       <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
@@ -90,7 +90,7 @@ export default function HeroSlider() {
                 </h3>
                 <Link
                   href={banner.link}
-                  className="inline-block bg-white text-[#6B0018] hover:bg-[#6B0018] hover:text-white text-[10px] md:text-[11px] font-extrabold px-3.5 py-1.5 md:px-4 md:py-2 rounded uppercase tracking-wider transition-colors shadow"
+                  className="inline-block bg-white text-brand-navy hover:bg-brand-cta hover:text-white text-[10px] md:text-[11px] font-extrabold px-3.5 py-1.5 md:px-4 md:py-2 rounded uppercase tracking-wider transition-colors shadow"
                 >
                   {banner.btnText}
                 </Link>

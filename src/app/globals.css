@@ -2,11 +2,14 @@
 
 /* Tailwind v4 Custom Theme Colors */
 @theme {
-  --color-brand-navy: #0F172A;
-  --color-brand-cyan: #0EA5E9;
-  --color-brand-green: #16A34A;
-  --color-brand-amber: #D97706;
-  --color-brand-slate: #F8FAFC;
+  --color-brand-navy: #0F172A;      /* Header / Footer / Nav / Headings */
+  --color-brand-navy-hover: #1E293B;
+  --color-brand-cyan: #0EA5E9;      /* Category chips / informational accents */
+  --color-brand-green: #16A34A;     /* Success / Active / In-stock states */
+  --color-brand-amber: #D97706;     /* Badges (SALE/HOT/NEW), trust icons, price accents */
+  --color-brand-slate: #F8FAFC;     /* Light page background */
+  --color-brand-cta: #0D9488;       /* Primary action buttons */
+  --color-brand-cta-hover: #0F766E;
 }
 
 /* Global Root Variables */

@@ -4,12 +4,25 @@ import { useState } from 'react';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
-      alert(`Subscribed successfully with: ${email}`);
+    if (!email) return;
+
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus('success');
       setEmail('');
+      setTimeout(() => setStatus('idle'), 4000);
+    } catch {
+      setStatus('error');
     }
   };
 
@@ -41,11 +54,19 @@ export default function Newsletter() {
           />
           <button
             type="submit"
-            className="w-full sm:w-auto bg-[#6B0018] hover:bg-[#80001d] text-white text-xs font-bold px-8 py-3.5 rounded-lg uppercase tracking-wider transition-all shadow-lg active:scale-95"
+            disabled={status === 'loading'}
+            className="w-full sm:w-auto bg-brand-cta hover:bg-brand-cta-hover disabled:opacity-60 text-white text-xs font-bold px-8 py-3.5 rounded-lg uppercase tracking-wider transition-all shadow-lg active:scale-95"
           >
-            Signup
+            {status === 'loading' ? 'Signing up...' : 'Signup'}
           </button>
         </form>
+
+        {status === 'success' && (
+          <p className="mt-3 text-xs font-semibold text-green-400">Subscribed successfully!</p>
+        )}
+        {status === 'error' && (
+          <p className="mt-3 text-xs font-semibold text-red-400">Something went wrong. Please try again.</p>
+        )}
       </div>
     </section>
   );

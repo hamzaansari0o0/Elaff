@@ -3,7 +3,7 @@ import { Phone, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#6B0018] text-white pt-12 pb-6 mt-16">
+    <footer className="bg-brand-navy text-white pt-12 pb-6 mt-16">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-xs">
         
         <div>
@@ -33,11 +33,11 @@ export default function Footer() {
             Shop Easy
           </h3>
           <ul className="font-bricolage space-y-2.5 font-semibold text-gray-200">
-            <li><Link href="/category/confectioneries" className="hover:underline">Confectioneries</Link></li>
-            <li><Link href="/category/agricultural" className="hover:underline">Agricultural Products</Link></li>
-            <li><Link href="/category/poultry" className="hover:underline">Poultry Feedstock</Link></li>
-            <li><Link href="/category/tea-coffee" className="hover:underline">Tea and Coffee</Link></li>
-            <li><Link href="/shop" className="hover:underline">Shop All Category</Link></li>
+            <li><Link href="/collection/confectionery" className="hover:underline">Confectioneries</Link></li>
+            <li><Link href="/collection/agricultural" className="hover:underline">Agricultural Products</Link></li>
+            <li><Link href="/collection/beverages" className="hover:underline">Beverages &amp; Beer</Link></li>
+            <li><Link href="/collection/tea-coffee" className="hover:underline">Tea and Coffee</Link></li>
+            <li><Link href="/collections" className="hover:underline">All Collections</Link></li>
           </ul>
         </div>
 

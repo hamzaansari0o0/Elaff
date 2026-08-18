@@ -25,7 +25,7 @@ export default function FooterMiniLists() {
                     className="w-12 h-12 object-contain bg-gray-50 rounded border p-1"
                   />
                   <div>
-                    <h4 className="font-fraunces text-xs font-bold text-gray-700 group-hover:text-[#6B0018] transition-colors line-clamp-1">
+                    <h4 className="font-fraunces text-xs font-bold text-gray-700 group-hover:text-brand-navy transition-colors line-clamp-1">
                       {item.title}
                     </h4>
                     <span className="font-bricolage text-xs font-extrabold text-gray-900">{item.price}</span>

@@ -17,9 +17,9 @@ export default function ProductDetails({ product }) {
       {/* Breadcrumbs */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
         <nav className="flex items-center gap-2 text-[11px] md:text-xs text-gray-500 font-semibold uppercase tracking-wider">
-          <Link href="/" className="hover:text-[#6B0018]">Home</Link>
+          <Link href="/" className="hover:text-brand-navy">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link href="/shop" className="hover:text-[#6B0018]">Products</Link>
+          <Link href="/shop" className="hover:text-brand-navy">Products</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-gray-800">{product.title}</span>
         </nav>
@@ -47,7 +47,7 @@ export default function ProductDetails({ product }) {
                     key={idx}
                     onClick={() => setActiveImage(img)}
                     className={`w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                      activeImage === img ? 'border-[#6B0018] opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
+                      activeImage === img ? 'border-brand-navy opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
@@ -58,7 +58,7 @@ export default function ProductDetails({ product }) {
 
             {/* Right Column: Product Info & Actions */}
             <div className="w-full lg:w-1/2 p-6 md:p-10 flex flex-col justify-center">
-              <span className="inline-block bg-amber-100 text-[#D9822B] text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest w-max mb-4">
+              <span className="inline-block bg-brand-cyan/10 text-brand-cyan text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest w-max mb-4">
                 {product.category || 'Category'}
               </span>
               
@@ -77,20 +77,20 @@ export default function ProductDetails({ product }) {
               {/* Trust Badges */}
               <div className="flex flex-wrap gap-4 mb-8 py-4 border-y border-gray-100">
                 <div className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                  <ShieldCheck className="w-5 h-5 text-[#D9822B]" /> Premium Quality
+                  <ShieldCheck className="w-5 h-5 text-brand-amber" /> Premium Quality
                 </div>
                 <div className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                  <Truck className="w-5 h-5 text-[#D9822B]" /> Global Shipping
+                  <Truck className="w-5 h-5 text-brand-amber" /> Global Shipping
                 </div>
                 <div className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                  <Package className="w-5 h-5 text-[#D9822B]" /> Bulk Packaging
+                  <Package className="w-5 h-5 text-brand-amber" /> Bulk Packaging
                 </div>
               </div>
 
               {/* Call to Action */}
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-[#6B0018] hover:bg-[#80001d] text-white font-extrabold text-sm md:text-base py-4 rounded-xl uppercase tracking-widest transition-colors shadow-lg hover:shadow-xl"
+                className="w-full bg-brand-cta hover:bg-brand-cta-hover text-white font-extrabold text-sm md:text-base py-4 rounded-xl uppercase tracking-widest transition-colors shadow-lg hover:shadow-xl"
               >
                 Place Order / Inquire Now
               </button>
@@ -139,10 +139,11 @@ export default function ProductDetails({ product }) {
       </div>
 
       {/* Render Order Modal */}
-      <OrderModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        productName={product.title} 
+      <OrderModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productName={product.title}
+        productSlug={product.slug}
       />
     </div>
   );

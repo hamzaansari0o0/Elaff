@@ -2,21 +2,28 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Menu, X, Search, ChevronDown, Phone, MapPin, ShoppingBag } from 'lucide-react';
 
-export default function Navbar() {
+export default function Navbar({ collections = [] }) {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const categories = [
-    { name: 'Frozen Food', href: '/collection/frozen-food' },
-    { name: 'Confectionery', href: '/collection/confectionery' },
-    { name: 'Beverages & Beer', href: '/collection/beverages' },
-    { name: 'Agricultural Products', href: '/collection/agricultural' },
-    { name: 'Cooking Oil', href: '/collection/cooking-oil' },
-    { name: 'Tea & Coffee', href: '/collection/tea-coffee' },
-  ];
+  const categories = collections.map((c) => ({
+    name: c.title,
+    href: `/collection/${c.slug}`,
+  }));
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+    router.push(`/shop?search=${encodeURIComponent(query)}`);
+    setIsSearchOpen(false);
+  }
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
@@ -25,12 +32,12 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5">
         
         {/* 📱 MOBILE & TABLET NAVBAR (Below 'lg') */}
-        <div className="flex lg:hidden items-center justify-between">
+        <div className="flex xl:hidden items-center justify-between">
           
           {/* Left: Hamburger Button */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-2 -ml-2 text-gray-800 hover:text-[#6B0018] focus:outline-none transition-colors"
+            className="p-2 -ml-2 text-gray-800 hover:text-brand-navy focus:outline-none transition-colors"
             aria-label="Open Mobile Menu"
           >
             <Menu className="w-6 h-6" />
@@ -38,10 +45,10 @@ export default function Navbar() {
 
           {/* Center: Logo */}
           <Link href="/" className="flex flex-col items-center leading-none">
-            <span className="font-fraunces text-xl font-black tracking-tight text-[#6B0018]">
+            <span className="font-fraunces text-xl font-black tracking-tight text-brand-navy">
               KONAVA
             </span>
-            <span className="font-bricolage text-[11px] font-extrabold tracking-[0.2em] text-[#D9822B]">
+            <span className="font-bricolage text-[11px] font-extrabold tracking-[0.2em] text-brand-amber">
               TRADE INC.
             </span>
           </Link>
@@ -49,37 +56,37 @@ export default function Navbar() {
           {/* Right: Search Toggle Button */}
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="p-2 -mr-2 text-gray-800 hover:text-[#6B0018] focus:outline-none transition-colors"
+            className="p-2 -mr-2 text-gray-800 hover:text-brand-navy focus:outline-none transition-colors"
             aria-label="Toggle Search"
           >
-            {isSearchOpen ? <X className="w-6 h-6 text-[#6B0018]" /> : <Search className="w-6 h-6" />}
+            {isSearchOpen ? <X className="w-6 h-6 text-brand-navy" /> : <Search className="w-6 h-6" />}
           </button>
         </div>
 
         {/* 💻 DESKTOP NAVBAR ('lg' and above) */}
-        <div className="hidden lg:flex items-center justify-between gap-8">
+        <div className="hidden xl:flex items-center justify-between gap-6">
           
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-none shrink-0 group">
-            <span className="font-fraunces text-2xl font-black tracking-tight text-[#6B0018] group-hover:opacity-90">
+            <span className="font-fraunces text-2xl font-black tracking-tight text-brand-navy group-hover:opacity-90">
               KONAVA
             </span>
-            <span className="font-bricolage text-xs font-bold tracking-[0.25em] text-[#D9822B]">
+            <span className="font-bricolage text-xs font-bold tracking-[0.25em] text-brand-amber">
               TRADE INC.
             </span>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-7 font-bricolage text-xs font-extrabold text-gray-800 tracking-wider">
-            <Link href="/" className="hover:text-[#6B0018] transition-colors uppercase">
+          <nav className="flex items-center gap-5 font-bricolage text-xs font-extrabold text-gray-800 tracking-wider whitespace-nowrap">
+            <Link href="/" className="hover:text-brand-navy transition-colors uppercase">
               HOME
             </Link>
-            
+
             {/* Product Category Dropdown */}
             <div className="relative group py-2 cursor-pointer">
-              <div className="flex items-center gap-1.5 hover:text-[#6B0018] transition-colors uppercase">
+              <div className="flex items-center gap-1.5 hover:text-brand-navy transition-colors uppercase">
                 <span>PRODUCT CATEGORY</span>
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 shrink-0" />
               </div>
 
               {/* Mega Dropdown Menu */}
@@ -88,7 +95,7 @@ export default function Navbar() {
                   <Link
                     key={idx}
                     href={cat.href}
-                    className="block px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-slate-50 hover:text-[#6B0018] rounded-lg transition-colors"
+                    className="block px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-slate-50 hover:text-brand-navy rounded-lg transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -96,59 +103,62 @@ export default function Navbar() {
               </div>
             </div>
 
-            <Link href="/shop" className="hover:text-[#6B0018] transition-colors uppercase">
+            <Link href="/shop" className="hover:text-brand-navy transition-colors uppercase">
               SHOP ALL
             </Link>
-            <Link href="/shipping-terms" className="hover:text-[#6B0018] transition-colors uppercase">
+            <Link href="/collections" className="hover:text-brand-navy transition-colors uppercase">
+              COLLECTIONS
+            </Link>
+            <Link href="/shipping-terms" className="hover:text-brand-navy transition-colors uppercase">
               SHIPPING TERMS
             </Link>
-            <Link href="/about" className="hover:text-[#6B0018] transition-colors uppercase">
+            <Link href="/about" className="hover:text-brand-navy transition-colors uppercase">
               ABOUT US
             </Link>
-            <Link href="/contact" className="hover:text-[#6B0018] transition-colors uppercase">
+            <Link href="/contact" className="hover:text-brand-navy transition-colors uppercase">
               CONTACT US
             </Link>
           </nav>
 
           {/* Search Component */}
-          <div className="flex items-center">
-            <div className="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1 w-72 focus-within:border-[#6B0018] transition-colors">
-              <select className="bg-transparent text-[11px] text-gray-600 font-semibold px-3 py-1 outline-none border-r border-gray-200 cursor-pointer">
-                <option value="all">All</option>
-                <option value="frozen">Frozen</option>
-                <option value="grocery">Grocery</option>
-              </select>
-              <input 
-                type="text" 
-                placeholder="Search products..." 
+          <div className="flex items-center shrink-0">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1 w-56 2xl:w-72 focus-within:border-brand-navy transition-colors"
+            >
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products..."
                 className="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
               />
-              <button className="pr-3 text-gray-500 hover:text-[#6B0018] transition-colors" aria-label="Search">
+              <button type="submit" className="pr-3 text-gray-500 hover:text-brand-navy transition-colors" aria-label="Search">
                 <Search className="w-4 h-4" />
               </button>
-            </div>
+            </form>
           </div>
 
         </div>
 
         {/* 🔍 EXPANDABLE MOBILE SEARCH BAR */}
         {isSearchOpen && (
-          <div className="lg:hidden mt-3 pt-3 border-t border-gray-100 animate-fadeIn">
-            <div className="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1">
-              <select className="bg-transparent text-[11px] text-gray-600 font-semibold px-2 py-1 outline-none border-r border-gray-200">
-                <option value="all">All</option>
-                <option value="frozen">Frozen</option>
-                <option value="grocery">Grocery</option>
-              </select>
-              <input 
-                type="text" 
-                placeholder="Search products..." 
+          <div className="xl:hidden mt-3 pt-3 border-t border-gray-100 animate-fadeIn">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1"
+            >
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products..."
                 className="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
               />
-              <button className="pr-3 text-[#6B0018]" aria-label="Submit Search">
+              <button type="submit" className="pr-3 text-brand-navy" aria-label="Submit Search">
                 <Search className="w-4 h-4" />
               </button>
-            </div>
+            </form>
           </div>
         )}
 
@@ -160,7 +170,7 @@ export default function Navbar() {
       
       {/* Backdrop Blur Overlay */}
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 xl:hidden transition-opacity duration-300 ${
           isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
         onClick={() => setIsMobileMenuOpen(false)}
@@ -168,13 +178,13 @@ export default function Navbar() {
 
       {/* Sliding Drawer Container */}
       <aside 
-        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 lg:hidden shadow-2xl flex flex-col justify-between transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 xl:hidden shadow-2xl flex flex-col justify-between transform transition-transform duration-300 ease-in-out ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Drawer Header */}
         <div>
-          <div className="flex items-center justify-between p-5 bg-[#6B0018] text-white">
+          <div className="flex items-center justify-between p-5 bg-brand-navy text-white">
             <div className="flex flex-col leading-none">
               <span className="font-fraunces text-lg font-black tracking-tight">KONAVA</span>
               <span className="font-bricolage text-[10px] font-bold tracking-[0.2em] text-amber-400">TRADE INC.</span>
@@ -193,7 +203,7 @@ export default function Navbar() {
             <Link 
               href="/" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-[#6B0018] hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Home
             </Link>
@@ -202,7 +212,7 @@ export default function Navbar() {
             <div className="border-y border-gray-100 my-1 py-1">
               <button 
                 onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                className="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-[#6B0018] hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
               >
                 <span>Product Category</span>
                 <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isCategoryOpen ? 'rotate-180' : ''}`} />
@@ -216,7 +226,7 @@ export default function Navbar() {
                       key={idx}
                       href={cat.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-3 py-2 text-xs font-semibold text-gray-600 hover:text-[#6B0018] transition-colors"
+                      className="block px-3 py-2 text-xs font-semibold text-gray-600 hover:text-brand-navy transition-colors"
                     >
                       • {cat.name}
                     </Link>
@@ -228,15 +238,23 @@ export default function Navbar() {
             <Link 
               href="/shop" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-[#6B0018] hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Shop All
             </Link>
 
-            <Link 
-              href="/shipping-terms" 
+            <Link
+              href="/collections"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-[#6B0018] hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+            >
+              Collections
+            </Link>
+
+            <Link
+              href="/shipping-terms"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Shipping Terms
             </Link>
@@ -244,7 +262,7 @@ export default function Navbar() {
             <Link 
               href="/about" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-[#6B0018] hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               About Us
             </Link>
@@ -252,7 +270,7 @@ export default function Navbar() {
             <Link 
               href="/contact" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-[#6B0018] hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Contact Us
             </Link>
@@ -262,11 +280,11 @@ export default function Navbar() {
         {/* Drawer Bottom Info */}
         <div className="p-5 border-t border-gray-100 bg-slate-50 text-[11px] font-bricolage space-y-3">
           <div className="flex items-center gap-2 text-gray-700 font-semibold">
-            <Phone className="w-4 h-4 text-[#6B0018]" />
+            <Phone className="w-4 h-4 text-brand-navy" />
             <a href="tel:+18078088990" className="hover:underline">+1(807) 808-8990</a>
           </div>
           <div className="flex items-start gap-2 text-gray-500 leading-tight">
-            <MapPin className="w-4 h-4 text-[#6B0018] shrink-0 mt-0.5" />
+            <MapPin className="w-4 h-4 text-brand-navy shrink-0 mt-0.5" />
             <span>4653 BD DES GRANDES-PRAIRIES, QC H1R 1A5, CANADA</span>
           </div>
         </div>

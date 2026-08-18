@@ -5,13 +5,13 @@ import { getCollectionBySlug, getProductsByCollection } from '@/lib/products';
 
 export default async function CollectionPage({ params }) {
   const { slug } = await params;
-  const collection = getCollectionBySlug(slug);
-  
+  const collection = await getCollectionBySlug(slug);
+
   if (!collection) {
     notFound();
   }
 
-  const products = getProductsByCollection(slug);
+  const products = await getProductsByCollection(slug);
 
   return (
     <div className="bg-slate-50 min-h-screen py-10 font-sans">
@@ -19,7 +19,7 @@ export default async function CollectionPage({ params }) {
         
         {/* Collection Banner */}
         <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-200 mb-8 shadow-sm">
-          <span className="text-[#D9822B] text-xs font-extrabold uppercase tracking-widest">Collection</span>
+          <span className="text-brand-cyan text-xs font-extrabold uppercase tracking-widest">Collection</span>
           <h1 className="text-3xl md:text-4xl font-black text-gray-900 uppercase mt-1 mb-3">
             {collection.title}
           </h1>
@@ -43,7 +43,7 @@ export default async function CollectionPage({ params }) {
                   />
                 </div>
                 <div className="p-5">
-                  <span className="text-[10px] font-extrabold text-[#D9822B] uppercase tracking-wider">
+                  <span className="text-[10px] font-extrabold text-brand-amber uppercase tracking-wider">
                     {product.sku}
                   </span>
                   <h3 className="text-lg font-extrabold text-gray-900 uppercase mt-1 mb-2">
@@ -56,7 +56,7 @@ export default async function CollectionPage({ params }) {
               </div>
 
               <div className="p-5 pt-0">
-                <span className="inline-block w-full text-center bg-slate-100 hover:bg-[#6B0018] hover:text-white text-gray-800 text-xs font-bold py-2.5 rounded-lg transition-colors uppercase tracking-wider">
+                <span className="inline-block w-full text-center bg-slate-100 hover:bg-brand-cta hover:text-white text-gray-800 text-xs font-bold py-2.5 rounded-lg transition-colors uppercase tracking-wider">
                   View Details & Inquire
                 </span>
               </div>

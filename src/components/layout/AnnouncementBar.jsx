@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function AnnouncementBar() {
   return (
-    <div className="bg-[#6B0018] text-white py-2 px-4 md:px-8 border-b border-white/10 overflow-hidden relative z-50">
+    <div className="bg-brand-navy text-white py-2 px-4 md:px-8 border-b border-white/10 overflow-hidden relative z-50">
       {/* CSS Animation for Continuous Marquee */}
       <style>{`
         @keyframes marquee {
