@@ -4,8 +4,12 @@ import { cookies } from 'next/headers';
 const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = 'admin_token';
 
-export function signAdminToken() {
-  return jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
+export function signAdminToken(user) {
+  return jwt.sign(
+    { userId: user._id.toString(), username: user.username, role: user.role },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
 }
 
 export function verifyAdminToken(token) {
