@@ -5,10 +5,11 @@ export default function Footer() {
   return (
     <footer className="bg-brand-navy text-white pt-12 pb-6 mt-16">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-xs">
-        
+
         <div>
+          <img src="/logo-white.png" alt="Elaff Trade Co." className="h-9 w-auto object-contain mb-4" />
           <h3 className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20">
-            About OMX Trader Stock
+            About Elaff Trade Co.
           </h3>
           <p className="font-bricolage text-gray-200 leading-relaxed">
             We supply Cooking Oil, Snacks & Grocery, Mineral Water, Soft Drinks, Office Supplies, Whiskey. We can deliver to all locations with compliance to local laws. We ship our orders within 24 to 72 hours.
@@ -65,7 +66,7 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 pt-6 border-t border-white/10 text-center text-[11px] text-gray-300 font-medium flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p>© Copyright 2026 KONAVA TRADE INC. All rights reserved.</p>
+        <p>© Copyright 2026 ELAFF TRADE CO. All rights reserved.</p>
         <div className="flex items-center gap-4">
           <Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link>
           <span>•</span>

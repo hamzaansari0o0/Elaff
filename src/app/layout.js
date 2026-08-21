@@ -14,7 +14,7 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata = {
-  title: 'Konava Trade Inc. | Premium Frozen Food & Groceries',
+  title: 'Elaff Trade Co. | Premium Frozen Food & Groceries',
   description: 'Wholesale frozen food, agricultural products, and groceries.',
 };
 

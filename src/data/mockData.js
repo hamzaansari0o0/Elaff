@@ -394,7 +394,7 @@ export const HERO_SLIDES = [
   {
     id: 1,
     title: "FAVORITE BRANDS AND HOTTEST TRENDS",
-    subtitle: "KONAVA TRADE INC.",
+    subtitle: "ELAFF TRADE CO.",
     tag: "PREMIUM SELECTION",
     image: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1200&auto=format&fit=crop",
     btnText: "BROWSE NOW",

@@ -37,8 +37,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
         <div className="text-center mb-8">
-          <h1 className="font-fraunces text-2xl font-black text-brand-navy">KONAVA</h1>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Admin Panel</p>
+          <img src="/logo.png" alt="Elaff Trade Co." className="h-12 w-auto object-contain mx-auto" />
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">Admin Panel</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

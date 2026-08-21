@@ -33,8 +33,8 @@ export default function AdminSidebar() {
     <>
       {/* Mobile top bar */}
       <div className="lg:hidden flex items-center justify-between bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
-        <div className="flex flex-col leading-none">
-          <span className="font-fraunces text-base font-black text-brand-navy">KONAVA</span>
+        <div className="flex flex-col leading-none gap-1">
+          <img src="/logo.png" alt="Elaff Trade Co." className="h-6 w-auto object-contain" />
           <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Admin Panel</span>
         </div>
         <button
@@ -63,7 +63,7 @@ export default function AdminSidebar() {
         <div>
           <div className="flex items-center justify-between p-5 border-b border-gray-200">
             <div>
-              <h1 className="font-fraunces text-lg font-black text-brand-navy">KONAVA</h1>
+              <img src="/logo.png" alt="Elaff Trade Co." className="h-7 w-auto object-contain mb-1" />
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Admin Panel</p>
             </div>
             <button

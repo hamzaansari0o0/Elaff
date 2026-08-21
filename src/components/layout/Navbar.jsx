@@ -44,13 +44,8 @@ export default function Navbar({ collections = [] }) {
           </button>
 
           {/* Center: Logo */}
-          <Link href="/" className="flex flex-col items-center leading-none">
-            <span className="font-fraunces text-xl font-black tracking-tight text-brand-navy">
-              KONAVA
-            </span>
-            <span className="font-bricolage text-[11px] font-extrabold tracking-[0.2em] text-brand-amber">
-              TRADE INC.
-            </span>
+          <Link href="/" className="flex items-center">
+            <img src="/logo.png" alt="Elaff Trade Co." className="h-9 w-auto object-contain" />
           </Link>
 
           {/* Right: Search Toggle Button */}
@@ -67,13 +62,12 @@ export default function Navbar({ collections = [] }) {
         <div className="hidden xl:flex items-center justify-between gap-6">
           
           {/* Logo */}
-          <Link href="/" className="flex flex-col leading-none shrink-0 group">
-            <span className="font-fraunces text-2xl font-black tracking-tight text-brand-navy group-hover:opacity-90">
-              KONAVA
-            </span>
-            <span className="font-bricolage text-xs font-bold tracking-[0.25em] text-brand-amber">
-              TRADE INC.
-            </span>
+          <Link href="/" className="flex items-center shrink-0 group">
+            <img
+              src="/logo.png"
+              alt="Elaff Trade Co."
+              className="h-11 w-auto object-contain group-hover:opacity-90 transition-opacity"
+            />
           </Link>
 
           {/* Navigation Links */}
@@ -185,10 +179,7 @@ export default function Navbar({ collections = [] }) {
         {/* Drawer Header */}
         <div>
           <div className="flex items-center justify-between p-5 bg-brand-navy text-white">
-            <div className="flex flex-col leading-none">
-              <span className="font-fraunces text-lg font-black tracking-tight">KONAVA</span>
-              <span className="font-bricolage text-[10px] font-bold tracking-[0.2em] text-amber-400">TRADE INC.</span>
-            </div>
+            <img src="/logo-white.png" alt="Elaff Trade Co." className="h-8 w-auto object-contain" />
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
               className="p-1 rounded-full hover:bg-white/10 transition-colors"
