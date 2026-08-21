@@ -3,13 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, X, Search, ChevronDown, Phone, MapPin, ShoppingBag } from 'lucide-react';
+import { Menu, X, Search, ChevronDown, Phone, MapPin, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import CartDrawer from '@/components/cart/CartDrawer';
 
 export default function Navbar({ collections = [] }) {
   const router = useRouter();
+  const { items } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = collections.map((c) => ({
@@ -132,6 +136,20 @@ export default function Navbar({ collections = [] }) {
               </button>
             </form>
           </div>
+
+          {/* Cart Icon (desktop only — mobile/tablet uses the bottom cart bar) */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="relative p-2 shrink-0 text-gray-700 hover:text-brand-navy transition-colors"
+            aria-label="Open cart"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            {items.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-brand-cta text-white text-[10px] font-bold rounded-full">
+                {items.length}
+              </span>
+            )}
+          </button>
 
         </div>
 
@@ -281,6 +299,8 @@ export default function Navbar({ collections = [] }) {
         </div>
 
       </aside>
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
     </header>
   );
