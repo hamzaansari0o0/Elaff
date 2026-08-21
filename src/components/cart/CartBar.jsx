@@ -13,24 +13,31 @@ export default function CartBar() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-brand-navy text-white shadow-[0_-4px_20px_rgba(0,0,0,0.2)] border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0 overflow-x-auto">
-            <div className="flex items-center gap-2 shrink-0">
-              <ShoppingCart className="w-5 h-5 text-brand-cta" />
-              <span className="font-bold text-sm whitespace-nowrap">
-                {items.length} Product{items.length > 1 ? 's' : ''}
-              </span>
-            </div>
+      {/* Reserves space at the end of the document so the fixed bar never covers the footer */}
+      <div className="h-20" aria-hidden="true" />
 
-            <div className="hidden sm:flex items-center gap-2 shrink-0">
-              {items.slice(0, 6).map((item) => (
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-brand-navy text-white shadow-[0_-8px_30px_rgba(0,0,0,0.25)] border-t border-white/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+          {/* Left: icon + count */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+              <ShoppingCart className="w-4 h-4 text-brand-cta" />
+            </div>
+            <span className="font-bold text-sm whitespace-nowrap hidden xs:inline">
+              {items.length} Product{items.length > 1 ? 's' : ''}
+            </span>
+          </div>
+
+          {/* Center: thumbnails, scrollbar hidden */}
+          <div className="hidden sm:flex flex-1 justify-center min-w-0">
+            <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide px-1">
+              {items.slice(0, 8).map((item) => (
                 <div key={item.slug} className="relative group shrink-0">
                   {item.image && (
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-10 h-10 rounded-lg object-cover border border-white/20"
+                      className="w-11 h-11 rounded-lg object-cover border border-white/15"
                     />
                   )}
                   <button
@@ -42,15 +49,16 @@ export default function CartBar() {
                   </button>
                 </div>
               ))}
-              {items.length > 6 && (
-                <span className="text-xs text-gray-300 shrink-0">+{items.length - 6} more</span>
+              {items.length > 8 && (
+                <span className="text-xs text-gray-300 shrink-0 pl-1">+{items.length - 8}</span>
               )}
             </div>
           </div>
 
+          {/* Right: CTA */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="shrink-0 bg-brand-cta hover:bg-brand-cta-hover text-white text-xs font-bold px-5 py-2.5 rounded-lg uppercase tracking-wider transition-colors"
+            className="shrink-0 bg-brand-cta hover:bg-brand-cta-hover text-white text-xs font-bold px-5 py-2.5 rounded-full uppercase tracking-wider transition-colors shadow-lg"
           >
             Inquire Now
           </button>

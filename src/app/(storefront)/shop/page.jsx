@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   getAllProducts,
   getProductsByTag,
@@ -8,6 +7,7 @@ import {
   toCardShape,
 } from '@/lib/products';
 import ProductCard from '@/components/ui/ProductCard';
+import ShopSidebar from '@/components/shop/ShopSidebar';
 
 const TAG_LABELS = {
   onSale: 'Latest On Sale',
@@ -49,42 +49,7 @@ export default async function ShopPage({ searchParams }) {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-          {/* Sidebar: Product Groups */}
-          <aside className="lg:w-64 shrink-0">
-            <div className="bg-white border border-gray-200 rounded-2xl p-4 lg:sticky lg:top-24">
-              <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-3 px-2">
-                Product Groups
-              </h2>
-              <nav className="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
-                <Link
-                  href="/shop"
-                  className={`shrink-0 flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors whitespace-nowrap ${
-                    isAllProducts
-                      ? 'bg-brand-navy text-white'
-                      : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
-                  }`}
-                >
-                  All Products
-                </Link>
-                {categoryCards.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/shop?collection=${cat.slug}`}
-                    className={`shrink-0 flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors whitespace-nowrap ${
-                      collection === cat.slug
-                        ? 'bg-brand-navy text-white'
-                        : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
-                    }`}
-                  >
-                    <span>{cat.title}</span>
-                    <span className={collection === cat.slug ? 'text-white/70' : 'text-gray-400'}>
-                      {cat.count.replace(' PRODUCTS', '')}
-                    </span>
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </aside>
+          <ShopSidebar categoryCards={categoryCards} activeSlug={collection} isAllProducts={isAllProducts} />
 
           {/* Products */}
           <div className="flex-1 min-w-0">

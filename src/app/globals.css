@@ -26,3 +26,13 @@ h1, h2, h3, h4, h5, h6 {
 body, p, span, button, input, select {
   font-family: var(--font-bricolage), sans-serif !important;
 }
+
+/* Hides the scrollbar on horizontally-scrollable strips (cart bar thumbnails,
+   mobile filter pills) while keeping them scrollable via touch/drag. */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
