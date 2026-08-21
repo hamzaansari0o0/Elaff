@@ -13,33 +13,40 @@ export default function ShopSidebar({ categoryCards, activeSlug, isAllProducts }
 
   function NavLinks({ onNavigate }) {
     return (
-      <nav className="flex flex-col gap-1.5">
+      <nav className="flex flex-col gap-1">
         <Link
           href="/shop"
           onClick={onNavigate}
-          className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors ${
+          className={`group relative flex items-center justify-between pl-4 pr-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors ${
             isAllProducts ? 'bg-brand-navy text-white' : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
           }`}
         >
-          All Products
+          {isAllProducts && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 rounded-full bg-brand-amber" />}
+          <span>All Products</span>
         </Link>
-        {categoryCards.map((cat) => (
-          <Link
-            key={cat.slug}
-            href={`/shop?collection=${cat.slug}`}
-            onClick={onNavigate}
-            className={`flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors ${
-              activeSlug === cat.slug
-                ? 'bg-brand-navy text-white'
-                : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
-            }`}
-          >
-            <span>{cat.title}</span>
-            <span className={activeSlug === cat.slug ? 'text-white/70' : 'text-gray-400'}>
-              {cat.count.replace(' PRODUCTS', '')}
-            </span>
-          </Link>
-        ))}
+        {categoryCards.map((cat) => {
+          const active = activeSlug === cat.slug;
+          return (
+            <Link
+              key={cat.slug}
+              href={`/shop?collection=${cat.slug}`}
+              onClick={onNavigate}
+              className={`group relative flex items-center justify-between gap-3 pl-4 pr-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors ${
+                active ? 'bg-brand-navy text-white' : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
+              }`}
+            >
+              {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 rounded-full bg-brand-amber" />}
+              <span className="truncate">{cat.title}</span>
+              <span
+                className={`shrink-0 font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                  active ? 'bg-white/15 text-white/80' : 'bg-slate-100 text-gray-400 group-hover:bg-white'
+                }`}
+              >
+                {cat.count.replace(' PRODUCTS', '')}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
     );
   }
@@ -49,7 +56,7 @@ export default function ShopSidebar({ categoryCards, activeSlug, isAllProducts }
       {/* Mobile & tablet: trigger button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="lg:hidden w-full flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3.5 mb-5 shadow-sm"
+        className="lg:hidden w-full flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3.5 mb-5 shadow-sm active:scale-[0.99] transition-transform"
       >
         <span className="flex items-center gap-2 text-sm font-bold text-gray-800">
           <SlidersHorizontal className="w-4 h-4 text-brand-navy" />
@@ -63,10 +70,11 @@ export default function ShopSidebar({ categoryCards, activeSlug, isAllProducts }
 
       {/* Desktop: static sticky sidebar */}
       <aside className="hidden lg:block lg:w-64 shrink-0">
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 lg:sticky lg:top-24">
-          <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-3 px-2">
-            Product Groups
-          </h2>
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 lg:sticky lg:top-28 shadow-sm">
+          <div className="flex items-center gap-2 px-2 mb-3 pb-3 border-b border-dashed border-gray-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan" />
+            <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest">Product Groups</h2>
+          </div>
           <NavLinks />
         </div>
       </aside>

@@ -29,9 +29,11 @@ export function toCardShape(p) {
     title: p.title,
     category: (p.category || '').toUpperCase(),
     price: formatPrice(p.price, p.priceUnit),
+    priceValue: typeof p.price === 'number' ? p.price : null,
     oldPrice: formatPrice(p.oldPrice, ''),
     image: p.images?.[0] || '',
     badge: p.badge || undefined,
+    sku: p.sku || '',
   };
 }
 
