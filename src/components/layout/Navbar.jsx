@@ -52,14 +52,28 @@ export default function Navbar({ collections = [] }) {
             <img src="/logo.png" alt="Elaff Trade Co." className="h-9 w-auto object-contain" />
           </Link>
 
-          {/* Right: Search Toggle Button */}
-          <button
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="p-2 -mr-2 text-gray-800 hover:text-brand-navy focus:outline-none transition-colors"
-            aria-label="Toggle Search"
-          >
-            {isSearchOpen ? <X className="w-6 h-6 text-brand-navy" /> : <Search className="w-6 h-6" />}
-          </button>
+          {/* Right: Search + Cart */}
+          <div className="flex items-center -mr-2">
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="p-2 text-gray-800 hover:text-brand-navy focus:outline-none transition-colors"
+              aria-label="Toggle Search"
+            >
+              {isSearchOpen ? <X className="w-6 h-6 text-brand-navy" /> : <Search className="w-6 h-6" />}
+            </button>
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-gray-800 hover:text-brand-navy focus:outline-none transition-colors"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-6 h-6" />
+              {items.length > 0 && (
+                <span className="absolute top-0.5 right-0.5 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-brand-cta text-white text-[9px] font-bold rounded-full">
+                  {items.length}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* 💻 DESKTOP NAVBAR ('lg' and above) */}

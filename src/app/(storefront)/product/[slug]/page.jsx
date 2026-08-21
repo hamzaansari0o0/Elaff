@@ -1,6 +1,6 @@
 // src/app/product/[slug]/page.jsx
 import { notFound } from 'next/navigation';
-import { getProductBySlug } from '@/lib/products';
+import { getProductBySlug, getRelatedProducts, toCardShape } from '@/lib/products';
 import ProductDetails from '@/components/product/ProductDetails';
 
 export default async function ProductPage({ params }) {
@@ -11,5 +11,7 @@ export default async function ProductPage({ params }) {
     notFound();
   }
 
-  return <ProductDetails product={product} />;
+  const relatedProducts = await getRelatedProducts(product);
+
+  return <ProductDetails product={product} related={relatedProducts.map(toCardShape)} />;
 }

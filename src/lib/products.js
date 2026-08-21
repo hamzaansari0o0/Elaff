@@ -3,6 +3,7 @@
 import { connectDB } from './mongodb';
 import Product from '@/models/Product';
 import Collection from '@/models/Collection';
+import { formatPrice } from './formatPrice';
 
 // Strip Mongoose-specific types (ObjectId, Date) into plain JSON, and expose `id`
 // alongside `_id` so components can use either.
@@ -10,11 +11,6 @@ function serialize(doc) {
   const obj = JSON.parse(JSON.stringify(doc));
   obj.id = obj._id;
   return obj;
-}
-
-function formatPrice(amount, unit) {
-  if (amount == null) return undefined;
-  return `$${Number(amount).toFixed(2)}${unit || ''}`;
 }
 
 function escapeRegex(str) {
@@ -33,7 +29,6 @@ export function toCardShape(p) {
     oldPrice: formatPrice(p.oldPrice, ''),
     image: p.images?.[0] || '',
     badge: p.badge || undefined,
-    sku: p.sku || '',
   };
 }
 
@@ -51,6 +46,24 @@ export async function getProductBySlug(slug) {
   await connectDB();
   const product = await Product.findOne({ slug }).populate('collections', 'title slug').lean();
   return product ? serialize(product) : null;
+}
+
+// Other active products sharing the same first collection, for the product page's "Related Products" strip.
+export async function getRelatedProducts(product, limit = 8) {
+  const collectionId = product.collections?.[0]?._id || product.collections?.[0];
+  if (!collectionId) return [];
+
+  await connectDB();
+  const products = await Product.find({
+    collections: collectionId,
+    status: 'active',
+    _id: { $ne: product.id },
+  })
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .lean();
+
+  return products.map(serialize);
 }
 
 export async function getFeaturedProducts() {

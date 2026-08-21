@@ -7,7 +7,6 @@ import { useCart } from '@/context/CartContext';
 export default function ProductCard({ product }) {
   const { addItem, isInCart } = useCart();
   const inCart = isInCart(product.slug);
-  const lotCode = (product.sku || product.slug || '').toString().slice(-6).toUpperCase();
 
   function handleAddToCart(e) {
     e.preventDefault();
@@ -54,11 +53,6 @@ export default function ProductCard({ product }) {
             alt={product.title}
             className="max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
           />
-        )}
-        {lotCode && (
-          <span className="absolute bottom-2 left-2 font-mono text-[9px] font-semibold text-gray-500 bg-white/85 backdrop-blur-sm px-1.5 py-0.5 rounded tracking-widest">
-            LOT #{lotCode}
-          </span>
         )}
       </div>
 

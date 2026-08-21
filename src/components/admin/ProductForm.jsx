@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, Trash2 } from 'lucide-react';
 import { slugify } from '@/lib/slugify';
 import ImageUploader from '@/components/admin/ImageUploader';
+import PageSectionsBuilder from '@/components/admin/PageSectionsBuilder';
 
 const TAG_OPTIONS = [
   { value: 'onSale', label: 'On Sale' },
@@ -36,6 +37,7 @@ export default function ProductForm({ initialData, productId }) {
   const [fullDescription, setFullDescription] = useState(initialData?.fullDescription || '');
   const [specifications, setSpecifications] = useState(initialData?.specifications || []);
   const [images, setImages] = useState(initialData?.images || []);
+  const [pageSections, setPageSections] = useState(initialData?.pageSections || []);
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -73,6 +75,15 @@ export default function ProductForm({ initialData, productId }) {
     setSpecifications((prev) => prev.filter((_, i) => i !== idx));
   }
 
+  function isSectionMeaningful(section) {
+    if (section.title?.trim()) return true;
+    if (section.type === 'infoTable') return (section.fields || []).some((f) => f.label && f.value);
+    if (section.type === 'richText') return Boolean(section.body?.trim());
+    if (section.type === 'imageText') return Boolean(section.body?.trim() || section.image);
+    if (section.type === 'gallery') return (section.images || []).length > 0;
+    return false;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
@@ -101,6 +112,11 @@ export default function ProductForm({ initialData, productId }) {
       fullDescription,
       specifications: specifications.filter((s) => s.label && s.value),
       images,
+      pageSections: pageSections
+        .filter(isSectionMeaningful)
+        .map((s) =>
+          s.type === 'infoTable' ? { ...s, fields: (s.fields || []).filter((f) => f.label && f.value) } : s
+        ),
     };
 
     const res = await fetch(isEdit ? `/api/products/${productId}` : '/api/products', {
@@ -385,6 +401,12 @@ export default function ProductForm({ initialData, productId }) {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Company Profile / Page Sections */}
+      <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
+        <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Company Profile Sections</h2>
+        <PageSectionsBuilder sections={pageSections} onChange={setPageSections} />
       </section>
 
       {error && (

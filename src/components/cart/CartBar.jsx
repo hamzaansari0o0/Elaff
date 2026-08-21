@@ -24,13 +24,13 @@ export default function CartBar() {
             <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
               <ShoppingCart className="w-4 h-4 text-brand-cta" />
             </div>
-            <span className="font-bold text-sm whitespace-nowrap hidden xs:inline">
+            <span className="font-bold text-sm whitespace-nowrap">
               {items.length} Product{items.length > 1 ? 's' : ''}
             </span>
           </div>
 
           {/* Center: thumbnails, scrollbar hidden */}
-          <div className="hidden sm:flex flex-1 justify-center min-w-0">
+          <div className="flex flex-1 justify-start min-w-0">
             <div className="flex items-center gap-2.5 overflow-x-auto scrollbar-hide px-1">
               {items.slice(0, 8).map((item) => (
                 <div key={item.slug} className="relative group shrink-0">
