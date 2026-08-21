@@ -3,23 +3,32 @@ import { connectDB } from '@/lib/mongodb';
 import { requireAdmin } from '@/lib/auth';
 import Inquiry from '@/models/Inquiry';
 
-// Public: any visitor can submit an inquiry from the product page's order modal.
+// Public: any visitor can submit an inquiry from the product page's order modal
+// or the cart's "Inquire Now" bar — both send one or more items.
 export async function POST(request) {
   await connectDB();
   const body = await request.json();
 
-  if (!body.name || !body.email || !body.quantity || !body.productTitle) {
-    return NextResponse.json({ error: 'name, email, quantity and productTitle are required' }, { status: 400 });
+  if (!body.name || !body.email || !Array.isArray(body.items) || body.items.length === 0) {
+    return NextResponse.json({ error: 'name, email and at least one item are required' }, { status: 400 });
+  }
+
+  const items = body.items.map((item) => ({
+    productTitle: item.productTitle,
+    productSlug: item.productSlug || '',
+    quantity: item.quantity,
+  }));
+
+  if (items.some((item) => !item.productTitle || !item.quantity)) {
+    return NextResponse.json({ error: 'Each item needs a productTitle and quantity' }, { status: 400 });
   }
 
   const inquiry = await Inquiry.create({
     name: body.name,
     email: body.email,
     phone: body.phone || '',
-    quantity: body.quantity,
     message: body.message || '',
-    productTitle: body.productTitle,
-    productSlug: body.productSlug || '',
+    items,
   });
 
   return NextResponse.json(inquiry, { status: 201 });

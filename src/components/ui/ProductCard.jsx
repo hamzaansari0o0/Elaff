@@ -1,7 +1,19 @@
+'use client';
+
 import Link from 'next/link';
-import { ShoppingBag, Heart, Eye } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Check } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 export default function ProductCard({ product }) {
+  const { addItem, isInCart } = useCart();
+  const inCart = isInCart(product.slug);
+
+  function handleAddToCart(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!inCart) addItem(product);
+  }
+
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -14,15 +26,18 @@ export default function ProductCard({ product }) {
         </span>
       )}
 
-      {/* Action Overlay */}
-      <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-        <button className="p-2 bg-white text-gray-700 hover:text-brand-navy rounded-full shadow-md hover:scale-110 transition-transform">
-          <Heart className="w-4 h-4" />
-        </button>
-        <button className="p-2 bg-white text-gray-700 hover:text-brand-navy rounded-full shadow-md hover:scale-110 transition-transform">
-          <Eye className="w-4 h-4" />
-        </button>
-      </div>
+      {/* Add to Cart */}
+      <button
+        onClick={handleAddToCart}
+        aria-label={inCart ? 'Added to cart' : 'Add to cart'}
+        className={`absolute top-3 right-3 z-10 p-2 rounded-full shadow-md transition-all ${
+          inCart
+            ? 'bg-brand-green text-white'
+            : 'bg-white text-gray-700 hover:text-brand-navy hover:scale-110'
+        }`}
+      >
+        {inCart ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
+      </button>
 
       {/* Image */}
       <div className="relative w-full h-56 bg-gray-50 overflow-hidden flex items-center justify-center p-4">

@@ -73,8 +73,7 @@ export default function AdminInquiriesPage() {
             <thead className="bg-slate-50 border-b border-gray-200">
               <tr>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Customer</th>
-                <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Product</th>
-                <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Quantity</th>
+                <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Products</th>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Message</th>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Date</th>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Status</th>
@@ -89,20 +88,25 @@ export default function AdminInquiriesPage() {
                     <p className="text-xs text-gray-500">{inq.email}</p>
                     {inq.phone && <p className="text-xs text-gray-400">{inq.phone}</p>}
                   </td>
-                  <td className="px-5 py-3">
-                    {inq.productSlug ? (
-                      <Link
-                        href={`/product/${inq.productSlug}`}
-                        target="_blank"
-                        className="font-semibold text-brand-navy hover:underline"
-                      >
-                        {inq.productTitle}
-                      </Link>
-                    ) : (
-                      <span className="font-semibold text-gray-700">{inq.productTitle}</span>
-                    )}
+                  <td className="px-5 py-3 space-y-1">
+                    {(inq.items || []).map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-xs">
+                        {item.productSlug ? (
+                          <Link
+                            href={`/product/${item.productSlug}`}
+                            target="_blank"
+                            className="font-semibold text-brand-navy hover:underline"
+                          >
+                            {item.productTitle}
+                          </Link>
+                        ) : (
+                          <span className="font-semibold text-gray-700">{item.productTitle}</span>
+                        )}
+                        <span className="text-gray-400">×</span>
+                        <span className="text-gray-600">{item.quantity}</span>
+                      </div>
+                    ))}
                   </td>
-                  <td className="px-5 py-3 text-gray-700">{inq.quantity}</td>
                   <td className="px-5 py-3 text-gray-500 text-xs max-w-xs">
                     {inq.message || '—'}
                   </td>

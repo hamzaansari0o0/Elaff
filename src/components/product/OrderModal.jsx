@@ -29,13 +29,13 @@ export default function OrderModal({ isOpen, onClose, productName, productSlug }
     setIsSubmitting(true);
 
     try {
+      const { quantity, ...contact } = formData;
       const res = await fetch('/api/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          productTitle: productName,
-          productSlug,
+          ...contact,
+          items: [{ productTitle: productName, productSlug, quantity }],
         }),
       });
 
