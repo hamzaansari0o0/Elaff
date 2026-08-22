@@ -38,7 +38,16 @@ export default function ImageUploader({ images = [], onChange, max = 6 }) {
   }
 
   function removeImage(idx) {
+    const removedUrl = images[idx];
     onChange(images.filter((_, i) => i !== idx));
+
+    // Best-effort — the image is already gone from this field either way, so a failed
+    // Cloudinary delete (network blip, already-deleted asset) shouldn't block the admin.
+    fetch('/api/upload', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: removedUrl }),
+    }).catch((err) => console.error('Failed to delete image from Cloudinary:', err));
   }
 
   return (

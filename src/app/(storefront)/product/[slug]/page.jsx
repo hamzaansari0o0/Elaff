@@ -1,6 +1,7 @@
 // src/app/product/[slug]/page.jsx
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getRelatedProducts, toCardShape } from '@/lib/products';
+import { getCompanySettings } from '@/lib/settings';
 import ProductDetails from '@/components/product/ProductDetails';
 
 export default async function ProductPage({ params }) {
@@ -11,7 +12,12 @@ export default async function ProductPage({ params }) {
     notFound();
   }
 
-  const relatedProducts = await getRelatedProducts(product);
+  const [relatedProducts, companySettings] = await Promise.all([
+    getRelatedProducts(product),
+    getCompanySettings(),
+  ]);
 
-  return <ProductDetails product={product} related={relatedProducts.map(toCardShape)} />;
+  return (
+    <ProductDetails product={product} related={relatedProducts.map(toCardShape)} company={companySettings} />
+  );
 }

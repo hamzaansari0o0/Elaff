@@ -48,8 +48,8 @@ export async function getProductBySlug(slug) {
   return product ? serialize(product) : null;
 }
 
-// Other active products sharing the same first collection, for the product page's "Related Products" strip.
-export async function getRelatedProducts(product, limit = 8) {
+// Other active products sharing the same first collection, for the product page's "Related Products" carousel.
+export async function getRelatedProducts(product, limit = 10) {
   const collectionId = product.collections?.[0]?._id || product.collections?.[0];
   if (!collectionId) return [];
 

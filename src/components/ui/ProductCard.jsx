@@ -40,18 +40,12 @@ export default function ProductCard({ product }) {
       </button>
 
       {/* Image */}
-      <div
-        className="relative w-full h-56 bg-slate-50 overflow-hidden flex items-center justify-center p-5"
-        style={{
-          backgroundImage: 'radial-gradient(circle, #E2E8F0 1px, transparent 1px)',
-          backgroundSize: '14px 14px',
-        }}
-      >
+      <div className="relative w-full h-56 bg-slate-50 overflow-hidden">
         {product.image && (
           <img
             src={product.image}
             alt={product.title}
-            className="max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         )}
       </div>
@@ -78,7 +72,7 @@ export default function ProductCard({ product }) {
 
           <span className="w-full bg-brand-cta group-hover:bg-brand-cta-hover text-white text-xs font-bold py-2.5 px-4 rounded-lg uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-sm group-hover:shadow-lg">
             {inCart ? <Check className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-            <span>{inCart ? 'Added to Quote' : 'Place Order'}</span>
+            <span>{inCart ? 'Added to Quote' : 'Send Inquiry'}</span>
           </span>
         </div>
       </div>

@@ -2,67 +2,206 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronRight, ShieldCheck, Truck, Package, ShoppingCart, ShoppingBag, Check } from 'lucide-react';
+import {
+  ChevronRight,
+  ShieldCheck,
+  Truck,
+  Package,
+  Globe,
+  Tag,
+  Search,
+  ShoppingCart,
+  ShoppingBag,
+  Check,
+  Clock,
+  Boxes,
+  BadgeCheck,
+} from 'lucide-react';
 import { formatPrice } from '@/lib/formatPrice';
 import { useCart } from '@/context/CartContext';
-import ProductCard from '@/components/ui/ProductCard';
 import OrderModal from '@/components/product/OrderModal';
+import ProductProfileTabs from '@/components/product/ProductProfileTabs';
+import InlineInquiryForm from '@/components/product/InlineInquiryForm';
+import RelatedProductsCarousel from '@/components/product/RelatedProductsCarousel';
 
-function InfoTableSection({ section }) {
+// lucide-react dropped brand/logo icons — small inline marks for the share row instead.
+function FacebookIcon(props) {
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <table className="w-full text-left text-sm">
-        <tbody className="divide-y divide-gray-200">
-          {section.fields?.map((row, idx) => (
-            <tr key={idx} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
-              <th className="py-3 px-4 font-bold text-gray-700 w-1/3 border-r border-gray-200">{row.label}</th>
-              <td className="py-3 px-4 text-gray-600 font-medium">{row.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94Z" />
+    </svg>
+  );
+}
+function XIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M18.9 2H22l-7.6 8.7L23 22h-6.9l-5.4-6.6L4.5 22H1.4l8.1-9.3L1 2h7.1l4.9 6.1L18.9 2Zm-1.2 18h1.7L7.4 4H5.6l12.1 16Z" />
+    </svg>
+  );
+}
+function LinkedinIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.84v1.64h.05c.53-1 1.84-2.06 3.79-2.06C21.9 8.58 23 11.03 23 14.2V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2 0-2.31 1.57-2.31 3.2V21h-4V9Z" />
+    </svg>
   );
 }
 
-function RichTextSection({ section }) {
-  return <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{section.body}</p>;
-}
+function ShareButtons({ title }) {
+  function share(kind) {
+    if (typeof window === 'undefined') return;
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(title);
+    const shareUrls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    };
+    window.open(shareUrls[kind], '_blank', 'noopener,noreferrer,width=600,height=500');
+  }
 
-function ImageTextSection({ section }) {
   return (
-    <div className="flex flex-col md:flex-row gap-6 items-start">
-      {section.image && (
-        <div className="w-full md:w-2/5 shrink-0 rounded-xl overflow-hidden border border-gray-200">
-          <img src={section.image} alt={section.title} className="w-full h-56 object-cover" />
-        </div>
-      )}
-      <p className="flex-1 text-sm text-gray-600 leading-relaxed whitespace-pre-line">{section.body}</p>
-    </div>
-  );
-}
-
-function GallerySection({ section }) {
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {section.images?.map((img, idx) => (
-        <div key={idx} className="aspect-square rounded-lg overflow-hidden border border-gray-200">
-          <img src={img} alt={`${section.title} ${idx + 1}`} className="w-full h-full object-cover" />
-        </div>
+    <div className="flex items-center gap-2.5">
+      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Share</span>
+      {[
+        { kind: 'facebook', Icon: FacebookIcon, label: 'Share on Facebook' },
+        { kind: 'twitter', Icon: XIcon, label: 'Share on X' },
+        { kind: 'linkedin', Icon: LinkedinIcon, label: 'Share on LinkedIn' },
+      ].map(({ kind, Icon, label }) => (
+        <button
+          key={kind}
+          type="button"
+          onClick={() => share(kind)}
+          aria-label={label}
+          className="p-1.5 text-gray-400 hover:text-brand-navy transition-colors"
+        >
+          <Icon className="w-4 h-4" />
+        </button>
       ))}
     </div>
   );
 }
 
-const SECTION_RENDERERS = {
-  infoTable: InfoTableSection,
-  richText: RichTextSection,
-  imageText: ImageTextSection,
-  gallery: GallerySection,
-};
+function iconForSpecLabel(label = '') {
+  const l = label.toLowerCase();
+  if (l.includes('origin') || l.includes('country')) return Globe;
+  if (l.includes('volume') || l.includes('size') || l.includes('weight') || l.includes('capacity')) return Package;
+  return Tag;
+}
 
-export default function ProductDetails({ product, related = [] }) {
-  const [activeImage, setActiveImage] = useState(product?.images?.[0] || '/placeholder.jpg');
+function Gallery({ product }) {
+  const images = product.images?.length ? product.images : ['/placeholder.jpg'];
+  const [activeImage, setActiveImage] = useState(images[0]);
+  const [zoomStyle, setZoomStyle] = useState({ transform: 'scale(1)' });
+
+  function handleMouseMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomStyle({ transformOrigin: `${x}% ${y}%`, transform: 'scale(1.7)' });
+  }
+
+  return (
+    <div className="flex gap-3">
+      {/* Vertical thumbnail rail (desktop) */}
+      {images.length > 1 && (
+        <div className="hidden md:flex flex-col gap-2 w-16 shrink-0 max-h-[420px] overflow-y-auto scrollbar-hide">
+          {images.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveImage(img)}
+              className={`w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                activeImage === img ? 'border-brand-navy opacity-100' : 'border-gray-200 opacity-70 hover:opacity-100'
+              }`}
+            >
+              <img src={img} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="flex-1 min-w-0">
+        <div
+          className="relative aspect-square rounded-xl overflow-hidden border border-gray-100 bg-slate-50 cursor-zoom-in"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setZoomStyle({ transform: 'scale(1)' })}
+        >
+          {product.badge && (
+            <span className="absolute top-4 left-4 z-10 -rotate-6 bg-brand-amber text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md ring-1 ring-inset ring-white/40">
+              {product.badge}
+            </span>
+          )}
+          <span className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-md">
+            <Search className="w-3.5 h-3.5 text-gray-500" />
+          </span>
+          <img
+            src={activeImage}
+            alt={product.title}
+            className="w-full h-full object-cover transition-transform duration-200"
+            style={zoomStyle}
+          />
+        </div>
+
+        {/* Horizontal thumbnails (mobile/tablet) */}
+        {images.length > 1 && (
+          <div className="flex md:hidden gap-3 overflow-x-auto scrollbar-hide pt-3">
+            {images.map((img, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveImage(img)}
+                className={`w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                  activeImage === img ? 'border-brand-navy opacity-100' : 'border-gray-200 opacity-70 hover:opacity-100'
+                }`}
+              >
+                <img src={img} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="pt-4">
+          <ShareButtons title={product.title} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WhyChooseBanner({ product }) {
+  const points = [
+    { Icon: ShieldCheck, title: 'Premium Quality', sub: 'Verified sourcing standards' },
+    { Icon: Truck, title: 'Global Shipping', sub: 'Delivered worldwide' },
+    { Icon: Package, title: 'Bulk Packaging', sub: 'Export-ready cartons' },
+    { Icon: BadgeCheck, title: 'Certified & Trusted', sub: 'Backed by our guarantee' },
+  ];
+
+  return (
+    <div className="relative overflow-hidden bg-white rounded-2xl border border-gray-200 shadow-sm px-6 md:px-10 py-8 md:py-10">
+      <div className="relative text-center max-w-xl mx-auto mb-8">
+        <h2 className="font-fraunces text-xl md:text-2xl font-black text-gray-900 uppercase tracking-wide">
+          Why Choose {product.title}?
+        </h2>
+        <p className="text-sm text-gray-500 mt-2">
+          {product.shortDescription || 'Sourced and shipped to the standard our wholesale buyers expect.'}
+        </p>
+      </div>
+
+      <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6">
+        {points.map(({ Icon, title, sub }) => (
+          <div key={title} className="flex flex-col items-center text-center gap-2">
+            <div className="w-11 h-11 rounded-full bg-brand-amber/10 text-brand-amber flex items-center justify-center">
+              <Icon className="w-5 h-5" />
+            </div>
+            <p className="text-xs font-bold text-gray-800 uppercase tracking-wide">{title}</p>
+            <p className="text-[11px] text-gray-500">{sub}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function ProductDetails({ product, related = [], company = null }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addItem, isInCart } = useCart();
 
@@ -70,15 +209,8 @@ export default function ProductDetails({ product, related = [] }) {
 
   const price = formatPrice(product.price, product.priceUnit);
   const oldPrice = formatPrice(product.oldPrice, '');
-  const hasCompanyProfile = product.pageSections?.length > 0;
-  const hasRelated = related.length > 0;
   const inCart = isInCart(product.slug);
-
-  const navItems = [
-    { id: 'overview', label: 'Overview' },
-    ...(hasCompanyProfile ? [{ id: 'company-profile', label: 'Company Profile' }] : []),
-    ...(hasRelated ? [{ id: 'related', label: 'Related Products' }] : []),
-  ];
+  const quickSpecs = (product.specifications || []).slice(0, 3);
 
   function handleAddToCart() {
     if (inCart) return;
@@ -104,211 +236,117 @@ export default function ProductDetails({ product, related = [] }) {
         </nav>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
         {/* Hero: gallery + info */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="flex flex-col lg:flex-row">
             {/* Left: Gallery */}
-            <div className="w-full lg:w-1/2 p-6 md:p-10 border-b lg:border-b-0 lg:border-r border-gray-200 relative">
-              {product.badge && (
-                <span className="absolute top-8 left-8 z-10 -rotate-6 bg-brand-amber text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md ring-1 ring-inset ring-white/40">
-                  {product.badge}
-                </span>
-              )}
-              <div
-                className="aspect-square rounded-xl overflow-hidden mb-4 border border-gray-100 flex items-center justify-center bg-slate-50"
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #E2E8F0 1px, transparent 1px)',
-                  backgroundSize: '16px 16px',
-                }}
-              >
-                <img src={activeImage} alt={product.title} className="w-full h-full object-contain p-6" />
-              </div>
-
-              {product.images?.length > 1 && (
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-                  {product.images.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveImage(img)}
-                      className={`w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                        activeImage === img
-                          ? 'border-brand-navy opacity-100'
-                          : 'border-transparent opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={img} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="w-full lg:w-[45%] p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-gray-200">
+              <Gallery product={product} />
             </div>
 
             {/* Right: Info */}
-            <div className="w-full lg:w-1/2 p-6 md:p-10 flex flex-col justify-center">
-              <span className="inline-flex items-center gap-2 text-brand-cyan text-[11px] font-extrabold uppercase tracking-[0.2em] w-max mb-3">
-                <span className="w-5 h-px bg-brand-cyan" />
-                {product.category || 'Product'}
-              </span>
+            <div className="w-full lg:w-[55%] p-6 md:p-8 flex flex-col justify-center">
+              {product.badge && (
+                <span className="inline-block w-max bg-brand-amber/10 text-brand-amber text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+                  {product.badge}
+                </span>
+              )}
 
-              <h1 className="font-fraunces text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-2">
+              <h1 className="font-fraunces text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-1">
                 {product.title}
               </h1>
+              {product.category && <p className="text-sm text-gray-500 mb-4">{product.category}</p>}
 
-              {product.sku && (
-                <p className="text-xs text-gray-400 font-mono tracking-wide mb-5">SKU: {product.sku}</p>
+              {quickSpecs.length > 0 && (
+                <div className="grid grid-cols-3 gap-3 mb-5 pb-5 border-b border-gray-100">
+                  {quickSpecs.map((spec, i) => {
+                    const Icon = iconForSpecLabel(spec.label);
+                    return (
+                      <div key={i} className="flex items-start gap-2">
+                        <Icon className="w-4 h-4 text-brand-navy shrink-0 mt-0.5" />
+                        <div className="min-w-0">
+                          <p className="text-[10px] text-gray-400 uppercase tracking-wide truncate">{spec.label}</p>
+                          <p className="text-xs font-bold text-gray-800 truncate">{spec.value}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
 
               {(price || oldPrice) && (
-                <div className="flex items-baseline gap-2 mb-5 pb-5 border-b border-dashed border-gray-200">
+                <div className="flex items-baseline gap-2 mb-1">
                   {price && <span className="font-bricolage text-2xl font-extrabold text-gray-900">{price}</span>}
                   {oldPrice && <span className="font-bricolage text-sm text-gray-400 line-through">{oldPrice}</span>}
                 </div>
               )}
-
-              {product.shortDescription && (
-                <p className="text-sm text-gray-600 leading-relaxed mb-6">{product.shortDescription}</p>
+              {(product.leadTime || product.moq) && (
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mb-5 text-xs text-gray-600">
+                  {product.leadTime && (
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-brand-navy shrink-0" />
+                      Lead Time: <span className="font-semibold text-gray-800">{product.leadTime}</span>
+                    </span>
+                  )}
+                  {product.moq && (
+                    <span className="flex items-center gap-1.5">
+                      <Boxes className="w-3.5 h-3.5 text-brand-navy shrink-0" />
+                      Min. Order: <span className="font-semibold text-gray-800">{product.moq}</span>
+                    </span>
+                  )}
+                </div>
               )}
 
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-x-5 gap-y-2.5 mb-6 py-4 border-y border-gray-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                  <ShieldCheck className="w-4 h-4 text-brand-amber shrink-0" /> Premium Quality
-                </div>
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                  <Truck className="w-4 h-4 text-brand-amber shrink-0" /> Global Shipping
-                </div>
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wide">
-                  <Package className="w-4 h-4 text-brand-amber shrink-0" /> Bulk Packaging
-                </div>
-              </div>
-
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 mb-5">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-brand-navy hover:bg-brand-navy-hover text-white font-extrabold text-xs md:text-sm py-3.5 px-5 rounded-xl uppercase tracking-widest transition-colors shadow-lg hover:shadow-xl"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  Send Inquiry
+                </button>
                 <button
                   onClick={handleAddToCart}
-                  className={`flex items-center justify-center gap-2 border-2 font-extrabold text-xs md:text-sm py-3.5 px-5 rounded-xl uppercase tracking-widest transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-2 border-2 font-extrabold text-xs md:text-sm py-3.5 px-5 rounded-xl uppercase tracking-widest transition-colors ${
                     inCart
                       ? 'border-brand-green text-brand-green bg-brand-green/5'
                       : 'border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white'
                   }`}
                 >
                   {inCart ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
-                  {inCart ? 'Added to Quote' : 'Add to Cart'}
-                </button>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="flex-1 flex items-center justify-center gap-2 bg-brand-cta hover:bg-brand-cta-hover text-white font-extrabold text-xs md:text-sm py-3.5 px-5 rounded-xl uppercase tracking-widest transition-colors shadow-lg hover:shadow-xl"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  Place Order / Inquire Now
+                  {inCart ? 'Added' : 'Add to Inquiry List'}
                 </button>
               </div>
-              <p className="text-center sm:text-left text-[11px] text-gray-500 mt-3 uppercase tracking-wide">
-                Submit an inquiry to get our latest bulk pricing.
-              </p>
             </div>
           </div>
         </div>
 
-        {/* Sticky section nav */}
-        {navItems.length > 1 && (
-          <div className="sticky top-16 z-30 mt-6 -mx-4 px-4 md:mx-0 md:px-0">
-            <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-xl shadow-sm flex gap-1 overflow-x-auto scrollbar-hide px-2 py-2">
-              {navItems.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className="shrink-0 px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wide text-gray-600 hover:bg-slate-50 hover:text-brand-navy transition-colors"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Why Choose banner */}
+        <WhyChooseBanner product={product} />
 
-        {/* Overview: specifications + description */}
-        {(product.specifications?.length > 0 || product.fullDescription) && (
-          <div id="overview" className="mt-6 scroll-mt-32 bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-10">
-            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-dashed border-gray-200">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan" />
-              <h2 className="font-fraunces text-lg md:text-xl font-black text-gray-900 uppercase tracking-wide">
-                Overview
-              </h2>
-            </div>
+        {/* Product dossier: tabs for details / company profile / certificates / shipping */}
+        <ProductProfileTabs product={product} company={company} />
 
-            <div className="flex flex-col lg:flex-row gap-10">
-              {product.specifications?.length > 0 && (
-                <div className="w-full lg:w-1/2">
-                  <h3 className="font-bold text-gray-900 uppercase text-xs tracking-widest mb-3">Specifications</h3>
-                  <InfoTableSection section={{ fields: product.specifications }} />
-                </div>
-              )}
-
-              {product.fullDescription && (
-                <div className="w-full lg:w-1/2 text-sm text-gray-600 leading-relaxed space-y-4">
-                  <h3 className="font-bold text-gray-900 uppercase text-xs tracking-widest mb-3">
-                    Detailed Description
-                  </h3>
-                  <div dangerouslySetInnerHTML={{ __html: product.fullDescription }} />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Company Profile: admin-configured dynamic sections */}
-        {hasCompanyProfile && (
-          <div id="company-profile" className="mt-6 scroll-mt-32 space-y-6">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan" />
-              <h2 className="font-fraunces text-lg md:text-xl font-black text-gray-900 uppercase tracking-wide">
-                Company Profile
-              </h2>
-            </div>
-
-            {product.pageSections.map((section, idx) => {
-              const Renderer = SECTION_RENDERERS[section.type];
-              if (!Renderer) return null;
-              return (
-                <div key={idx} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-10">
-                  {section.title && (
-                    <h3 className="font-fraunces text-base md:text-lg font-black text-gray-900 uppercase tracking-wide mb-5 pb-4 border-b border-dashed border-gray-200">
-                      {section.title}
-                    </h3>
-                  )}
-                  <Renderer section={section} />
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {/* Send an Inquiry */}
+        <InlineInquiryForm product={product} companyName={company?.companyName} price={price} />
 
         {/* Related Products */}
-        {hasRelated && (
-          <div id="related" className="mt-6 scroll-mt-32">
+        {related.length > 0 && (
+          <div>
             <div className="flex items-center gap-2 mb-5">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan" />
               <h2 className="font-fraunces text-lg md:text-xl font-black text-gray-900 uppercase tracking-wide">
-                Related Products
+                Related Products from This Supplier
               </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
-              {related.map((item) => (
-                <ProductCard key={item.id} product={item} />
-              ))}
-            </div>
+            <RelatedProductsCarousel products={related} />
           </div>
         )}
       </div>
 
-      <OrderModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        productName={product.title}
-        productSlug={product.slug}
-      />
+      <OrderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} product={product} company={company} />
     </div>
   );
 }

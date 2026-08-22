@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Trash2 } from 'lucide-react';
 import { slugify } from '@/lib/slugify';
 import ImageUploader from '@/components/admin/ImageUploader';
 import PageSectionsBuilder from '@/components/admin/PageSectionsBuilder';
+import KeyValueListEditor from '@/components/admin/KeyValueListEditor';
 
 const TAG_OPTIONS = [
   { value: 'onSale', label: 'On Sale' },
@@ -29,6 +29,8 @@ export default function ProductForm({ initialData, productId }) {
   const [price, setPrice] = useState(initialData?.price ?? '');
   const [priceUnit, setPriceUnit] = useState(initialData?.priceUnit || '');
   const [oldPrice, setOldPrice] = useState(initialData?.oldPrice ?? '');
+  const [moq, setMoq] = useState(initialData?.moq || '');
+  const [leadTime, setLeadTime] = useState(initialData?.leadTime || '');
   const [badge, setBadge] = useState(initialData?.badge || '');
   const [tags, setTags] = useState(initialData?.tags || []);
   const [status, setStatus] = useState(initialData?.status || 'active');
@@ -63,18 +65,6 @@ export default function ProductForm({ initialData, productId }) {
     setTags((prev) => (prev.includes(value) ? prev.filter((t) => t !== value) : [...prev, value]));
   }
 
-  function addSpecRow() {
-    setSpecifications((prev) => [...prev, { label: '', value: '' }]);
-  }
-
-  function updateSpecRow(idx, field, value) {
-    setSpecifications((prev) => prev.map((s, i) => (i === idx ? { ...s, [field]: value } : s)));
-  }
-
-  function removeSpecRow(idx) {
-    setSpecifications((prev) => prev.filter((_, i) => i !== idx));
-  }
-
   function isSectionMeaningful(section) {
     if (section.title?.trim()) return true;
     if (section.type === 'infoTable') return (section.fields || []).some((f) => f.label && f.value);
@@ -104,6 +94,8 @@ export default function ProductForm({ initialData, productId }) {
       price: price === '' ? null : Number(price),
       priceUnit,
       oldPrice: oldPrice === '' ? null : Number(oldPrice),
+      moq,
+      leadTime,
       badge,
       tags,
       status,
@@ -295,6 +287,28 @@ export default function ProductForm({ initialData, productId }) {
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy"
             />
           </div>
+          <div>
+            <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
+              Minimum Order (MOQ)
+            </label>
+            <input
+              type="text"
+              value={moq}
+              onChange={(e) => setMoq(e.target.value)}
+              placeholder="10000 Cartons"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">Lead Time</label>
+            <input
+              type="text"
+              value={leadTime}
+              onChange={(e) => setLeadTime(e.target.value)}
+              placeholder="7-14 days"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy"
+            />
+          </div>
         </div>
 
         <div>
@@ -359,48 +373,13 @@ export default function ProductForm({ initialData, productId }) {
 
       {/* Specifications */}
       <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Specifications</h2>
-          <button
-            type="button"
-            onClick={addSpecRow}
-            className="flex items-center gap-1 text-xs font-bold text-brand-navy hover:underline"
-          >
-            <Plus className="w-3.5 h-3.5" /> Add Row
-          </button>
-        </div>
-
-        {specifications.length === 0 ? (
-          <p className="text-xs text-gray-400">No specifications added.</p>
-        ) : (
-          <div className="space-y-2">
-            {specifications.map((spec, idx) => (
-              <div key={idx} className="flex gap-2">
-                <input
-                  type="text"
-                  value={spec.label}
-                  onChange={(e) => updateSpecRow(idx, 'label', e.target.value)}
-                  placeholder="Label (e.g. Protein Content)"
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-navy"
-                />
-                <input
-                  type="text"
-                  value={spec.value}
-                  onChange={(e) => updateSpecRow(idx, 'value', e.target.value)}
-                  placeholder="Value (e.g. 60% Min)"
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-navy"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeSpecRow(idx)}
-                  className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Specifications</h2>
+        <KeyValueListEditor
+          rows={specifications}
+          onChange={setSpecifications}
+          labelPlaceholder="Label (e.g. Protein Content)"
+          valuePlaceholder="Value (e.g. 60% Min)"
+        />
       </section>
 
       {/* Company Profile / Page Sections */}

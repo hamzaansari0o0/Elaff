@@ -38,6 +38,8 @@ const ProductSchema = new mongoose.Schema(
     price: { type: Number, default: null },
     priceUnit: { type: String, default: '' }, // e.g. "/ ton", leave blank for flat price
     oldPrice: { type: Number, default: null },
+    moq: { type: String, default: '' }, // e.g. "10000 Cartons"
+    leadTime: { type: String, default: '' }, // e.g. "7-14 days"
     badge: { type: String, default: '' }, // e.g. SALE, HOT, NEW
     tags: [{ type: String }], // e.g. onSale, weeklyFeatured, bestseller
     status: { type: String, enum: ['active', 'draft'], default: 'active' },

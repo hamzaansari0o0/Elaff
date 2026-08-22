@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, FolderTree, Mail, AtSign, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, Mail, AtSign, Building2, LogOut, Menu, X } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/admin/collections', label: 'Collections', icon: FolderTree },
   { href: '/admin/inquiries', label: 'Inquiries', icon: Mail },
   { href: '/admin/subscribers', label: 'Subscribers', icon: AtSign },
+  { href: '/admin/settings', label: 'Company Settings', icon: Building2 },
 ];
 
 export default function AdminSidebar() {
