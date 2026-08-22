@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageCircle, Mail, Phone, ShieldCheck, Package } from 'lucide-react';
+import { ShieldCheck, Package } from 'lucide-react';
 
 const TABS = [
   { key: 'details', label: 'Product Details' },
@@ -44,14 +44,6 @@ function specValue(specifications, keyword) {
 
 export default function ProductProfileTabs({ product, company }) {
   const [activeTab, setActiveTab] = useState('details');
-
-  const chatHref = company?.whatsapp
-    ? `https://wa.me/${company.whatsapp}`
-    : company?.email
-    ? `mailto:${company.email}`
-    : company?.phone
-    ? `tel:${company.phone}`
-    : null;
 
   const packagingValue = specValue(product.specifications, 'packag');
   const lifestyleImage = product.images?.[1] || product.images?.[0];
@@ -252,20 +244,6 @@ export default function ProductProfileTabs({ product, company }) {
                 <EmptyNote>Contact us for payment terms.</EmptyNote>
               )}
             </div>
-          </div>
-        )}
-
-        {chatHref && (
-          <div className="mt-8 pt-6 border-t border-dashed border-gray-200">
-            <a
-              href={chatHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-brand-navy hover:bg-brand-navy-hover text-white text-xs font-bold px-5 py-3 rounded-xl uppercase tracking-wide transition-colors"
-            >
-              {company?.whatsapp ? <MessageCircle className="w-4 h-4" /> : company?.email ? <Mail className="w-4 h-4" /> : <Phone className="w-4 h-4" />}
-              Contact Supplier
-            </a>
           </div>
         )}
       </div>
