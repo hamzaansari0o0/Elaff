@@ -118,9 +118,6 @@ export default function Navbar({ collections = [] }) {
             <Link href="/shop" className="hover:text-brand-navy transition-colors uppercase">
               SHOP ALL
             </Link>
-            <Link href="/collections" className="hover:text-brand-navy transition-colors uppercase">
-              COLLECTIONS
-            </Link>
             <Link href="/shipping-terms" className="hover:text-brand-navy transition-colors uppercase">
               SHIPPING TERMS
             </Link>
@@ -264,14 +261,6 @@ export default function Navbar({ collections = [] }) {
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Shop All
-            </Link>
-
-            <Link
-              href="/collections"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
-            >
-              Collections
             </Link>
 
             <Link
