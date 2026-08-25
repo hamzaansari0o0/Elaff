@@ -118,10 +118,10 @@ export default function Navbar({ collections = [] }) {
             <Link href="/shop" className="hover:text-brand-navy transition-colors uppercase">
               SHOP ALL
             </Link>
-            <Link href="/shipping-terms" className="hover:text-brand-navy transition-colors uppercase">
+            <Link href="/shipping-terms" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
               SHIPPING TERMS
             </Link>
-            <Link href="/about" className="hover:text-brand-navy transition-colors uppercase">
+            <Link href="/about" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
               ABOUT US
             </Link>
             <Link href="/contact" className="hover:text-brand-navy transition-colors uppercase">
@@ -265,22 +265,24 @@ export default function Navbar({ collections = [] }) {
 
             <Link
               href="/shipping-terms"
+              prefetch={false}
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Shipping Terms
             </Link>
 
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
+              prefetch={false}
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               About Us
             </Link>
 
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >

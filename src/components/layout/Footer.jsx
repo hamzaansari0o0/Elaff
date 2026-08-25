@@ -21,10 +21,10 @@ export default function Footer() {
             Quick Navigation
           </h3>
           <ul className="font-bricolage space-y-2.5 font-semibold text-gray-200">
-            <li><Link href="/shipping-terms" className="hover:underline">SHIPPING TERMS</Link></li>
-            <li><Link href="/about" className="hover:underline">ABOUT US</Link></li>
+            <li><Link href="/shipping-terms" prefetch={false} className="hover:underline">SHIPPING TERMS</Link></li>
+            <li><Link href="/about" prefetch={false} className="hover:underline">ABOUT US</Link></li>
             <li><Link href="/contact" className="hover:underline">CONTACT US</Link></li>
-            <li><Link href="/privacy-policy" className="hover:underline">PRIVACY POLICY</Link></li>
+            <li><Link href="/privacy-policy" prefetch={false} className="hover:underline">PRIVACY POLICY</Link></li>
             <li><Link href="/" className="hover:underline">HOMEPAGE</Link></li>
           </ul>
         </div>
@@ -68,9 +68,9 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 pt-6 border-t border-white/10 text-center text-[11px] text-gray-300 font-medium flex flex-col sm:flex-row items-center justify-between gap-2">
         <p>© Copyright 2026 ELAFF TRADE CO. All rights reserved.</p>
         <div className="flex items-center gap-4">
-          <Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link>
+          <Link href="/privacy-policy" prefetch={false} className="hover:underline">Privacy Policy</Link>
           <span>•</span>
-          <Link href="/terms" className="hover:underline">Terms of Service</Link>
+          <Link href="/terms" prefetch={false} className="hover:underline">Terms of Service</Link>
         </div>
       </div>
     </footer>
