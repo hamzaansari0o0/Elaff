@@ -43,6 +43,9 @@ export async function PUT(request) {
     certifications: body.certifications ?? settings.certifications,
     shippingInfo: body.shippingInfo ?? settings.shippingInfo,
     paymentInfo: body.paymentInfo ?? settings.paymentInfo,
+    address: body.address ?? settings.address,
+    contactIntro: body.contactIntro ?? settings.contactIntro,
+    supportHours: body.supportHours ?? settings.supportHours,
   });
 
   await settings.save();

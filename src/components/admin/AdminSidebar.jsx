@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, FolderTree, Mail, AtSign, Building2, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, Mail, MessageSquare, AtSign, Building2, LogOut, Menu, X } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/collections', label: 'Collections', icon: FolderTree },
   { href: '/admin/inquiries', label: 'Inquiries', icon: Mail },
+  { href: '/admin/contact-messages', label: 'Contact Messages', icon: MessageSquare },
   { href: '/admin/subscribers', label: 'Subscribers', icon: AtSign },
   { href: '/admin/settings', label: 'Company Settings', icon: Building2 },
 ];

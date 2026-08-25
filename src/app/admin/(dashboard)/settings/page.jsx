@@ -10,6 +10,7 @@ const TABS = [
   { key: 'certifications', label: 'Certifications' },
   { key: 'shipping', label: 'Shipping' },
   { key: 'payment', label: 'Payment' },
+  { key: 'contact', label: 'Contact Page' },
 ];
 
 export default function AdminSettingsPage() {
@@ -288,6 +289,60 @@ export default function AdminSettingsPage() {
                 labelPlaceholder="Label (e.g. Accepted Methods)"
                 valuePlaceholder="Value (e.g. T/T, L/C, Western Union)"
               />
+            </section>
+          )}
+
+          {/* Contact Page */}
+          {activeTab === 'contact' && (
+            <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
+              <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Contact Page Info</h2>
+              <p className="text-xs text-gray-500">
+                Shown on the right side of the public /contact page, next to the message form.
+              </p>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
+                  Correspondence Address
+                </label>
+                <textarea
+                  value={form.address}
+                  onChange={(e) => set('address', e.target.value)}
+                  rows={2}
+                  placeholder="e.g. 4653 Bd des Grandes-Prairies, Saint-Léonard, QC H1R 1A5, Canada"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
+                  &quot;Get In Touch&quot; Message
+                </label>
+                <textarea
+                  value={form.contactIntro}
+                  onChange={(e) => set('contactIntro', e.target.value)}
+                  rows={3}
+                  placeholder="e.g. Have a question about an order, a product, or our wholesale terms? Send us a message and our team will get back to you."
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5">
+                  Support Hours
+                </label>
+                <input
+                  type="text"
+                  value={form.supportHours}
+                  onChange={(e) => set('supportHours', e.target.value)}
+                  placeholder="e.g. Monday - Saturday: 9:00 AM - 6:00 PM"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy"
+                />
+              </div>
+
+              <p className="text-xs text-gray-400">
+                Phone, WhatsApp, email and response time are already set in the Company Profile tab and are reused
+                on the contact page automatically.
+              </p>
             </section>
           )}
         </div>

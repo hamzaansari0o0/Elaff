@@ -38,6 +38,11 @@ const CompanySettingsSchema = new mongoose.Schema(
     certifications: [CertificationSchema], // company-wide certifications shown on every product page
     shippingInfo: [KeyValueSchema], // e.g. FOB Port, Packaging, Shipping Method — admin-defined rows
     paymentInfo: [KeyValueSchema], // e.g. Accepted Methods, Minimum Deposit — admin-defined rows
+
+    // Right-hand info panel on the public /contact page
+    address: { type: String, default: '' }, // correspondence address
+    contactIntro: { type: String, default: '' }, // short "Get In Touch" blurb
+    supportHours: { type: String, default: '' }, // e.g. "Monday - Saturday: 9:00 AM - 6:00 PM"
   },
   { timestamps: true }
 );
