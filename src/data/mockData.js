@@ -420,25 +420,16 @@ export const HERO_SLIDES = [
     btnText: "DISCOVER MORE",
     btnLink: "/collection/agricultural",
     badge: "Bulk Save"
-  }
-];
-
-export const SIDE_BANNERS = [
-  {
-    id: 1,
-    tag: "Great Value Offer",
-    title: "SPECIAL SEASONS DISCOUNT",
-    btnText: "BROWSE NOW",
-    link: "/collection/confectionery",
-    bgImage: "https://images.unsplash.com/photo-1610348725531-843dff563e2c?q=80&w=600&auto=format&fit=crop"
   },
   {
-    id: 2,
-    tag: "Fresh Harvest",
-    title: "AGRICULTURAL PRODUCTS",
-    btnText: "BROWSE NOW",
-    link: "/collection/agricultural",
-    bgImage: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=600&auto=format&fit=crop"
+    id: 4,
+    title: "PURE COOKING OILS FOR EVERY KITCHEN",
+    subtitle: "BULK & RETAIL PACKS",
+    tag: "REFINED & TRUSTED QUALITY",
+    image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=1200&auto=format&fit=crop",
+    btnText: "SHOP COOKING OIL",
+    btnLink: "/collection/cooking-oil",
+    badge: "Wholesale Ready"
   }
 ];
 
@@ -457,30 +448,3 @@ export const CATEGORY_CARDS = [
   ...cat,
   count: `${PRODUCTS.filter((p) => p.collectionSlug === cat.slug).length} PRODUCTS`
 }));
-
-export const FOOTER_MINI_LISTS = {
-  drinks: [
-    { title: "Carlsberg Beer", price: "$28.00", img: "https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=100&auto=format&fit=crop" },
-    { title: "Grey Goose Vodka 1000ml", price: "$45.00", img: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?q=80&w=100&auto=format&fit=crop" },
-    { title: "Heineken Beer", price: "$32.99", img: "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=100&auto=format&fit=crop" },
-    { title: "Hennessy Cognac", price: "$65.00", img: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?q=80&w=100&auto=format&fit=crop" }
-  ],
-  cookingOil: [
-    { title: "Sunflower Oil Pure", price: "$18.50", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=100&auto=format&fit=crop" },
-    { title: "Soybean Oil 5L", price: "$22.00", img: "https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?q=80&w=100&auto=format&fit=crop" },
-    { title: "Refined Corn Oil", price: "$19.00", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=100&auto=format&fit=crop" },
-    { title: "Pure Peanut Oil", price: "$24.00", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=100&auto=format&fit=crop" }
-  ],
-  confectionery: [
-    { title: "Ferrero Rocher Box", price: "$16.00", img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=100&auto=format&fit=crop" },
-    { title: "Kinder Bueno Box", price: "$14.50", img: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?q=80&w=100&auto=format&fit=crop" },
-    { title: "Kinder Joy Eggs 24x", price: "$22.00", img: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?q=80&w=100&auto=format&fit=crop" },
-    { title: "M&M's Peanut Box", price: "$12.00", img: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=100&auto=format&fit=crop" }
-  ],
-  bestsellersMini: [
-    { title: "Soybean Meal Bulk", price: "$210.00", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=100&auto=format&fit=crop" },
-    { title: "Alfalfa Hay Bales", price: "$185.00", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=100&auto=format&fit=crop" },
-    { title: "Nestle Coffee Mate", price: "$8.50", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=100&auto=format&fit=crop" },
-    { title: "Nutella Chocolate 750g", price: "$9.99", img: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?q=80&w=100&auto=format&fit=crop" }
-  ]
-};

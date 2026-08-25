@@ -9,6 +9,10 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 
 export default function ProductSection({ title, products, link }) {
+  // Nothing tagged for this section in the admin yet — skip the section entirely
+  // instead of showing an empty header with no products under it.
+  if (!products || products.length === 0) return null;
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       <SectionHeader title={title} link={link} />

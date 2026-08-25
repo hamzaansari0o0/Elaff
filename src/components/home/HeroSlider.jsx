@@ -1,104 +1,132 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
+import { Autoplay, EffectFade } from 'swiper/modules';
 import { ArrowRight } from 'lucide-react';
-import { HERO_SLIDES, SIDE_BANNERS } from '@/data/mockData';
+import { HERO_SLIDES } from '@/data/mockData';
 
 import 'swiper/css';
-import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
+// The hero is full-bleed (100vw) so a single 1200px source would be stretched
+// and blurry on wide screens — build a srcset from Unsplash's own resize params
+// instead, so each viewport only downloads the width it actually renders.
+const RESPONSIVE_WIDTHS = [640, 960, 1280, 1600, 1920];
+
+const AUTOPLAY_DELAY = 5000;
+const TIMER_RADIUS = 18;
+const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS;
+
+function buildResponsiveImage(url) {
+  const srcSet = RESPONSIVE_WIDTHS.map((w) => {
+    const variant = new URL(url);
+    variant.searchParams.set('w', String(w));
+    variant.searchParams.set('q', '75');
+    return `${variant.toString()} ${w}w`;
+  }).join(', ');
+
+  const src = new URL(url);
+  src.searchParams.set('w', '1920');
+  src.searchParams.set('q', '75');
+
+  return { src: src.toString(), srcSet };
+}
+
 export default function HeroSlider() {
+  const timerRingRef = useRef(null);
+  const timerCountRef = useRef(null);
+
   return (
-    <section className="max-w-7xl mx-auto px-4 py-4 md:py-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        
-        {/* Dynamic Swiper Banner */}
-        <div className="lg:col-span-2 rounded-xl md:rounded-2xl overflow-hidden shadow-lg relative h-[340px] sm:h-[400px] md:h-[460px] bg-slate-900">
-          <Swiper
-            modules={[Autoplay, Pagination, EffectFade]}
-            effect="fade"
-            fadeEffect={{ crossFade: true }}
-            loop={true}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            pagination={{ clickable: true }}
-            className="w-full h-full hero-swiper [&_.swiper-pagination-bullet-active]:bg-brand-amber [&_.swiper-pagination-bullet]:bg-white"
-          >
-            {HERO_SLIDES.map((slide) => (
-              <SwiperSlide key={slide.id}>
-                <div className="relative w-full h-full flex items-center justify-start p-6 sm:p-10 md:p-14">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={slide.image}
-                    alt={slide.title}
-                    className="absolute inset-0 w-full h-full object-cover opacity-50"
-                  />
-                  {/* Fully structured gradient to avoid warnings */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-transparent"></div>
+    <section className="relative w-full h-[360px] sm:h-[440px] md:h-[520px] lg:h-[580px] bg-slate-900 overflow-hidden">
+      <Swiper
+        modules={[Autoplay, EffectFade]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        loop={true}
+        speed={800}
+        autoplay={{ delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
+        // Driven straight off Swiper's own autoplay clock (fires on every animation
+        // frame) rather than a separate setInterval, so the ring/number can't drift
+        // out of sync with the real slide change. Mutates the DOM via refs instead of
+        // React state so a ~60fps callback doesn't trigger a re-render every frame.
+        onAutoplayTimeLeft={(_swiper, timeLeft, percentage) => {
+          const progress = 1 - percentage;
+          if (timerRingRef.current) {
+            timerRingRef.current.style.strokeDashoffset = String(TIMER_CIRCUMFERENCE * (1 - progress));
+          }
+          if (timerCountRef.current) {
+            timerCountRef.current.textContent = String(Math.min(5, Math.max(1, Math.ceil(timeLeft / 1000))));
+          }
+        }}
+        className="w-full h-full hero-swiper"
+      >
+        {HERO_SLIDES.map((slide, index) => {
+          const { src, srcSet } = buildResponsiveImage(slide.image);
+          return (
+            <SwiperSlide key={slide.id}>
+              <div className="relative w-full h-full flex items-center justify-start px-6 sm:px-10 md:px-16 lg:px-24">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  srcSet={srcSet}
+                  sizes="100vw"
+                  alt={slide.title}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover opacity-50"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-transparent"></div>
 
-                  <div className="relative z-10 max-w-xl text-white">
-                    <span className="inline-block bg-brand-amber text-white text-[10px] md:text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest mb-3 md:mb-4 shadow-sm">
-                      {slide.badge}
-                    </span>
-                    <h4 className="font-bricolage text-xs md:text-sm font-bold tracking-widest text-amber-400 mb-1.5 md:mb-2 uppercase">
-                      {slide.subtitle}
-                    </h4>
-                    <h1 className="font-fraunces text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight uppercase mb-3 md:mb-4 drop-shadow-md">
-                      {slide.title}
-                    </h1>
-                    <p className="font-bricolage text-[11px] sm:text-xs md:text-sm text-gray-300 mb-5 md:mb-6 font-medium tracking-wide max-w-sm md:max-w-md line-clamp-2 md:line-clamp-none">
-                      {slide.tag}
-                    </p>
-                    <Link
-                      href={slide.btnLink}
-                      className="inline-flex items-center gap-2 bg-brand-cta hover:bg-brand-cta-hover text-white font-bold text-[11px] md:text-xs px-5 md:px-6 py-2.5 md:py-3 rounded-lg uppercase tracking-wider transition-all transform hover:-translate-y-0.5 shadow-lg"
-                    >
-                      <span>{slide.btnText}</span>
-                      <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                    </Link>
-                  </div>
+                <div className="relative z-10 max-w-xl text-white">
+                  <span className="inline-block bg-brand-amber text-white text-[10px] md:text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest mb-3 md:mb-4 shadow-sm">
+                    {slide.badge}
+                  </span>
+                  <h4 className="font-bricolage text-xs md:text-sm font-bold tracking-widest text-amber-400 mb-1.5 md:mb-2 uppercase">
+                    {slide.subtitle}
+                  </h4>
+                  <h1 className="font-fraunces text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight uppercase mb-3 md:mb-4 drop-shadow-md">
+                    {slide.title}
+                  </h1>
+                  <p className="font-bricolage text-[11px] sm:text-xs md:text-sm text-gray-300 mb-5 md:mb-6 font-medium tracking-wide max-w-sm md:max-w-md line-clamp-2 md:line-clamp-none">
+                    {slide.tag}
+                  </p>
+                  <Link
+                    href={slide.btnLink}
+                    className="inline-flex items-center gap-2 bg-brand-cta hover:bg-brand-cta-hover text-white font-bold text-[11px] md:text-xs px-5 md:px-6 py-2.5 md:py-3 rounded-lg uppercase tracking-wider transition-all transform hover:-translate-y-0.5 shadow-lg"
+                  >
+                    <span>{slide.btnText}</span>
+                    <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  </Link>
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
-        {/* Side Banners (Responsive grid stack) */}
-        <div className="flex flex-col sm:flex-row lg:flex-col gap-4 md:gap-6">
-          {SIDE_BANNERS.map((banner) => (
-            <div
-              key={banner.id}
-              className="relative w-full flex-1 rounded-xl md:rounded-2xl overflow-hidden shadow-md group min-h-[160px] sm:min-h-[190px] lg:min-h-[218px] flex items-center p-5 md:p-6 bg-slate-900"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={banner.bgImage}
-                alt={banner.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700 ease-out"
-              />
-              {/* Fixed Gradient: Added 'lg:to-transparent' to clear the warning */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent lg:bg-gradient-to-r lg:from-black/90 lg:via-black/40 lg:to-transparent"></div>
-              
-              <div className="relative z-10 text-white w-full">
-                <span className="font-bricolage text-[9px] md:text-[10px] font-bold text-amber-400 uppercase tracking-widest block mb-1.5 md:mb-2">
-                  {banner.tag}
-                </span>
-                <h3 className="font-fraunces text-sm md:text-base font-black uppercase leading-snug mb-3 md:mb-4 max-w-[200px]">
-                  {banner.title}
-                </h3>
-                <Link
-                  href={banner.link}
-                  className="inline-block bg-white text-brand-navy hover:bg-brand-cta hover:text-white text-[10px] md:text-[11px] font-extrabold px-3.5 py-1.5 md:px-4 md:py-2 rounded uppercase tracking-wider transition-colors shadow"
-                >
-                  {banner.btnText}
-                </Link>
               </div>
-            </div>
-          ))}
-        </div>
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
 
+      {/* Autoplay countdown — replaces pagination dots; fills up over the 5s delay and resets on slide change */}
+      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-20 w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-black/45 backdrop-blur-sm">
+        <svg viewBox="0 0 44 44" className="absolute inset-0 w-full h-full -rotate-90">
+          <circle cx="22" cy="22" r={TIMER_RADIUS} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="3" />
+          <circle
+            ref={timerRingRef}
+            cx="22"
+            cy="22"
+            r={TIMER_RADIUS}
+            fill="none"
+            stroke="var(--color-brand-amber)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={TIMER_CIRCUMFERENCE}
+            strokeDashoffset={TIMER_CIRCUMFERENCE}
+          />
+        </svg>
+        <span ref={timerCountRef} className="font-bricolage text-xs md:text-sm font-bold text-white tabular-nums">
+          5
+        </span>
       </div>
     </section>
   );

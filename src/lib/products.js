@@ -138,3 +138,32 @@ export async function getCategoryCards() {
     })
   );
 }
+
+// Homepage "shop by category" mini-lists — a few real products per collection,
+// so it only ever shows what's actually been added in admin (no placeholder items).
+export async function getMiniCategoryLists(maxCategories = 4, productsPerCategory = 4) {
+  await connectDB();
+  const collections = await Collection.find().sort({ title: 1 }).lean();
+
+  const panels = await Promise.all(
+    collections.map(async (c) => {
+      const products = await Product.find({ collections: c._id, status: 'active' })
+        .sort({ createdAt: -1 })
+        .limit(productsPerCategory)
+        .select('title slug images')
+        .lean();
+
+      return {
+        title: c.title,
+        slug: c.slug,
+        items: products.map((p) => ({
+          title: p.title,
+          slug: p.slug,
+          image: p.images?.[0] || '',
+        })),
+      };
+    })
+  );
+
+  return panels.filter((p) => p.items.length > 0).slice(0, maxCategories);
+}
