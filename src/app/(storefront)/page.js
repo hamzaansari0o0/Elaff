@@ -1,9 +1,7 @@
 import HeroSlider from '@/components/home/HeroSlider';
 import ProductSection from '@/components/home/ProductSection';
 import Newsletter from '@/components/home/Newsletter';
-import CategoryCards from '@/components/home/CategoryCards';
 import FooterMiniLists from '@/components/home/FooterMiniLists';
-import Chatbot from '@/components/chatbot/Chatbot';
 
 import { getProductsByTag, toCardShape } from '@/lib/products';
 
@@ -39,14 +37,8 @@ export default async function Home() {
       {/* Newsletter */}
       <Newsletter />
 
-      {/* Circular Category Cards */}
-      <CategoryCards />
-
       {/* 4-Column Mini Product Grids */}
       <FooterMiniLists />
-
-      {/* AI Chatbot Widget */}
-      <Chatbot />
     </main>
   );
 }
