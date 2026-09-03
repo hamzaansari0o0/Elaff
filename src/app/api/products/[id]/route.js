@@ -2,6 +2,19 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { requireAdmin } from '@/lib/auth';
 import Product from '@/models/Product';
+import { deleteCloudinaryImages } from '@/lib/cloudinary';
+
+// Product images live in the main gallery and can also be embedded in
+// Company Profile page sections (imageText/gallery blocks) — both need
+// cleaning up or a deleted product still leaves orphaned Cloudinary assets.
+function collectImageUrls(product) {
+  const urls = [...(product.images || [])];
+  for (const section of product.pageSections || []) {
+    if (section.image) urls.push(section.image);
+    if (Array.isArray(section.images)) urls.push(...section.images);
+  }
+  return urls;
+}
 
 export async function GET(request, { params }) {
   await connectDB();
@@ -50,5 +63,6 @@ export async function DELETE(request, { params }) {
   if (!product) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 });
   }
+  await deleteCloudinaryImages(collectImageUrls(product));
   return NextResponse.json({ success: true });
 }

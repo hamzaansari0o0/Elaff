@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { X, Upload, Loader2 } from 'lucide-react';
 
-export default function ImageUploader({ images = [], onChange, max = 6 }) {
+export default function ImageUploader({ images = [], onChange, max = 6, collectionName = '' }) {
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
@@ -20,6 +20,7 @@ export default function ImageUploader({ images = [], onChange, max = 6 }) {
       for (const file of files) {
         const formData = new FormData();
         formData.append('file', file);
+        if (collectionName) formData.append('collection', collectionName);
         const res = await fetch('/api/upload', { method: 'POST', body: formData });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));

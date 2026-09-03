@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import RevealText from '@/components/ui/RevealText';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -36,9 +37,9 @@ export default function Newsletter() {
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/90"></div>
 
       <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
-        <h2 className="font-fraunces text-2xl md:text-4xl font-black uppercase tracking-wider mb-2">
+        <RevealText as="h2" className="font-fraunces text-2xl md:text-4xl font-black uppercase tracking-wider mb-2 block">
           Signup For Newsletter
-        </h2>
+        </RevealText>
         <p className="font-bricolage text-xs md:text-sm text-gray-300 mb-8 tracking-wide">
           Don't Miss A Sale! Enter Your Email And Get The Very Latest Coupon Codes & Deals.
         </p>

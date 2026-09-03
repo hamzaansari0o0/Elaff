@@ -1,5 +1,6 @@
 import { MapPin, MessageCircle, Clock, Phone, Mail } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
+import RevealText from '@/components/ui/RevealText';
 import { getCompanySettings } from '@/lib/settings';
 
 export const metadata = {
@@ -31,9 +32,13 @@ export default async function ContactPage() {
           <span className="inline-block text-[11px] font-bold text-brand-cta uppercase tracking-widest mb-2">
             Get In Touch
           </span>
-          <h1 className="font-fraunces text-3xl md:text-4xl font-black text-gray-900 uppercase tracking-tight">
+          <RevealText
+            as="h1"
+            trigger="load"
+            className="font-fraunces text-3xl md:text-4xl font-black text-gray-900 uppercase tracking-tight block"
+          >
             Contact Us
-          </h1>
+          </RevealText>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 md:gap-8 items-start">

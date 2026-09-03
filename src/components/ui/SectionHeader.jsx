@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import RevealText from './RevealText';
 
 export default function SectionHeader({ title, link = "/shop" }) {
   return (
     <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-8">
-      <h2 className="font-fraunces text-lg md:text-xl font-extrabold text-gray-900 tracking-wider uppercase border-b-2 border-brand-navy -mb-[14px] pb-3">
+      <RevealText
+        as="h2"
+        className="font-fraunces text-lg md:text-xl font-extrabold text-gray-900 tracking-wider uppercase border-b-2 border-brand-navy -mb-[14px] pb-3"
+      >
         {title}
-      </h2>
+      </RevealText>
       <Link
         href={link}
         className="font-bricolage text-xs font-bold text-gray-500 hover:text-brand-navy flex items-center gap-1 tracking-wider uppercase transition-colors"

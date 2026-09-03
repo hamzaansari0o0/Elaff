@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getCategoryCards } from '@/lib/products';
+import RevealText from '@/components/ui/RevealText';
 
 export const revalidate = 60;
 
@@ -11,7 +12,9 @@ export default async function CollectionsPage() {
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-200 mb-8 shadow-sm">
           <span className="text-brand-cyan text-xs font-extrabold uppercase tracking-widest">Browse</span>
-          <h1 className="text-3xl md:text-4xl font-black text-gray-900 uppercase mt-1">All Collections</h1>
+          <RevealText as="h1" trigger="load" className="text-3xl md:text-4xl font-black text-gray-900 uppercase mt-1 block">
+            All Collections
+          </RevealText>
         </div>
 
         {collections.length === 0 ? (

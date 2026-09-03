@@ -20,8 +20,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${bricolage.variable}`}>
-      <body className="font-bricolage antialiased bg-slate-50 text-gray-800">
+    <html lang="en" className={`${fraunces.variable} ${bricolage.variable}`} suppressHydrationWarning>
+      <body className="font-bricolage antialiased bg-slate-50 text-gray-800" suppressHydrationWarning>
         {children}
       </body>
     </html>

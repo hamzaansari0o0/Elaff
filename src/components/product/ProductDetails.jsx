@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { formatPrice } from '@/lib/formatPrice';
 import { useCart } from '@/context/CartContext';
+import RevealText from '@/components/ui/RevealText';
 import OrderModal from '@/components/product/OrderModal';
 import ProductProfileTabs from '@/components/product/ProductProfileTabs';
 import InlineInquiryForm from '@/components/product/InlineInquiryForm';
@@ -178,9 +179,9 @@ function WhyChooseBanner({ product }) {
   return (
     <div className="relative overflow-hidden bg-white rounded-2xl border border-gray-200 shadow-sm px-6 md:px-10 py-8 md:py-10">
       <div className="relative text-center max-w-xl mx-auto mb-8">
-        <h2 className="font-fraunces text-xl md:text-2xl font-black text-gray-900 uppercase tracking-wide">
+        <RevealText as="h2" className="font-fraunces text-xl md:text-2xl font-black text-gray-900 uppercase tracking-wide block">
           Why Choose {product.title}?
-        </h2>
+        </RevealText>
         <p className="text-sm text-gray-500 mt-2">
           {product.shortDescription || 'Sourced and shipped to the standard our wholesale buyers expect.'}
         </p>
@@ -253,9 +254,13 @@ export default function ProductDetails({ product, related = [], company = null }
                 </span>
               )}
 
-              <h1 className="font-fraunces text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-1">
+              <RevealText
+                as="h1"
+                trigger="load"
+                className="font-fraunces text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-1 block"
+              >
                 {product.title}
-              </h1>
+              </RevealText>
               {product.category && <p className="text-sm text-gray-500 mb-4">{product.category}</p>}
 
               {quickSpecs.length > 0 && (
@@ -337,9 +342,9 @@ export default function ProductDetails({ product, related = [], company = null }
           <div>
             <div className="flex items-center gap-2 mb-5">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan" />
-              <h2 className="font-fraunces text-lg md:text-xl font-black text-gray-900 uppercase tracking-wide">
+              <RevealText as="h2" className="font-fraunces text-lg md:text-xl font-black text-gray-900 uppercase tracking-wide block">
                 Related Products from This Supplier
-              </h2>
+              </RevealText>
             </div>
             <RelatedProductsCarousel products={related} />
           </div>

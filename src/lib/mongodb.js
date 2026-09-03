@@ -19,8 +19,12 @@ export async function connectDB() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      bufferCommands: false,
+    // If this attempt fails (e.g. a transient DNS blip), drop the cached
+    // promise so the next call retries fresh instead of replaying the same
+    // rejection forever for the life of the process.
+    cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false }).catch((err) => {
+      cached.promise = null;
+      throw err;
     });
   }
 

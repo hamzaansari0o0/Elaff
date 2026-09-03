@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCollectionBySlug, getProductsByCollection } from '@/lib/products';
+import RevealText from '@/components/ui/RevealText';
 
 export default async function CollectionPage({ params }) {
   const { slug } = await params;
@@ -20,9 +21,13 @@ export default async function CollectionPage({ params }) {
         {/* Collection Banner */}
         <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-200 mb-8 shadow-sm">
           <span className="text-brand-cyan text-xs font-extrabold uppercase tracking-widest">Collection</span>
-          <h1 className="text-3xl md:text-4xl font-black text-gray-900 uppercase mt-1 mb-3">
+          <RevealText
+            as="h1"
+            trigger="load"
+            className="text-3xl md:text-4xl font-black text-gray-900 uppercase mt-1 mb-3 block"
+          >
             {collection.title}
-          </h1>
+          </RevealText>
           <p className="text-gray-600 text-sm max-w-2xl">{collection.description}</p>
         </div>
 

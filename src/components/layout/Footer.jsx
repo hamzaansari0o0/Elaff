@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import RevealText from '@/components/ui/RevealText';
 
 export default function Footer() {
   return (
@@ -8,18 +9,18 @@ export default function Footer() {
 
         <div>
           <img src="/logo-white.png" alt="Elaff Trade Co." className="h-9 w-auto object-contain mb-4" />
-          <h3 className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20">
+          <RevealText as="h3" className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20 block">
             About Elaff Trade Co.
-          </h3>
+          </RevealText>
           <p className="font-bricolage text-gray-200 leading-relaxed">
             We supply Cooking Oil, Snacks & Grocery, Mineral Water, Soft Drinks, Office Supplies, Whiskey. We can deliver to all locations with compliance to local laws. We ship our orders within 24 to 72 hours.
           </p>
         </div>
 
         <div>
-          <h3 className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20">
+          <RevealText as="h3" className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20 block">
             Quick Navigation
-          </h3>
+          </RevealText>
           <ul className="font-bricolage space-y-2.5 font-semibold text-gray-200">
             <li><Link href="/shipping-terms" prefetch={false} className="hover:underline">SHIPPING TERMS</Link></li>
             <li><Link href="/about" prefetch={false} className="hover:underline">ABOUT US</Link></li>
@@ -30,9 +31,9 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20">
+          <RevealText as="h3" className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20 block">
             Shop Easy
-          </h3>
+          </RevealText>
           <ul className="font-bricolage space-y-2.5 font-semibold text-gray-200">
             <li><Link href="/collection/confectionery" className="hover:underline">Confectioneries</Link></li>
             <li><Link href="/collection/agricultural" className="hover:underline">Agricultural Products</Link></li>
@@ -43,9 +44,9 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20">
+          <RevealText as="h3" className="font-fraunces text-sm font-black uppercase tracking-widest mb-4 pb-2 border-b border-white/20 block">
             Contact Info
-          </h3>
+          </RevealText>
           <div className="font-bricolage space-y-3 text-gray-200">
             <p>Please contact us if you have any questions about our shop. We generally reply within an hour.</p>
             <div className="flex items-center gap-2">

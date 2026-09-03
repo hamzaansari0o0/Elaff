@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import RevealText from '@/components/ui/RevealText';
 import {
   getAllProducts,
   getProductsByTag,
@@ -82,9 +83,13 @@ export default async function ShopPage({ searchParams }) {
             {eyebrow}
           </span>
 
-          <h1 className="font-fraunces text-3xl md:text-5xl font-black text-white mt-2 wrap-break-word max-w-2xl">
+          <RevealText
+            as="h1"
+            trigger="load"
+            className="font-fraunces text-3xl md:text-5xl font-black text-white mt-2 wrap-break-word max-w-2xl block"
+          >
             {title}
-          </h1>
+          </RevealText>
 
           <p className="mt-3 text-sm text-white/60 max-w-lg font-bricolage">
             {cards.length} {cards.length === 1 ? 'item' : 'items'} available for wholesale inquiry — add what you

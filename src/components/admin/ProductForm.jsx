@@ -38,6 +38,7 @@ export default function ProductForm({ initialData, productId }) {
   const [shortDescription, setShortDescription] = useState(initialData?.shortDescription || '');
   const [fullDescription, setFullDescription] = useState(initialData?.fullDescription || '');
   const [specifications, setSpecifications] = useState(initialData?.specifications || []);
+  const [shippingInfo, setShippingInfo] = useState(initialData?.shippingInfo || []);
   const [images, setImages] = useState(initialData?.images || []);
   const [pageSections, setPageSections] = useState(initialData?.pageSections || []);
 
@@ -54,6 +55,10 @@ export default function ProductForm({ initialData, productId }) {
     setTitle(value);
     if (!slugTouched) setSlug(slugify(value));
   }
+
+  // Files new images under the first selected collection's Cloudinary folder
+  // (e.g. "Frozen Food" -> elaff-products/frozen-food) so uploads land pre-sorted.
+  const primaryCollectionName = collections.find((c) => c._id === selectedCollections[0])?.title || '';
 
   function toggleCollection(id) {
     setSelectedCollections((prev) =>
@@ -103,6 +108,7 @@ export default function ProductForm({ initialData, productId }) {
       shortDescription,
       fullDescription,
       specifications: specifications.filter((s) => s.label && s.value),
+      shippingInfo: shippingInfo.filter((s) => s.label && s.value),
       images,
       pageSections: pageSections
         .filter(isSectionMeaningful)
@@ -341,7 +347,7 @@ export default function ProductForm({ initialData, productId }) {
       {/* Images */}
       <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
         <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Images</h2>
-        <ImageUploader images={images} onChange={setImages} max={6} />
+        <ImageUploader images={images} onChange={setImages} max={6} collectionName={primaryCollectionName} />
       </section>
 
       {/* Description */}
@@ -374,11 +380,27 @@ export default function ProductForm({ initialData, productId }) {
       {/* Specifications */}
       <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
         <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Specifications</h2>
+        <p className="text-xs text-gray-500">Shown on this product&apos;s &quot;Product Details&quot; tab.</p>
         <KeyValueListEditor
           rows={specifications}
           onChange={setSpecifications}
           labelPlaceholder="Label (e.g. Protein Content)"
           valuePlaceholder="Value (e.g. 60% Min)"
+        />
+      </section>
+
+      {/* Shipping Details */}
+      <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
+        <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Shipping Details</h2>
+        <p className="text-xs text-gray-500">
+          Shown on this product&apos;s &quot;Shipping &amp; Payment&quot; tab, alongside its Lead Time and MOQ
+          above. Payment terms are set once in Company Settings and shown automatically.
+        </p>
+        <KeyValueListEditor
+          rows={shippingInfo}
+          onChange={setShippingInfo}
+          labelPlaceholder="Label (e.g. FOB Port)"
+          valuePlaceholder="Value (e.g. Port of Montreal, Canada)"
         />
       </section>
 

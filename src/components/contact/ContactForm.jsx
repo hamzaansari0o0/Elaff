@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check, Send } from 'lucide-react';
+import RevealText from '@/components/ui/RevealText';
 
 const MESSAGE_LIMIT = 1000;
 
@@ -99,9 +100,9 @@ export default function ContactForm() {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-10">
-      <h2 className="font-fraunces text-xl md:text-2xl font-black text-gray-900 uppercase tracking-wide mb-1.5">
+      <RevealText as="h2" className="font-fraunces text-xl md:text-2xl font-black text-gray-900 uppercase tracking-wide mb-1.5 block">
         Contact Us
-      </h2>
+      </RevealText>
       <p className="text-sm text-gray-500 mb-6">
         Have a question or an order in mind? Send us a message below.
       </p>

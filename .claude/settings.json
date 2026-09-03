@@ -1,0 +1,12 @@
+{
+  "enabledPlugins": {
+    "commit-commands@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "mongodb@claude-plugins-official": true,
+    "mongodb-atlas@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "codspeed@claude-plugins-official": true,
+    "superdesign@claude-plugins-official": true
+  }
+}

@@ -47,6 +47,7 @@ const ProductSchema = new mongoose.Schema(
     shortDescription: { type: String, default: '' },
     fullDescription: { type: String, default: '' },
     specifications: [SpecificationSchema],
+    shippingInfo: [SpecificationSchema], // per-product Shipping & Payment tab rows (e.g. FOB Port, Packaging)
     images: [{ type: String }],
     pageSections: [PageSectionSchema],
   },

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth';
-import cloudinary from '@/lib/cloudinary';
+import cloudinary, { productImageFolder, publicIdFromUrl } from '@/lib/cloudinary';
 
 export async function POST(request) {
   if (!(await requireAdmin())) {
@@ -9,6 +9,7 @@ export async function POST(request) {
 
   const formData = await request.formData();
   const file = formData.get('file');
+  const collectionName = formData.get('collection');
 
   if (!file) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -16,10 +17,11 @@ export async function POST(request) {
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+  const folder = productImageFolder(collectionName);
 
   const result = await new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder: 'elaff-products' },
+      { folder },
       (error, uploadResult) => {
         if (error) reject(error);
         else resolve(uploadResult);
@@ -29,15 +31,6 @@ export async function POST(request) {
   });
 
   return NextResponse.json({ url: result.secure_url });
-}
-
-// Derives a Cloudinary public_id from one of our own delivery URLs, e.g.
-// https://res.cloudinary.com/<cloud>/image/upload/v169.../elaff-products/abc123.png
-// -> "elaff-products/abc123". Only matches our own upload folder, so it can't be
-// used to delete arbitrary Cloudinary assets from other folders/accounts.
-function publicIdFromUrl(url) {
-  const match = url.match(/\/upload\/(?:v\d+\/)?(elaff-products\/[^./]+)\.[a-zA-Z0-9]+(?:\?.*)?$/);
-  return match ? match[1] : null;
 }
 
 export async function DELETE(request) {

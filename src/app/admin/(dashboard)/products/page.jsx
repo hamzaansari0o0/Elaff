@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Upload } from 'lucide-react';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
@@ -37,12 +37,20 @@ export default function AdminProductsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-fraunces text-2xl font-black text-gray-900">Products</h1>
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center gap-2 bg-brand-cta hover:bg-brand-cta-hover text-white text-xs font-bold px-4 py-2.5 rounded-lg uppercase tracking-wide transition-colors"
-        >
-          <Plus className="w-4 h-4" /> New Product
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/products/import"
+            className="inline-flex items-center gap-2 border border-gray-300 hover:border-brand-navy text-gray-700 text-xs font-bold px-4 py-2.5 rounded-lg uppercase tracking-wide transition-colors"
+          >
+            <Upload className="w-4 h-4" /> Import CSV
+          </Link>
+          <Link
+            href="/admin/products/new"
+            className="inline-flex items-center gap-2 bg-brand-cta hover:bg-brand-cta-hover text-white text-xs font-bold px-4 py-2.5 rounded-lg uppercase tracking-wide transition-colors"
+          >
+            <Plus className="w-4 h-4" /> New Product
+          </Link>
+        </div>
       </div>
 
       {error && (

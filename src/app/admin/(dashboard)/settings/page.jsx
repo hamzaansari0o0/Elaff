@@ -8,7 +8,6 @@ import CertificationsEditor from '@/components/admin/CertificationsEditor';
 const TABS = [
   { key: 'profile', label: 'Company Profile' },
   { key: 'certifications', label: 'Certifications' },
-  { key: 'shipping', label: 'Shipping' },
   { key: 'payment', label: 'Payment' },
   { key: 'contact', label: 'Contact Page' },
 ];
@@ -257,23 +256,6 @@ export default function AdminSettingsPage() {
               <CertificationsEditor
                 certifications={form.certifications || []}
                 onChange={(v) => set('certifications', v)}
-              />
-            </section>
-          )}
-
-          {/* Shipping */}
-          {activeTab === 'shipping' && (
-            <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
-              <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Shipping Information</h2>
-              <p className="text-xs text-gray-500">
-                Rows shown on every product page's "Shipping & Payment" tab, alongside that product's own lead time
-                and minimum order.
-              </p>
-              <KeyValueListEditor
-                rows={form.shippingInfo || []}
-                onChange={(v) => set('shippingInfo', v)}
-                labelPlaceholder="Label (e.g. FOB Port)"
-                valuePlaceholder="Value (e.g. Port of Montreal, Canada)"
               />
             </section>
           )}

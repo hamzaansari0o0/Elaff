@@ -36,3 +36,10 @@ body, p, span, button, input, select {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Partners marquee — autoplay's delay is effectively zero so one transition
+   starts the instant the last ends, and this linear timing keeps that handoff
+   reading as one continuous motion instead of a per-slide ease-out stutter. */
+.partners-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}

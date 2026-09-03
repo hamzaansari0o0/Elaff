@@ -125,8 +125,8 @@ export default function ProductProfileTabs({ product, company }) {
             </div>
 
             {lifestyleImage && (
-              <div className="lg:col-span-1">
-                <div className="relative rounded-xl overflow-hidden h-full min-h-[220px] bg-gray-100">
+              <div className="lg:col-span-1 lg:self-start">
+                <div className="relative rounded-xl overflow-hidden aspect-[4/5] bg-gray-100">
                   <img src={lifestyleImage} alt={product.title} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/0 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -211,7 +211,7 @@ export default function ProductProfileTabs({ product, company }) {
               <DataTable>
                 <Row label="Lead Time" value={product.leadTime || 'Contact us'} />
                 <Row label="Minimum Order" value={product.moq || 'Contact us'} />
-                {company?.shippingInfo?.map((row, i) => (
+                {product.shippingInfo?.map((row, i) => (
                   <Row key={i} label={row.label} value={row.value} />
                 ))}
               </DataTable>

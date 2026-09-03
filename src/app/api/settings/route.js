@@ -41,7 +41,6 @@ export async function PUT(request) {
     whatsapp: body.whatsapp ?? settings.whatsapp,
     email: body.email ?? settings.email,
     certifications: body.certifications ?? settings.certifications,
-    shippingInfo: body.shippingInfo ?? settings.shippingInfo,
     paymentInfo: body.paymentInfo ?? settings.paymentInfo,
     address: body.address ?? settings.address,
     contactIntro: body.contactIntro ?? settings.contactIntro,

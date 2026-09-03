@@ -39,15 +39,11 @@ export default function AnnouncementBar() {
           </div>
         </div>
 
-        {/* Right Section: Quick Links */}
+        {/* Right Section: B2B Quick Actions */}
         <div className="flex items-center gap-4 font-semibold tracking-wider">
-          <Link href="/deals" prefetch={false} className="hover:text-amber-400 uppercase transition-colors">Deals</Link>
+          <Link href="/shop" className="hover:text-amber-400 uppercase transition-colors">Request A Quote</Link>
           <span className="opacity-40">|</span>
-          <Link href="/privacy-policy" prefetch={false} className="hover:text-amber-400 uppercase transition-colors">Privacy Policy</Link>
-          <span className="opacity-40">|</span>
-          <Link href="/contact" className="hover:text-amber-400 uppercase transition-colors">Get In Touch</Link>
-          <span className="opacity-40">|</span>
-          <Link href="/account" prefetch={false} className="hover:text-amber-400 uppercase transition-colors">My Account</Link>
+          <Link href="/contact" className="hover:text-amber-400 uppercase transition-colors">Partner With Us</Link>
         </div>
       </div>
 
@@ -72,11 +68,9 @@ export default function AnnouncementBar() {
               <a href="tel:+18078088990" className="hover:underline font-bold">+1(807) 808-8990</a>
             </div>
             <span className="text-amber-400 font-bold"></span>
-            <Link href="/deals" prefetch={false} className="font-bold uppercase tracking-wider text-amber-300">🔥 HOT DEALS</Link>
+            <Link href="/shop" className="font-bold uppercase tracking-wider text-amber-300">Request A Quote</Link>
             <span className="text-amber-400 font-bold"></span>
-            <Link href="/contact" className="uppercase font-semibold hover:text-amber-300">GET IN TOUCH</Link>
-            <span className="text-amber-400 font-bold"></span>
-            <Link href="/account" prefetch={false} className="uppercase font-semibold hover:text-amber-300">MY ACCOUNT</Link>
+            <Link href="/contact" className="uppercase font-semibold hover:text-amber-300">Partner With Us</Link>
           </div>
 
           {/* Block 2 (Duplicated for Seamless Infinite Loop) */}
@@ -96,11 +90,9 @@ export default function AnnouncementBar() {
               <a href="tel:+18078088990" className="hover:underline font-bold">+92 308 4888399</a>
             </div>
             <span className="text-amber-400 font-bold"></span>
-            <Link href="/deals" prefetch={false} className="font-bold uppercase tracking-wider text-amber-300">🔥 HOT DEALS</Link>
+            <Link href="/shop" className="font-bold uppercase tracking-wider text-amber-300">Request A Quote</Link>
             <span className="text-amber-400 font-bold"></span>
-            <Link href="/contact" className="uppercase font-semibold hover:text-amber-300">GET IN TOUCH</Link>
-            <span className="text-amber-400 font-bold"></span>
-            <Link href="/account" prefetch={false} className="uppercase font-semibold hover:text-amber-300">MY ACCOUNT</Link>
+            <Link href="/contact" className="uppercase font-semibold hover:text-amber-300">Partner With Us</Link>
           </div>
 
         </div>

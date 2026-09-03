@@ -17,9 +17,11 @@ const CertificationSchema = new mongoose.Schema(
 );
 
 // Singleton — a single document holds the trust/company info shown on every
-// product page (supplier card, Company Profile / Certificates / Shipping & Payment
-// tabs), since this storefront represents one company rather than a multi-vendor
-// marketplace. Written once in admin, reused across every product page.
+// product page (supplier card, Company Profile / Certificates tabs, and the
+// Payment half of the Shipping & Payment tab), since this storefront represents
+// one company rather than a multi-vendor marketplace. Written once in admin,
+// reused across every product page. Shipping itself is per-product — see
+// Product.shippingInfo — since it varies by item, unlike payment terms.
 const CompanySettingsSchema = new mongoose.Schema(
   {
     companyName: { type: String, default: 'Elaff Trade Co.' },
@@ -36,7 +38,6 @@ const CompanySettingsSchema = new mongoose.Schema(
     whatsapp: { type: String, default: '' }, // digits only, e.g. 18078088990
     email: { type: String, default: '' },
     certifications: [CertificationSchema], // company-wide certifications shown on every product page
-    shippingInfo: [KeyValueSchema], // e.g. FOB Port, Packaging, Shipping Method — admin-defined rows
     paymentInfo: [KeyValueSchema], // e.g. Accepted Methods, Minimum Deposit — admin-defined rows
 
     // Right-hand info panel on the public /contact page

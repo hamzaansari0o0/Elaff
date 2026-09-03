@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getMiniCategoryLists } from '@/lib/products';
+import RevealText from '@/components/ui/RevealText';
 
 export default async function FooterMiniLists() {
   const panels = await getMiniCategoryLists();
@@ -13,9 +14,9 @@ export default async function FooterMiniLists() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10">
         {panels.map((panel) => (
           <div key={panel.slug}>
-            <h3 className="font-fraunces text-sm font-black text-gray-800 uppercase tracking-wider mb-2">
+            <RevealText as="h3" className="font-fraunces text-sm font-black text-gray-800 uppercase tracking-wider mb-2 block">
               {panel.title}
-            </h3>
+            </RevealText>
             <span className="block w-6 h-0.5 bg-brand-cta mb-5"></span>
 
             <div className="divide-y divide-gray-100">

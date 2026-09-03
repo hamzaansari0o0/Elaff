@@ -2,6 +2,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
 import Chatbot from '@/components/chatbot/Chatbot';
+import SmoothScroll from '@/components/layout/SmoothScroll';
 import { getCompanySettings } from '@/lib/settings';
 
 // Applies to every page under this layout — without it, pages that don't set their
@@ -14,9 +15,13 @@ export default async function StorefrontLayout({ children }) {
 
   return (
     <CartProvider>
-      <Header />
-      {children}
-      <Footer />
+      {/* Lenis momentum scroll — every storefront page, not just the home page.
+          Scoped to this layout only, so /admin keeps native scroll. */}
+      <SmoothScroll>
+        <Header companySettings={companySettings} />
+        {children}
+        <Footer />
+      </SmoothScroll>
 
       {/* AI Chatbot + WhatsApp widget — every storefront page, not just the home page */}
       <Chatbot whatsappNumber={companySettings.whatsapp} />
