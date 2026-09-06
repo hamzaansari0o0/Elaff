@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
@@ -9,6 +9,10 @@ import InquiryDrawer from './InquiryDrawer';
 
 import 'swiper/css';
 
+const AUTOPLAY_DELAY = 5000;
+const RING_RADIUS = 16;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
 // Mobile-only banner. The desktop/tablet full-screen scroll-pinned sequence
 // (BannerPanels) forces every image into a tall, narrow box, which either
 // crops it or letterboxes it — neither reads well on a phone. A shorter,
@@ -16,6 +20,20 @@ import 'swiper/css';
 // fits, while still cycling through all of them automatically.
 export default function MobileBannerCarousel({ images = [], collections = [] }) {
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const ringRef = useRef(null);
+  const secondsRef = useRef(null);
+
+  // Fires every animation frame while autoplay counts down — mutating the ring
+  // and label directly (instead of via setState) avoids re-rendering the whole
+  // carousel dozens of times a second.
+  function handleAutoplayTimeLeft(swiper, timeLeft, progress) {
+    if (ringRef.current) {
+      ringRef.current.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - progress));
+    }
+    if (secondsRef.current) {
+      secondsRef.current.textContent = String(Math.max(1, Math.ceil(timeLeft / 1000)));
+    }
+  }
 
   if (images.length === 0) return null;
 
@@ -26,7 +44,8 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
           modules={[Autoplay]}
           loop
           slidesPerView={1}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          autoplay={{ delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
+          onAutoplayTimeLeft={handleAutoplayTimeLeft}
           className="h-full w-full"
         >
           {images.map((panel, i) => (
@@ -36,6 +55,29 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
             </SwiperSlide>
           ))}
         </Swiper>
+
+        {/* Autoplay countdown — ring drains over the 5s delay, refilling the
+            instant the slide changes. */}
+        <div className="absolute bottom-4 right-4 z-20 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm grid place-items-center">
+          <svg viewBox="0 0 36 36" className="absolute inset-0 w-full h-full -rotate-90">
+            <circle cx="18" cy="18" r={RING_RADIUS} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
+            <circle
+              ref={ringRef}
+              cx="18"
+              cy="18"
+              r={RING_RADIUS}
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2"
+              strokeDasharray={RING_CIRCUMFERENCE}
+              strokeDashoffset={0}
+              strokeLinecap="round"
+            />
+          </svg>
+          <span ref={secondsRef} className="relative text-[11px] font-bold text-white">
+            {AUTOPLAY_DELAY / 1000}
+          </span>
+        </div>
 
         <div className="absolute inset-x-0 bottom-6 z-10 flex flex-wrap items-center justify-center gap-y-2.5 gap-x-3 px-4">
           <button
