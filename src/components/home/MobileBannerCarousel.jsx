@@ -32,7 +32,7 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
           {images.map((panel, i) => (
             <SwiperSlide key={panel.src + i}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={panel.src} alt={panel.alt || ''} className="w-full h-full object-cover" />
+              <img src={panel.src} alt={panel.alt || ''} className="w-full h-full object-[inherit]" />
             </SwiperSlide>
           ))}
         </Swiper>
