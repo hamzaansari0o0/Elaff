@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { requireAdmin } from '@/lib/auth';
 import Product from '@/models/Product';
+import { deleteCloudinaryImages, collectProductImageUrls } from '@/lib/cloudinary';
 
 export async function GET(request) {
   await connectDB();
@@ -43,4 +44,26 @@ export async function POST(request) {
     }
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+}
+
+// Bulk delete: body is { ids: [...] }. Used by the admin product list's
+// select-and-delete-multiple action.
+export async function DELETE(request) {
+  if (!(await requireAdmin())) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  await connectDB();
+  const body = await request.json();
+  const ids = Array.isArray(body.ids) ? body.ids : [];
+
+  if (ids.length === 0) {
+    return NextResponse.json({ error: 'ids array is required' }, { status: 400 });
+  }
+
+  const products = await Product.find({ _id: { $in: ids } });
+  await Product.deleteMany({ _id: { $in: ids } });
+  await deleteCloudinaryImages(products.flatMap(collectProductImageUrls));
+
+  return NextResponse.json({ deletedCount: products.length });
 }

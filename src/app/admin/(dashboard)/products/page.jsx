@@ -8,6 +8,8 @@ export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selected, setSelected] = useState(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -32,6 +34,47 @@ export default function AdminProductsPage() {
     }
     load();
   }
+
+  function toggleOne(id) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    setSelected((prev) => (prev.size === products.length ? new Set() : new Set(products.map((p) => p._id))));
+  }
+
+  async function handleBulkDelete() {
+    const count = selected.size;
+    if (count === 0) return;
+    if (!confirm(`Delete ${count} selected product${count > 1 ? 's' : ''}? This can't be undone.`)) return;
+
+    setBulkDeleting(true);
+    setError('');
+    try {
+      const res = await fetch('/api/products', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: [...selected] }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Could not delete selected products');
+      }
+      setSelected(new Set());
+      await load();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBulkDeleting(false);
+    }
+  }
+
+  const allSelected = products.length > 0 && selected.size === products.length;
 
   return (
     <div>
@@ -59,6 +102,30 @@ export default function AdminProductsPage() {
         </p>
       )}
 
+      {selected.size > 0 && (
+        <div className="flex items-center justify-between bg-brand-navy text-white rounded-lg px-4 py-2.5 mb-4">
+          <span className="text-xs font-bold">
+            {selected.size} product{selected.size > 1 ? 's' : ''} selected
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSelected(new Set())}
+              className="text-xs font-semibold text-white/70 hover:text-white transition-colors"
+            >
+              Clear
+            </button>
+            <button
+              onClick={handleBulkDelete}
+              disabled={bulkDeleting}
+              className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              {bulkDeleting ? 'Deleting...' : 'Delete Selected'}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         {loading ? (
           <p className="p-6 text-sm text-gray-500">Loading...</p>
@@ -69,6 +136,15 @@ export default function AdminProductsPage() {
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b border-gray-200">
               <tr>
+                <th className="px-5 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={toggleAll}
+                    aria-label="Select all products"
+                    className="w-4 h-4 accent-brand-navy cursor-pointer"
+                  />
+                </th>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Product</th>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Collections</th>
                 <th className="text-left font-bold text-gray-500 uppercase text-xs px-5 py-3">Status</th>
@@ -78,7 +154,16 @@ export default function AdminProductsPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {products.map((p) => (
-                <tr key={p._id}>
+                <tr key={p._id} className={selected.has(p._id) ? 'bg-brand-navy/5' : undefined}>
+                  <td className="px-5 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(p._id)}
+                      onChange={() => toggleOne(p._id)}
+                      aria-label={`Select ${p.title}`}
+                      className="w-4 h-4 accent-brand-navy cursor-pointer"
+                    />
+                  </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
                       {p.images?.[0] && (

@@ -38,3 +38,16 @@ export async function deleteCloudinaryImages(urls = []) {
   if (ids.length === 0) return;
   await Promise.allSettled(ids.map((id) => cloudinary.uploader.destroy(id)));
 }
+
+// Product images live in the main gallery and can also be embedded in Company
+// Profile page sections (imageText/gallery blocks) — both need cleaning up or a
+// deleted product still leaves orphaned Cloudinary assets. Shared by the single
+// and bulk product-delete routes.
+export function collectProductImageUrls(product) {
+  const urls = [...(product.images || [])];
+  for (const section of product.pageSections || []) {
+    if (section.image) urls.push(section.image);
+    if (Array.isArray(section.images)) urls.push(...section.images);
+  }
+  return urls;
+}

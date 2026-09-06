@@ -92,6 +92,56 @@ export async function searchProducts(query) {
   return products.map(serialize);
 }
 
+export const SHOP_PAGE_SIZE = 10;
+
+const SHOP_SORTS = {
+  featured: { createdAt: -1 },
+  'price-asc': { price: 1 },
+  'price-desc': { price: -1 },
+  'name-asc': { title: 1 },
+};
+
+// Powers the /shop page: same exclusive search > collection > tag > "all
+// products" precedence the page always used, plus real server-side sorting
+// and pagination (10 per page) instead of loading every matching product.
+export async function getShopProducts({ tag, collectionSlug, search, page = 1, sort = 'featured' } = {}) {
+  await connectDB();
+
+  const filter = { status: 'active' };
+  let collectionDoc = null;
+
+  if (search) {
+    const regex = new RegExp(escapeRegex(search.trim()), 'i');
+    filter.$or = [{ title: regex }, { category: regex }, { shortDescription: regex }, { sku: regex }];
+  } else if (collectionSlug) {
+    collectionDoc = await Collection.findOne({ slug: collectionSlug }).lean();
+    // No matching collection -> an id no product can have, so this deliberately
+    // resolves to zero results instead of accidentally falling through to "all".
+    filter.collections = collectionDoc?._id || '000000000000000000000000';
+  } else if (tag) {
+    filter.tags = tag;
+  }
+
+  const total = await Product.countDocuments(filter);
+  const totalPages = Math.max(1, Math.ceil(total / SHOP_PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, parseInt(page, 10) || 1), totalPages);
+
+  const products = await Product.find(filter)
+    .populate('collections', 'title slug')
+    .sort(SHOP_SORTS[sort] || SHOP_SORTS.featured)
+    .skip((safePage - 1) * SHOP_PAGE_SIZE)
+    .limit(SHOP_PAGE_SIZE)
+    .lean();
+
+  return {
+    products: products.map(serialize),
+    total,
+    totalPages,
+    page: safePage,
+    collection: collectionDoc ? serialize(collectionDoc) : null,
+  };
+}
+
 // --- COLLECTION HELPERS ---
 export async function getAllCollections() {
   await connectDB();
