@@ -226,7 +226,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={form.whatsapp}
                       onChange={(e) => set('whatsapp', e.target.value.replace(/[^\d]/g, ''))}
-                      placeholder="18078088990"
+                      placeholder="923084888399"
                       className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy font-mono"
                     />
                   </div>
@@ -290,7 +290,7 @@ export default function AdminSettingsPage() {
                   value={form.address}
                   onChange={(e) => set('address', e.target.value)}
                   rows={2}
-                  placeholder="e.g. 4653 Bd des Grandes-Prairies, Saint-Léonard, QC H1R 1A5, Canada"
+                  placeholder="e.g. Qusais Industrial Area 1, Near Master Global Cargo, Gate # 7, Warehouse # B20, Bin Sout Warehouse, Dubai"
                   className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy resize-none"
                 />
               </div>

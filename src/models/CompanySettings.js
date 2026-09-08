@@ -35,7 +35,7 @@ const CompanySettingsSchema = new mongoose.Schema(
     responseTime: { type: String, default: '' }, // e.g. "≤ 24 hours"
     onTimeDelivery: { type: String, default: '' }, // e.g. "98.6%"
     phone: { type: String, default: '' },
-    whatsapp: { type: String, default: '' }, // digits only, e.g. 18078088990
+    whatsapp: { type: String, default: '' }, // digits only, e.g. 923084888399
     email: { type: String, default: '' },
     certifications: [CertificationSchema], // company-wide certifications shown on every product page
     paymentInfo: [KeyValueSchema], // e.g. Accepted Methods, Minimum Deposit — admin-defined rows

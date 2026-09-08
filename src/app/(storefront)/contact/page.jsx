@@ -12,7 +12,8 @@ export const metadata = {
 // admin edits to CompanySettings never show up until the next full deploy.
 export const revalidate = 60;
 
-const DEFAULT_ADDRESS = '4653 Bd des Grandes-Prairies, Saint-Léonard, QC H1R 1A5, Canada';
+const DEFAULT_ADDRESS =
+  'Qusais Industrial Area 1, Near Master Global Cargo, Gate # 7, Warehouse # B20, Bin Sout Warehouse, Dubai';
 const DEFAULT_INTRO =
   "Have a question about an order, a product, or our wholesale terms? Send us a message and our team will get back to you.";
 const DEFAULT_HOURS = 'Monday - Saturday: 9:00 AM - 6:00 PM';

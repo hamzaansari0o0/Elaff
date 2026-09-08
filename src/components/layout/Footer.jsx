@@ -51,15 +51,15 @@ export default function Footer() {
             <p>Please contact us if you have any questions about our shop. We generally reply within an hour.</p>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-amber-400" />
-              <span><strong>TEL:</strong> +1(807) 808-8990</span>
+              <span><strong>TEL:</strong> +92 308 4888399</span>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-amber-400" />
-              <span><strong>WHATSAPP:</strong> +1(807) 329-7478</span>
+              <span><strong>WHATSAPP:</strong> +92 308 4888399</span>
             </div>
             <div className="flex items-start gap-2">
               <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-              <span><strong>OFFICE LOCATION:</strong> 4653 BD DES GRANDES-PRAIRIES, SAINT-LÉONARD, QC H1R 1A5, CANADA</span>
+              <span><strong>OFFICE LOCATION:</strong> QUSAIS INDUSTRIAL AREA 1, NEAR MASTER GLOBAL CARGO, GATE # 7, WAREHOUSE # B20, BIN SOUT WAREHOUSE, DUBAI</span>
             </div>
           </div>
         </div>

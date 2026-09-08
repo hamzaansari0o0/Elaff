@@ -295,11 +295,11 @@ export default function Navbar({ collections = [] }) {
         <div className="p-5 border-t border-gray-100 bg-slate-50 text-[11px] font-bricolage space-y-3">
           <div className="flex items-center gap-2 text-gray-700 font-semibold">
             <Phone className="w-4 h-4 text-brand-navy" />
-            <a href="tel:+18078088990" className="hover:underline">+1(807) 808-8990</a>
+            <a href="tel:+923084888399" className="hover:underline">+92 308 4888399</a>
           </div>
           <div className="flex items-start gap-2 text-gray-500 leading-tight">
             <MapPin className="w-4 h-4 text-brand-navy shrink-0 mt-0.5" />
-            <span>4653 BD DES GRANDES-PRAIRIES, QC H1R 1A5, CANADA</span>
+            <span>QUSAIS INDUSTRIAL AREA 1, NEAR MASTER GLOBAL CARGO, GATE # 7, WAREHOUSE # B20, BIN SOUT WAREHOUSE, DUBAI</span>
           </div>
         </div>
 
