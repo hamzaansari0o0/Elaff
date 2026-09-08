@@ -3,7 +3,6 @@ import MobileBannerCarousel from '@/components/home/MobileBannerCarousel';
 import PartnersMarquee from '@/components/home/PartnersMarquee';
 import ProductSection from '@/components/home/ProductSection';
 import Newsletter from '@/components/home/Newsletter';
-import FooterMiniLists from '@/components/home/FooterMiniLists';
 
 import { getProductsByTag, getAllCollections, toCardShape } from '@/lib/products';
 
@@ -57,9 +56,6 @@ export default async function Home() {
 
       {/* Newsletter */}
       <Newsletter />
-
-      {/* 4-Column Mini Product Grids */}
-      <FooterMiniLists />
     </main>
   );
 }
