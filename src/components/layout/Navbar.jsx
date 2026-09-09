@@ -2,26 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Menu, X, Search, Phone, MapPin, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import CartDrawer from '@/components/cart/CartDrawer';
+import SearchAutocomplete from './SearchAutocomplete';
 
 export default function Navbar() {
-  const router = useRouter();
   const { items } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-    const query = searchQuery.trim();
-    if (!query) return;
-    router.push(`/shop?search=${encodeURIComponent(query)}`);
-    setIsSearchOpen(false);
-  }
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
@@ -100,22 +90,13 @@ export default function Navbar() {
           </nav>
 
           {/* Search Component */}
-          <div className="flex items-center shrink-0">
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1 w-56 2xl:w-72 focus-within:border-brand-navy transition-colors"
-            >
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products..."
-                className="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
-              />
-              <button type="submit" className="pr-3 text-gray-500 hover:text-brand-navy transition-colors" aria-label="Search">
-                <Search className="w-4 h-4" />
-              </button>
-            </form>
+          <div className="flex items-center shrink-0 w-56 2xl:w-72">
+            <SearchAutocomplete
+              formClassName="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1 w-full focus-within:border-brand-navy transition-colors"
+              inputClassName="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
+              buttonClassName="pr-3 text-gray-500 hover:text-brand-navy transition-colors"
+              placeholder="Search products..."
+            />
           </div>
 
           {/* Cart Icon (desktop only — mobile/tablet uses the bottom cart bar) */}
@@ -137,21 +118,13 @@ export default function Navbar() {
         {/* 🔍 EXPANDABLE MOBILE SEARCH BAR */}
         {isSearchOpen && (
           <div className="xl:hidden mt-3 pt-3 border-t border-gray-100 animate-fadeIn">
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1"
-            >
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products..."
-                className="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
-              />
-              <button type="submit" className="pr-3 text-brand-navy" aria-label="Submit Search">
-                <Search className="w-4 h-4" />
-              </button>
-            </form>
+            <SearchAutocomplete
+              formClassName="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1"
+              inputClassName="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
+              buttonClassName="pr-3 text-brand-navy"
+              placeholder="Search products..."
+              onNavigate={() => setIsSearchOpen(false)}
+            />
           </div>
         )}
 
