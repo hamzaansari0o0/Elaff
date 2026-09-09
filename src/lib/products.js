@@ -122,16 +122,36 @@ export async function getShopProducts({ tag, collectionSlug, search, page = 1, s
     filter.tags = tag;
   }
 
-  const total = await Product.countDocuments(filter);
-  const totalPages = Math.max(1, Math.ceil(total / SHOP_PAGE_SIZE));
-  const safePage = Math.min(Math.max(1, parseInt(page, 10) || 1), totalPages);
+  // The count and the page of results don't depend on each other, so run
+  // them as two concurrent round trips instead of one after the other.
+  // Page can't be clamped to totalPages until the count comes back, so this
+  // fetches one page too many/few worth of skip in the rare case a stale
+  // `page` is past the end — corrected below by re-querying only when that
+  // actually happens, which is the uncommon path (e.g. a bookmarked page
+  // link after items were removed), not the common one.
+  const requestedPage = Math.max(1, parseInt(page, 10) || 1);
+  const [total, firstAttempt] = await Promise.all([
+    Product.countDocuments(filter),
+    Product.find(filter)
+      .populate('collections', 'title slug')
+      .sort(SHOP_SORTS[sort] || SHOP_SORTS.featured)
+      .skip((requestedPage - 1) * SHOP_PAGE_SIZE)
+      .limit(SHOP_PAGE_SIZE)
+      .lean(),
+  ]);
 
-  const products = await Product.find(filter)
-    .populate('collections', 'title slug')
-    .sort(SHOP_SORTS[sort] || SHOP_SORTS.featured)
-    .skip((safePage - 1) * SHOP_PAGE_SIZE)
-    .limit(SHOP_PAGE_SIZE)
-    .lean();
+  const totalPages = Math.max(1, Math.ceil(total / SHOP_PAGE_SIZE));
+  const safePage = Math.min(requestedPage, totalPages);
+
+  const products =
+    safePage === requestedPage
+      ? firstAttempt
+      : await Product.find(filter)
+          .populate('collections', 'title slug')
+          .sort(SHOP_SORTS[sort] || SHOP_SORTS.featured)
+          .skip((safePage - 1) * SHOP_PAGE_SIZE)
+          .limit(SHOP_PAGE_SIZE)
+          .lean();
 
   return {
     products: products.map(serialize),
@@ -167,26 +187,32 @@ export async function getProductsByCollection(collectionSlug) {
 
 // Circular category cards on the homepage. Falls back to a sample product's image
 // when a collection has no cover image set in the admin panel yet.
+//
+// One aggregation across all products, instead of a countDocuments() +
+// findOne() per collection (2N queries that scaled linearly with the
+// catalog's category count) — a single pass that groups by collection.
 export async function getCategoryCards() {
   await connectDB();
-  const collections = await Collection.find().sort({ title: 1 }).lean();
+  const [collections, stats] = await Promise.all([
+    Collection.find().sort({ title: 1 }).lean(),
+    Product.aggregate([
+      { $match: { status: 'active' } },
+      { $unwind: '$collections' },
+      { $group: { _id: '$collections', count: { $sum: 1 }, sampleImage: { $first: '$images' } } },
+    ]),
+  ]);
 
-  return Promise.all(
-    collections.map(async (c) => {
-      const count = await Product.countDocuments({ collections: c._id, status: 'active' });
-      let image = c.image;
-      if (!image) {
-        const sample = await Product.findOne({ collections: c._id }).select('images').lean();
-        image = sample?.images?.[0] || '';
-      }
-      return {
-        title: c.title.toUpperCase(),
-        slug: c.slug,
-        image,
-        count: `${count} PRODUCTS`,
-      };
-    })
-  );
+  const statsById = new Map(stats.map((s) => [s._id.toString(), s]));
+
+  return collections.map((c) => {
+    const stat = statsById.get(c._id.toString());
+    return {
+      title: c.title.toUpperCase(),
+      slug: c.slug,
+      image: c.image || stat?.sampleImage?.[0] || '',
+      count: `${stat?.count || 0} PRODUCTS`,
+    };
+  });
 }
 
 // Homepage "shop by category" mini-lists — a few real products per collection,

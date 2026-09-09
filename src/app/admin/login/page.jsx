@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { startRouteLoading } from '@/lib/routeLoading';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function AdminLoginPage() {
       return;
     }
 
+    startRouteLoading();
     router.push('/admin');
     router.refresh();
   }

@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Loader2 } from 'lucide-react';
+import { startRouteLoading } from '@/lib/routeLoading';
 
 const MIN_QUERY_LENGTH = 2;
 const DEBOUNCE_MS = 250;
@@ -81,6 +82,7 @@ export default function SearchAutocomplete({ inputClassName, formClassName, butt
     setIsOpen(false);
     setQuery('');
     onNavigate?.();
+    startRouteLoading();
     router.push(`/product/${slug}`);
   }
 
@@ -89,6 +91,7 @@ export default function SearchAutocomplete({ inputClassName, formClassName, butt
     if (!trimmed) return;
     setIsOpen(false);
     onNavigate?.();
+    startRouteLoading();
     router.push(`/shop?search=${encodeURIComponent(trimmed)}`);
   }
 

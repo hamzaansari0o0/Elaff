@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { slugify } from '@/lib/slugify';
 import ImageUploader from '@/components/admin/ImageUploader';
+import { startRouteLoading } from '@/lib/routeLoading';
 
 export default function CollectionForm({ initialData, collectionId }) {
   const router = useRouter();
@@ -42,6 +43,7 @@ export default function CollectionForm({ initialData, collectionId }) {
       return;
     }
 
+    startRouteLoading();
     router.push('/admin/collections');
     router.refresh();
   }

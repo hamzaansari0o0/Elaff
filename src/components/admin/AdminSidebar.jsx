@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Package, FolderTree, Mail, MessageSquare, AtSign, Building2, LogOut, Menu, X } from 'lucide-react';
+import { startRouteLoading } from '@/lib/routeLoading';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -27,6 +28,7 @@ export default function AdminSidebar() {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
+    startRouteLoading();
     router.push('/admin/login');
     router.refresh();
   }

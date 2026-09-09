@@ -54,4 +54,15 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Nearly every storefront query filters on status (almost always 'active')
+// and sorts by createdAt, and the shop page + tag/collection pages also
+// filter by collections/tags — without these, each of those queries was a
+// full collection scan. Compound indexes with status first so a plain
+// status-only query can still use them via the prefix, and createdAt last
+// so MongoDB can satisfy the usual `.sort({ createdAt: -1 })` from the
+// index instead of an in-memory sort.
+ProductSchema.index({ status: 1, createdAt: -1 });
+ProductSchema.index({ status: 1, collections: 1, createdAt: -1 });
+ProductSchema.index({ status: 1, tags: 1, createdAt: -1 });
+
 export default mongoose.models.Product || mongoose.model('Product', ProductSchema);

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { PackageSearch, ArrowUpDown } from 'lucide-react';
 import ProductCard from '@/components/ui/ProductCard';
 import Pagination from './Pagination';
+import { startRouteLoading } from '@/lib/routeLoading';
 
 const SORTS = {
   featured: 'Featured',
@@ -29,6 +30,7 @@ export default function ShopResults({ cards, total, page, totalPages }) {
     }
     params.delete('page');
     const qs = params.toString();
+    startRouteLoading();
     router.push(`/shop${qs ? `?${qs}` : ''}`);
   }
 

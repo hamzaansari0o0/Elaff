@@ -2,76 +2,105 @@
 
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { ROUTE_LOADING_START_EVENT } from '@/lib/routeLoading';
 
 // A stuck bar (route never actually changes — e.g. navigating to the exact
 // page you're already on) is worse than no bar, so it always self-clears.
-const SAFETY_TIMEOUT_MS = 4000;
+const SAFETY_TIMEOUT_MS = 8000;
 
 function RouteLoadingBarInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [progress, setProgress] = useState(0);
   const timeoutIdsRef = useRef([]);
-  // Whether a navigation is in flight — a plain ref, not state. It's written
-  // synchronously the instant a navigation starts (see `start()` below) so
-  // the completion effect can never miss a route change that lands before a
-  // *deferred* state update would have. Using isLoading state here instead
-  // previously raced: pathname could update (and the completion effect run)
-  // before the deferred setIsLoading(true) had even fired, leaving the bar
-  // stuck mid-animation.
+  const trickleIntervalRef = useRef(null);
+  // Whether a navigation is in flight — a plain ref, not state, so it's
+  // always up to date synchronously the instant a navigation starts and
+  // can never be missed by the completion effect below (see the note on
+  // `start()`).
   const isNavigatingRef = useRef(false);
 
-  // Every client-side navigation in the App Router — a <Link> click or a
-  // router.push()/replace() call — ultimately calls history.pushState or
-  // replaceState. Patching those two functions once catches every
-  // navigation at a single reliable point, rather than trying to intercept
-  // clicks on every link and every router.push() call site individually.
   useEffect(() => {
     function clearScheduledSteps() {
       timeoutIdsRef.current.forEach(clearTimeout);
       timeoutIdsRef.current = [];
+      if (trickleIntervalRef.current) {
+        clearInterval(trickleIntervalRef.current);
+        trickleIntervalRef.current = null;
+      }
     }
 
     function start() {
-      // Synchronous — safe even from inside a useInsertionEffect (which is
-      // where Next's router can call pushState/replaceState from during a
-      // route transition) because mutating a ref never schedules a
-      // re-render, unlike a setState call, which throws "useInsertionEffect
-      // must not schedule updates" from that same call stack.
       isNavigatingRef.current = true;
       clearScheduledSteps();
 
-      // The visual progress updates *do* go through setState, so those stay
-      // deferred a macrotask out, same reasoning as above.
-      timeoutIdsRef.current.push(setTimeout(() => setProgress(15), 0));
-      timeoutIdsRef.current.push(setTimeout(() => setProgress(45), 120));
-      timeoutIdsRef.current.push(setTimeout(() => setProgress(70), 400));
-      timeoutIdsRef.current.push(setTimeout(() => setProgress(85), 900));
+      // Deferred a macrotask out (not called directly here): Next's router
+      // can itself call pushState from inside a useInsertionEffect during a
+      // transition, and if this ever runs synchronously inside that same
+      // call stack, updating state throws "useInsertionEffect must not
+      // schedule updates" and appears to silently abort the navigation.
+      timeoutIdsRef.current.push(
+        setTimeout(() => {
+          setProgress(15);
+          // Keeps creeping toward — never reaching — 90% for as long as the
+          // navigation takes, so a slow page load never reads as frozen
+          // partway through instead of just "still working".
+          trickleIntervalRef.current = setInterval(() => {
+            setProgress((p) => (p >= 90 ? p : p + (90 - p) * 0.15));
+          }, 300);
+        }, 0)
+      );
+
       timeoutIdsRef.current.push(
         setTimeout(() => {
           isNavigatingRef.current = false;
+          clearScheduledSteps();
           setProgress(0);
         }, SAFETY_TIMEOUT_MS)
       );
     }
 
-    const original = { pushState: window.history.pushState, replaceState: window.history.replaceState };
+    // The real trigger: fires the instant the user clicks a same-origin
+    // link, well before Next.js has fetched anything for the destination —
+    // history.pushState/replaceState turned out to fire close to when the
+    // new page is ready rather than at the start of the click, so watching
+    // those alone left clicks feeling like nothing had happened yet.
+    function handleDocumentClick(e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-    if (!window.history.pushState.__routeLoadingBarPatched) {
-      window.history.pushState = function patchedPushState(...args) {
-        start();
-        return original.pushState.apply(window.history, args);
-      };
-      window.history.pushState.__routeLoadingBarPatched = true;
+      const anchor = e.target.closest('a');
+      if (!anchor) return;
 
-      window.history.replaceState = function patchedReplaceState(...args) {
-        start();
-        return original.replaceState.apply(window.history, args);
-      };
+      const href = anchor.getAttribute('href');
+      if (!href || href.startsWith('#')) return;
+      if (anchor.hasAttribute('download')) return;
+      if (anchor.target && anchor.target !== '_self') return;
+
+      let url;
+      try {
+        url = new URL(anchor.href, window.location.href);
+      } catch {
+        return;
+      }
+      if (url.origin !== window.location.origin) return;
+
+      const current = window.location.pathname + window.location.search + window.location.hash;
+      const destination = url.pathname + url.search + url.hash;
+      if (destination === current) return;
+
+      start();
     }
 
+    // Capture phase, not bubble: next/link's own click handler can call
+    // stopPropagation() once it's done intercepting the click, which would
+    // stop a bubble-phase listener on document from ever seeing it. Capture
+    // fires on the way down, before that's possible.
+    document.addEventListener('click', handleDocumentClick, true);
+    window.addEventListener(ROUTE_LOADING_START_EVENT, start);
     window.addEventListener('popstate', start);
     return () => {
+      document.removeEventListener('click', handleDocumentClick, true);
+      window.removeEventListener(ROUTE_LOADING_START_EVENT, start);
       window.removeEventListener('popstate', start);
       clearScheduledSteps();
     };
@@ -83,10 +112,11 @@ function RouteLoadingBarInner() {
     if (!isNavigatingRef.current) return;
     isNavigatingRef.current = false;
     timeoutIdsRef.current.forEach(clearTimeout);
+    if (trickleIntervalRef.current) {
+      clearInterval(trickleIntervalRef.current);
+      trickleIntervalRef.current = null;
+    }
 
-    // Deferred (not called directly in the effect body) to stay consistent
-    // with the rest of this component, even though this particular effect
-    // isn't the one at risk of the useInsertionEffect issue.
     const jumpToComplete = setTimeout(() => setProgress(100), 0);
     const finishTimeout = setTimeout(() => setProgress(0), 200);
 

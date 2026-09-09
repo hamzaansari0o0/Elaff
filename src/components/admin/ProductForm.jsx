@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { slugify } from '@/lib/slugify';
+import { startRouteLoading } from '@/lib/routeLoading';
 import ImageUploader from '@/components/admin/ImageUploader';
 import PageSectionsBuilder from '@/components/admin/PageSectionsBuilder';
 import KeyValueListEditor from '@/components/admin/KeyValueListEditor';
@@ -131,6 +132,7 @@ export default function ProductForm({ initialData, productId }) {
       return;
     }
 
+    startRouteLoading();
     router.push('/admin/products');
     router.refresh();
   }
