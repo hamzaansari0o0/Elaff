@@ -51,15 +51,19 @@ export default function AdminSidebar() {
       {/* Backdrop (mobile drawer only) */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-200 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={() => setIsOpen(false)}
       />
 
-      {/* Sidebar: off-canvas drawer on mobile, static column on desktop */}
+      {/* Sidebar: off-canvas drawer on mobile, static column on desktop. Hiding
+          is doubled up (transform + visibility) below lg so a stuck/not-yet-
+          applied transform can't leave this open and clickable over the page;
+          the lg: variants keep it forced visible as the static desktop column
+          regardless of isOpen. */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen w-64 lg:w-60 shrink-0 bg-white border-r border-gray-200 z-50 flex flex-col justify-between transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed lg:sticky top-0 left-0 h-screen w-64 lg:w-60 shrink-0 bg-white border-r border-gray-200 z-50 flex flex-col justify-between transform transition-[transform,visibility] duration-300 ease-in-out lg:translate-x-0 lg:visible lg:pointer-events-auto ${
+          isOpen ? 'translate-x-0 visible pointer-events-auto' : '-translate-x-full invisible pointer-events-none'
         }`}
       >
         <div>
