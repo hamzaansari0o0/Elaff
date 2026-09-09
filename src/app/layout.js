@@ -1,4 +1,5 @@
 import { Fraunces, Bricolage_Grotesque } from 'next/font/google';
+import RouteLoadingBar from '@/components/layout/RouteLoadingBar';
 import './globals.css';
 
 const fraunces = Fraunces({
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${bricolage.variable}`} suppressHydrationWarning>
       <body className="font-bricolage antialiased bg-slate-50 text-gray-800" suppressHydrationWarning>
+        <RouteLoadingBar />
         {children}
       </body>
     </html>
