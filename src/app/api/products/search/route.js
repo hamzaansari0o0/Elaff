@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
 import { formatPrice } from '@/lib/formatPrice';
+import { fuzzyScore } from '@/lib/fuzzyMatch';
 
 const SUGGESTION_LIMIT = 5;
 const FIELDS = 'title slug images price priceUnit category';
@@ -60,6 +61,31 @@ export async function GET(request) {
       .limit(remaining)
       .lean();
     results = results.concat(fallbackMatches);
+  }
+
+  // Typo tolerance: only runs when the fast exact/prefix/contains search
+  // above didn't fill the list — e.g. "agricultureal" finds nothing there,
+  // but is one edit away from "Agricultural", so this catches it as a
+  // fallback instead of scanning the whole catalog on every keystroke.
+  // Skipped for 2-char queries, where edit-distance matching is too noisy
+  // to mean anything.
+  if (results.length < SUGGESTION_LIMIT && q.length >= 3) {
+    const remaining = SUGGESTION_LIMIT - results.length;
+    const candidates = await Product.find({
+      status: 'active',
+      _id: { $nin: results.map((p) => p._id) },
+    })
+      .select(FIELDS)
+      .lean();
+
+    const fuzzyMatches = candidates
+      .map((p) => ({ product: p, score: fuzzyScore(q, `${p.title} ${p.category}`) }))
+      .filter((c) => c.score < Infinity)
+      .sort((a, b) => a.score - b.score)
+      .slice(0, remaining)
+      .map((c) => c.product);
+
+    results = results.concat(fuzzyMatches);
   }
 
   return NextResponse.json({ products: results.map(toSuggestion) });
