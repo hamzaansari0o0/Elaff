@@ -72,19 +72,24 @@ export default function InquiryDrawer({ isOpen, onClose, categories = [] }) {
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] transition-opacity duration-300 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={handleClose}
       />
 
-      {/* Drawer: slides in from the right */}
+      {/* Drawer: slides in from the right. Hiding is deliberately doubled up —
+          the translate-x-full transform for the slide animation, plus
+          visibility/pointer-events as a hard fallback — so a stuck or
+          not-yet-applied transform (seen on some Chrome/macOS builds) can't
+          leave this sitting open and clickable on top of the page. */}
       <aside
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[440px] bg-[#0a0e16] text-white z-[70] shadow-2xl flex flex-col transform transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[440px] bg-[#0a0e16] text-white z-[70] shadow-2xl flex flex-col transform transition-[transform,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none'
         }`}
         role="dialog"
         aria-modal="true"
         aria-label="B2B inquiry form"
+        aria-hidden={!isOpen}
       >
         {/* Header */}
         <div className="relative shrink-0 overflow-hidden border-b border-white/10 px-6 py-6">

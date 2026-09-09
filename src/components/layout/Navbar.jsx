@@ -192,18 +192,21 @@ export default function Navbar({ collections = [] }) {
       {/* ------------------------------------------------------------- */}
       
       {/* Backdrop Blur Overlay */}
-      <div 
+      <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 xl:hidden transition-opacity duration-300 ${
-          isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Sliding Drawer Container */}
-      <aside 
-        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 xl:hidden shadow-2xl flex flex-col justify-between transform transition-transform duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      {/* Sliding Drawer Container. Hiding is doubled up (transform + visibility)
+          so a stuck/not-yet-applied transform can't leave this open and
+          clickable on top of the page. */}
+      <aside
+        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 xl:hidden shadow-2xl flex flex-col justify-between transform transition-[transform,visibility] duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'translate-x-0 visible' : '-translate-x-full invisible pointer-events-none'
         }`}
+        aria-hidden={!isMobileMenuOpen}
       >
         {/* Drawer Header */}
         <div>

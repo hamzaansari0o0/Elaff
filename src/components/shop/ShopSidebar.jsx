@@ -55,14 +55,17 @@ function SlideDrawer({ isOpen, onClose, title, children, responsiveClass = '' })
     <>
       <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 ${responsiveClass} ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={onClose}
       />
+      {/* Hiding is doubled up (transform + visibility) so a stuck/not-yet-applied
+          transform can't leave this open and clickable on top of the page. */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 shadow-2xl overflow-y-auto scrollbar-hide transform transition-transform duration-300 ease-in-out ${responsiveClass} ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 shadow-2xl overflow-y-auto scrollbar-hide transform transition-[transform,visibility] duration-300 ease-in-out ${responsiveClass} ${
+          isOpen ? 'translate-x-0 visible' : '-translate-x-full invisible pointer-events-none'
         }`}
+        aria-hidden={!isOpen}
       >
         <div className="flex items-center justify-between p-5 bg-brand-navy text-white sticky top-0 z-10">
           <span className="font-fraunces font-black text-sm uppercase tracking-wide">{title}</span>

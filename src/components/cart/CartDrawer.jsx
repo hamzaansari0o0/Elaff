@@ -20,16 +20,19 @@ export default function CartDrawer({ isOpen, onClose }) {
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={onClose}
       />
 
-      {/* Drawer: slides in from the right */}
+      {/* Drawer: slides in from the right. Hiding is doubled up (transform +
+          visibility) so a stuck/not-yet-applied transform can't leave this
+          open and clickable on top of the page. */}
       <aside
-        className={`fixed top-0 right-0 bottom-0 w-[88%] max-w-md bg-white z-50 shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 bottom-0 w-[88%] max-w-md bg-white z-50 shadow-2xl flex flex-col transform transition-[transform,visibility] duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none'
         }`}
+        aria-hidden={!isOpen}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-5 bg-brand-navy text-white shrink-0">
