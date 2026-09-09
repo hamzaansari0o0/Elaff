@@ -3,23 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, X, Search, ChevronDown, Phone, MapPin, ShoppingCart } from 'lucide-react';
+import { Menu, X, Search, Phone, MapPin, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import CartDrawer from '@/components/cart/CartDrawer';
 
-export default function Navbar({ collections = [] }) {
+export default function Navbar() {
   const router = useRouter();
   const { items } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
-  const categories = collections.map((c) => ({
-    name: c.title,
-    href: `/collection/${c.slug}`,
-  }));
 
   function handleSearchSubmit(e) {
     e.preventDefault();
@@ -94,32 +88,8 @@ export default function Navbar({ collections = [] }) {
               HOME
             </Link>
 
-            {/* Product Category Dropdown */}
-            <div className="relative group py-2 cursor-pointer">
-              <div className="flex items-center gap-1.5 hover:text-brand-navy transition-colors uppercase">
-                <span>PRODUCT CATEGORY</span>
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 shrink-0" />
-              </div>
-
-              {/* Mega Dropdown Menu */}
-              <div className="absolute top-full left-0 w-64 bg-white border border-gray-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-3 z-50">
-                {categories.map((cat, idx) => (
-                  <Link
-                    key={idx}
-                    href={cat.href}
-                    className="block px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-slate-50 hover:text-brand-navy rounded-lg transition-colors"
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
             <Link href="/shop" className="hover:text-brand-navy transition-colors uppercase">
               SHOP ALL
-            </Link>
-            <Link href="/shipping-terms" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
-              SHIPPING TERMS
             </Link>
             <Link href="/about" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
               ABOUT US
@@ -231,48 +201,12 @@ export default function Navbar({ collections = [] }) {
               Home
             </Link>
 
-            {/* Accordion: Product Category */}
-            <div className="border-y border-gray-100 my-1 py-1">
-              <button 
-                onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                className="w-full flex items-center justify-between px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
-              >
-                <span>Product Category</span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isCategoryOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {/* Sub-categories */}
-              {isCategoryOpen && (
-                <div className="pl-6 pr-2 py-1 space-y-1 bg-slate-50/70 rounded-lg my-1">
-                  {categories.map((cat, idx) => (
-                    <Link
-                      key={idx}
-                      href={cat.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-3 py-2 text-xs font-semibold text-gray-600 hover:text-brand-navy transition-colors"
-                    >
-                      • {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <Link 
-              href="/shop" 
+            <Link
+              href="/shop"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Shop All
-            </Link>
-
-            <Link
-              href="/shipping-terms"
-              prefetch={false}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
-            >
-              Shipping Terms
             </Link>
 
             <Link

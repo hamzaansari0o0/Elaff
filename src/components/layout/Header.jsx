@@ -1,15 +1,12 @@
 import AnnouncementBar from './AnnouncementBar';
 import Navbar from './Navbar';
 import FeatureBar from './FeatureBar';
-import { getAllCollections } from '@/lib/products';
 
-export default async function Header({ companySettings }) {
-  const collections = await getAllCollections();
-
+export default function Header({ companySettings }) {
   return (
     <>
       <AnnouncementBar />
-      <Navbar collections={collections} />
+      <Navbar />
       <FeatureBar companySettings={companySettings} />
     </>
   );
