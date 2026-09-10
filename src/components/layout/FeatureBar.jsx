@@ -104,16 +104,16 @@ export default function FeatureBar({ companySettings }) {
         ))}
       </div>
 
-      {/* 📱 MOBILE & TABLET (below md): single line, continuous left-to-right marquee */}
+      {/* 📱 MOBILE & TABLET (below md): single line, continuous right-to-left marquee */}
       <style>{`
-        @keyframes feature-marquee-ltr {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0%); }
+        @keyframes feature-marquee-rtl {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
         }
         .animate-feature-marquee {
           display: flex;
           width: max-content;
-          animation: feature-marquee-ltr 18s linear infinite;
+          animation: feature-marquee-rtl 18s linear infinite;
         }
         .animate-feature-marquee:hover {
           animation-play-state: paused;
