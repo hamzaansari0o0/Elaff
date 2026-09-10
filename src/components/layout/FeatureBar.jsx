@@ -7,7 +7,7 @@ function buildFeatures(companySettings) {
   return [
     {
       icon: (
-        <svg className="w-4 h-4 text-brand-amber shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -18,20 +18,20 @@ function buildFeatures(companySettings) {
       ),
       content: (
         <>
-          <strong className="font-extrabold text-gray-800 uppercase tracking-widest">FMCG</strong> — Fast Moving
+          <strong className="font-extrabold text-white uppercase tracking-widest">FMCG</strong> — Fast Moving
           Consumer Goods
         </>
       ),
     },
     {
       icon: (
-        <svg className="w-4 h-4 text-brand-amber shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
         </svg>
       ),
       content: (
         <>
-          <strong className="font-extrabold text-gray-800 uppercase tracking-widest">
+          <strong className="font-extrabold text-white uppercase tracking-widest">
             {companySettings?.verified ? companySettings.verifiedLabel || 'Verified Supplier' : 'Verified Supplier'}
           </strong>
         </>
@@ -39,7 +39,7 @@ function buildFeatures(companySettings) {
     },
     {
       icon: (
-        <svg className="w-4 h-4 text-brand-amber shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -52,18 +52,18 @@ function buildFeatures(companySettings) {
         <>
           {exportCount > 0 ? (
             <>
-              <strong className="font-extrabold text-gray-800 uppercase tracking-widest">Exporting</strong> to{' '}
+              <strong className="font-extrabold text-white uppercase tracking-widest">Exporting</strong> to{' '}
               {exportCount}+ Countries
             </>
           ) : (
-            <strong className="font-extrabold text-gray-800 uppercase tracking-widest">Global Export Network</strong>
+            <strong className="font-extrabold text-white uppercase tracking-widest">Global Export Network</strong>
           )}
         </>
       ),
     },
     {
       icon: (
-        <svg className="w-4 h-4 text-brand-amber shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -74,13 +74,13 @@ function buildFeatures(companySettings) {
       ),
       content: companySettings?.responseTime ? (
         <>
-          <strong className="font-extrabold text-gray-800 uppercase tracking-widest">
+          <strong className="font-extrabold text-white uppercase tracking-widest">
             {companySettings.responseTime}
           </strong>{' '}
           Quote Response
         </>
       ) : (
-        <strong className="font-extrabold text-gray-800 uppercase tracking-widest">Fast Quote Turnaround</strong>
+        <strong className="font-extrabold text-white uppercase tracking-widest">Fast Quote Turnaround</strong>
       ),
     },
   ];
@@ -90,13 +90,13 @@ export default function FeatureBar({ companySettings }) {
   const FEATURES = buildFeatures(companySettings);
 
   return (
-    <section className="bg-slate-50 border-b border-gray-200 py-3 md:px-8">
+    <section className="bg-brand-navy border-b border-white/10 py-3 md:px-8">
       {/* 💻 DESKTOP (md and above): one row, divided columns, no motion */}
-      <div className="hidden md:flex max-w-7xl mx-auto justify-between items-center divide-x divide-gray-200 text-center">
+      <div className="hidden md:flex max-w-7xl mx-auto justify-between items-center divide-x divide-white/10 text-center">
         {FEATURES.map((feature, idx) => (
           <div
             key={idx}
-            className="w-1/4 py-1 flex items-center justify-center gap-2.5 text-xs text-gray-600 font-bricolage tracking-wide"
+            className="w-1/4 py-1 flex items-center justify-center gap-2.5 text-xs text-white/70 font-bricolage tracking-wide"
           >
             {feature.icon}
             <span>{feature.content}</span>
@@ -124,7 +124,7 @@ export default function FeatureBar({ companySettings }) {
           {[0, 1].map((copy) => (
             <div key={copy} className="flex items-center gap-10 shrink-0" aria-hidden={copy === 1}>
               {FEATURES.map((feature, idx) => (
-                <span key={idx} className="flex items-center gap-2 text-[11px] text-gray-600 font-bricolage tracking-wide">
+                <span key={idx} className="flex items-center gap-2 text-[11px] text-white/70 font-bricolage tracking-wide">
                   {feature.icon}
                   {feature.content}
                 </span>
