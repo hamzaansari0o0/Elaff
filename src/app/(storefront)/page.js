@@ -24,10 +24,10 @@ export default async function Home() {
 
   // Banner panel images — the component renders however many it's given, in order.
   const bannerImages = [
-    { src: '/home%20banner%20image/grocery%20products.png', alt: 'Grocery products' },
-    { src: '/home%20banner%20image/agricultural%20products.png', alt: 'Agricultural products' },
-    { src: '/home%20banner%20image/frozen%20items.png', alt: 'Frozen items' },
-    { src: '/home%20banner%20image/confectioneries.png', alt: 'Confectioneries' },
+    { src: '/home%20banner%20image/grocery%20products.jpeg', alt: 'Grocery products' },
+    { src: '/home%20banner%20image/agricultural%20products.jpeg', alt: 'Agricultural products' },
+    { src: '/home%20banner%20image/frozen%20items.jpeg', alt: 'Frozen items' },
+    { src: '/home%20banner%20image/confectioneries.jpeg', alt: 'Confectioneries' },
   ];
 
   return (
