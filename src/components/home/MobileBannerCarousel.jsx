@@ -4,8 +4,9 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Globe2, Plane } from 'lucide-react';
 import InquiryDrawer from './InquiryDrawer';
+import { CATEGORY_THEME, DEFAULT_THEME } from './bannerTheme';
 
 import 'swiper/css';
 
@@ -48,12 +49,36 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
           onAutoplayTimeLeft={handleAutoplayTimeLeft}
           className="h-full w-full"
         >
-          {images.map((panel, i) => (
-            <SwiperSlide key={panel.src + i}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={panel.src} alt={panel.alt || ''} className="w-full h-full object-[inherit]" />
-            </SwiperSlide>
-          ))}
+          {images.map((panel, i) => {
+            const theme = CATEGORY_THEME[panel.theme] || DEFAULT_THEME;
+            return (
+              <SwiperSlide key={panel.src + i} className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={panel.src} alt={panel.alt || ''} className="w-full h-full object-[inherit]" />
+
+                {(panel.title || panel.subtitle) && (
+                  <div className="absolute top-0 left-0 right-0 z-10 px-4 pt-5 pointer-events-none">
+                    <div className={`flex items-center gap-1.5 mb-1.5 ${theme.text}`}>
+                      <Globe2 className="w-3.5 h-3.5 shrink-0" />
+                      <span className="text-[9px] font-extrabold uppercase tracking-[0.2em]">
+                        From China to Worldwide
+                      </span>
+                      <span className={`w-5 h-px shrink-0 ${theme.divider}`} />
+                      <Plane className="w-3 h-3 shrink-0 -rotate-12" />
+                    </div>
+                    <h2
+                      className={`font-fraunces text-xl min-[400px]:text-2xl font-black leading-tight mb-1 whitespace-nowrap ${theme.text}`}
+                    >
+                      {panel.title}
+                    </h2>
+                    <p className={`text-xs min-[400px]:text-sm font-semibold max-w-[80%] ${theme.text}`}>
+                      {panel.subtitle}
+                    </p>
+                  </div>
+                )}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
 
         {/* Autoplay countdown — ring drains over the 5s delay, refilling the
