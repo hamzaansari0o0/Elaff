@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
 import RevealText from '@/components/ui/RevealText';
 
 export default function Footer() {
@@ -56,10 +56,6 @@ export default function Footer() {
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-amber-400" />
               <span><strong>WHATSAPP:</strong> +92 308 4888399</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-              <span><strong>OFFICE LOCATION:</strong> QUSAIS INDUSTRIAL AREA 1, NEAR MASTER GLOBAL CARGO, GATE # 7, WAREHOUSE # B20, BIN SOUT WAREHOUSE, DUBAI</span>
             </div>
           </div>
         </div>

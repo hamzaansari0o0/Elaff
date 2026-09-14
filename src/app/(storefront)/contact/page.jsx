@@ -1,4 +1,4 @@
-import { MapPin, MessageCircle, Clock, Phone, Mail } from 'lucide-react';
+import { MessageCircle, Clock, Phone, Mail } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import RevealText from '@/components/ui/RevealText';
 import { getCompanySettings } from '@/lib/settings';
@@ -12,8 +12,6 @@ export const metadata = {
 // admin edits to CompanySettings never show up until the next full deploy.
 export const revalidate = 60;
 
-const DEFAULT_ADDRESS =
-  'Qusais Industrial Area 1, Near Master Global Cargo, Gate # 7, Warehouse # B20, Bin Sout Warehouse, Dubai';
 const DEFAULT_INTRO =
   "Have a question about an order, a product, or our wholesale terms? Send us a message and our team will get back to you.";
 const DEFAULT_HOURS = 'Monday - Saturday: 9:00 AM - 6:00 PM';
@@ -21,7 +19,6 @@ const DEFAULT_HOURS = 'Monday - Saturday: 9:00 AM - 6:00 PM';
 export default async function ContactPage() {
   const settings = await getCompanySettings();
 
-  const address = settings.address || DEFAULT_ADDRESS;
   const intro = settings.contactIntro || DEFAULT_INTRO;
   const hours = settings.supportHours || DEFAULT_HOURS;
   const responseTime = settings.responseTime || '24 hours';
@@ -47,18 +44,6 @@ export default async function ContactPage() {
 
           {/* Right side — dynamic company info, editable from Admin > Company Settings > Contact Page */}
           <div className="space-y-5">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-full bg-brand-navy/5 text-brand-navy flex items-center justify-center shrink-0">
-                  <MapPin className="w-4.5 h-4.5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-gray-900 mb-1">Correspondence Address</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{address}</p>
-                </div>
-              </div>
-            </div>
-
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-full bg-brand-navy/5 text-brand-navy flex items-center justify-center shrink-0">
