@@ -4,6 +4,7 @@ import { CartProvider } from '@/context/CartContext';
 import Chatbot from '@/components/chatbot/Chatbot';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import { getCompanySettings } from '@/lib/settings';
+import { getAllCollections } from '@/lib/products';
 
 // Applies to every page under this layout — without it, pages that don't set their
 // own revalidate (shop, product, collection) render fully static, so admin edits to
@@ -11,14 +12,14 @@ import { getCompanySettings } from '@/lib/settings';
 export const revalidate = 60;
 
 export default async function StorefrontLayout({ children }) {
-  const companySettings = await getCompanySettings();
+  const [companySettings, collections] = await Promise.all([getCompanySettings(), getAllCollections()]);
 
   return (
     <CartProvider>
       {/* Lenis momentum scroll — every storefront page, not just the home page.
           Scoped to this layout only, so /admin keeps native scroll. */}
       <SmoothScroll>
-        <Header companySettings={companySettings} />
+        <Header companySettings={companySettings} collections={collections} />
         {children}
         <Footer />
       </SmoothScroll>

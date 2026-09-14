@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Search, Phone, MapPin, ShoppingCart } from 'lucide-react';
+import { Menu, X, Search, Phone, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import CartDrawer from '@/components/cart/CartDrawer';
 import SearchAutocomplete from './SearchAutocomplete';
+import { MenuItem, HoveredLink } from '@/components/ui/navbar-menu';
 
-export default function Navbar() {
+export default function Navbar({ collections = [] }) {
   const { items } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
@@ -20,7 +22,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5">
         
         {/* 📱 MOBILE & TABLET NAVBAR (Below 'lg') */}
-        <div className="flex xl:hidden items-center justify-between">
+        <div className="flex lg:hidden items-center justify-between">
           
           {/* Left: Hamburger Button */}
           <button
@@ -61,7 +63,7 @@ export default function Navbar() {
         </div>
 
         {/* 💻 DESKTOP NAVBAR ('lg' and above) */}
-        <div className="hidden xl:flex items-center justify-between gap-6">
+        <div className="hidden lg:flex items-center justify-between gap-6">
           
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0 group">
@@ -73,14 +75,34 @@ export default function Navbar() {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-5 font-bricolage text-xs font-extrabold text-gray-800 tracking-wider whitespace-nowrap">
+          <nav
+            onMouseLeave={() => setActiveMenu(null)}
+            className="flex items-center gap-5 font-bricolage text-xs font-extrabold text-gray-800 tracking-wider whitespace-nowrap"
+          >
             <Link href="/" className="hover:text-brand-navy transition-colors uppercase">
               HOME
             </Link>
 
-            <Link href="/shop" className="hover:text-brand-navy transition-colors uppercase">
-              SHOP ALL
-            </Link>
+            <MenuItem
+              setActive={setActiveMenu}
+              active={activeMenu}
+              item="Category"
+              href="/shop"
+              triggerClassName="cursor-pointer hover:text-brand-navy transition-colors uppercase"
+            >
+              {collections.length > 0 ? (
+                <div className="grid grid-flow-col grid-rows-4 auto-cols-[8.5rem] gap-x-6 gap-y-3 text-sm font-semibold leading-snug tracking-normal">
+                  {collections.map((c) => (
+                    <HoveredLink key={c.slug} href={`/collection/${c.slug}`} title={c.title}>
+                      {c.title.length > 15 ? `${c.title.slice(0, 15)}...` : c.title}
+                    </HoveredLink>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm font-semibold tracking-normal text-neutral-500">No collections yet</p>
+              )}
+            </MenuItem>
+
             <Link href="/about" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
               ABOUT US
             </Link>
@@ -117,7 +139,7 @@ export default function Navbar() {
 
         {/* 🔍 EXPANDABLE MOBILE SEARCH BAR */}
         {isSearchOpen && (
-          <div className="xl:hidden mt-3 pt-3 border-t border-gray-100 animate-fadeIn">
+          <div className="lg:hidden mt-3 pt-3 border-t border-gray-100 animate-fadeIn">
             <SearchAutocomplete
               formClassName="flex items-center border border-gray-300 rounded-full bg-slate-50 overflow-hidden p-1"
               inputClassName="w-full bg-transparent text-xs px-3 text-gray-800 outline-none placeholder-gray-400 font-medium"
@@ -136,7 +158,7 @@ export default function Navbar() {
       
       {/* Backdrop Blur Overlay */}
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 xl:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden transition-opacity duration-300 ${
           isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={() => setIsMobileMenuOpen(false)}
@@ -146,7 +168,7 @@ export default function Navbar() {
           so a stuck/not-yet-applied transform can't leave this open and
           clickable on top of the page. */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 xl:hidden shadow-2xl flex flex-col justify-between transform transition-[transform,visibility] duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 lg:hidden shadow-2xl flex flex-col justify-between transform transition-[transform,visibility] duration-300 ease-in-out ${
           isMobileMenuOpen ? 'translate-x-0 visible' : '-translate-x-full invisible pointer-events-none'
         }`}
         aria-hidden={!isMobileMenuOpen}
@@ -175,11 +197,11 @@ export default function Navbar() {
             </Link>
 
             <Link
-              href="/shop"
+              href="/collections"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
-              Shop All
+              Category
             </Link>
 
             <Link
@@ -206,10 +228,6 @@ export default function Navbar() {
           <div className="flex items-center gap-2 text-gray-700 font-semibold">
             <Phone className="w-4 h-4 text-brand-navy" />
             <a href="tel:+923084888399" className="hover:underline">+92 308 4888399</a>
-          </div>
-          <div className="flex items-start gap-2 text-gray-500 leading-tight">
-            <MapPin className="w-4 h-4 text-brand-navy shrink-0 mt-0.5" />
-            <span>QUSAIS INDUSTRIAL AREA 1, NEAR MASTER GLOBAL CARGO, GATE # 7, WAREHOUSE # B20, BIN SOUT WAREHOUSE, DUBAI</span>
           </div>
         </div>
 
