@@ -383,6 +383,15 @@ export default function StellarCardGallery({ cards, title = 'Explore Our Partner
               <ScrollZoomRig progressRef={progressRef} controlsRef={controlsRef} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
               <OrbitControls
                 ref={controlsRef}
+                // The top-level `enabled` flag, not just the individual
+                // enableRotate/Pan/Zoom props — those only gate what a
+                // gesture *does*, not whether OrbitControls still captures
+                // and tracks it. Left enabled, it kept intercepting touch
+                // drags (blocking the page's own scroll, which is what
+                // drives the zoom below) and swallowing taps before they
+                // reached a card's click handler, even with every individual
+                // behavior turned off.
+                enabled={!isTouch}
                 enablePan={!isTouch}
                 enableZoom={false}
                 enableRotate={!isTouch}
