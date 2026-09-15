@@ -17,8 +17,9 @@ export const metadata = {
 // newly added product photos never show up in the hero/spread until redeploy.
 export const revalidate = 60;
 
-// Guarantees a full, real set of images regardless of catalog size — real
-// product photos are preferred, with these as filler if there aren't enough yet.
+// Guarantees a full, real set of hero images regardless of catalog size —
+// real product photos are preferred, with these as filler if there aren't
+// enough yet.
 const CATEGORY_FALLBACKS = [
   { src: '/home%20banner%20image/grocery%20products.jpeg', alt: 'Grocery products' },
   { src: '/home%20banner%20image/agricultural%20products.jpeg', alt: 'Agricultural products' },
@@ -26,16 +27,24 @@ const CATEGORY_FALLBACKS = [
   { src: '/home%20banner%20image/confectioneries.jpeg', alt: 'Confectioneries' },
 ];
 
+// The "Quality Trusted Worldwide" spread — purpose-made export category
+// shots, not live product photos, so this stays a fixed list.
+const TRUSTED_IMAGES = [
+  { src: '/trusted/Grocery_export.jpeg', alt: 'Grocery export' },
+  { src: '/trusted/Fresh_agricultural_products.jpeg', alt: 'Fresh agricultural products' },
+  { src: '/trusted/Frozen_food_export.jpeg', alt: 'Frozen food export' },
+  { src: '/trusted/Confectionery_export.jpeg', alt: 'Confectionery export' },
+  { src: '/trusted/Beverage_export.jpeg', alt: 'Beverage export' },
+  { src: '/trusted/Seafood_export.jpeg', alt: 'Seafood export' },
+  { src: '/trusted/CATEGORY%20BABY%20FOOD%20%26%20GENERAL%20SUPPLIES.jpeg', alt: 'Baby food and general supplies' },
+];
+
 export default async function AboutPage() {
   const products = await getAllProducts();
-  // A larger pool, split into two non-overlapping halves, so the hero
-  // corridor and the "Quality Trusted Worldwide" spread never show the same
-  // photos.
-  const diverseImages = pickDiverseProductImages(products, 20);
-  const [heroPool, spreadPool] = [diverseImages.slice(0, 12), diverseImages.slice(12, 20)];
+  const heroPool = pickDiverseProductImages(products, 12);
 
   const heroImages = heroPool.length > 0 ? heroPool : CATEGORY_FALLBACKS;
-  const cards = buildCards([...spreadPool, ...CATEGORY_FALLBACKS].slice(0, 8));
+  const cards = buildCards(TRUSTED_IMAGES);
 
   return (
     <main className="bg-slate-50">
