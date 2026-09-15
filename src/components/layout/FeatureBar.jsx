@@ -90,13 +90,13 @@ export default function FeatureBar({ companySettings }) {
   const FEATURES = buildFeatures(companySettings);
 
   return (
-    <section className="bg-brand-navy border-b border-white/10 py-3 md:px-8">
+    <section className="bg-brand-navy border-b border-white/10 py-2 md:px-8">
       {/* 💻 DESKTOP (md and above): one row, divided columns, no motion */}
       <div className="hidden md:flex max-w-7xl mx-auto justify-between items-center divide-x divide-white/10 text-center">
         {FEATURES.map((feature, idx) => (
           <div
             key={idx}
-            className="w-1/4 py-1 flex items-center justify-center gap-2.5 text-xs text-white/70 font-bricolage tracking-wide"
+            className="w-1/4 py-0.5 flex items-center justify-center gap-2.5 text-xs text-white/70 font-bricolage tracking-wide"
           >
             {feature.icon}
             <span>{feature.content}</span>
