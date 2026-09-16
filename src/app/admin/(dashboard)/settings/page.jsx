@@ -179,7 +179,7 @@ export default function AdminSettingsPage() {
                 />
                 <TagListEditor
                   label="Main Products"
-                  placeholder="e.g. Beer, Wine, Spirits"
+                  placeholder="e.g. Soft Drinks, Snacks, Grocery"
                   values={form.mainProducts || []}
                   onChange={(v) => set('mainProducts', v)}
                 />

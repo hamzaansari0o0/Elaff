@@ -35,7 +35,6 @@ const MESSAGE_TEMPLATES = [
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
-  const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -49,11 +48,6 @@ export default function ContactForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-
-    if (!agreed) {
-      setError('Please agree to the terms and conditions to send your message.');
-      return;
-    }
 
     setIsSubmitting(true);
     try {
@@ -178,22 +172,6 @@ export default function ContactForm() {
             {formData.message.length} / {MESSAGE_LIMIT}
           </p>
         </div>
-
-        <label className="flex items-start gap-2.5 text-xs text-gray-600">
-          <input
-            type="checkbox"
-            checked={agreed}
-            onChange={(e) => setAgreed(e.target.checked)}
-            className="w-4 h-4 mt-0.5 accent-brand-navy shrink-0"
-          />
-          <span>
-            I agree to the{' '}
-            <a href="/terms" className="text-brand-navy font-semibold hover:underline">
-              terms and conditions
-            </a>
-            .
-          </span>
-        </label>
 
         {error && (
           <p className="text-xs font-semibold text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">

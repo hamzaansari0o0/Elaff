@@ -11,8 +11,8 @@ export const COLLECTIONS = [
   },
   {
     slug: "beverages",
-    title: "Beverages & Beer",
-    description: "Imported beers, spirits, and soft drinks available in bulk multipacks for wholesale distribution."
+    title: "Beverages",
+    description: "Soft drinks and non-alcoholic beverages available in bulk multipacks for wholesale distribution."
   },
   {
     slug: "agricultural",
@@ -244,94 +244,6 @@ export const PRODUCTS = [
     ]
   },
   {
-    id: 1010,
-    slug: "heineken-premium-lager",
-    sku: "HNK-5540-L",
-    title: "Heineken Premium Lager",
-    category: "Beverages",
-    collectionSlug: "beverages",
-    featured: true,
-    price: "$32.99",
-    tags: { weeklyFeatured: true },
-    shortDescription: "World-renowned premium lager beer, imported and distributed in full pallet or mixed container loads.",
-    fullDescription: "<p>Heineken Premium Lager is available for wholesale import with full documentation, ideal for distributors and retail chains.</p>",
-    specifications: [
-      { label: "Alcohol Content", value: "5.0% ABV" },
-      { label: "Bottle Size", value: "330ml / 500ml" },
-      { label: "Units per Case", value: "24 Bottles" },
-      { label: "Packaging", value: "Carton / Pallet" }
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?auto=format&fit=crop&w=800&q=80"
-    ]
-  },
-  {
-    id: 1011,
-    slug: "desperados-beer-multipack",
-    sku: "DSP-6631-B",
-    title: "Desperados Beer Multipack 24x",
-    category: "Beverages",
-    collectionSlug: "beverages",
-    featured: false,
-    price: "$34.00",
-    tags: { weeklyFeatured: true },
-    shortDescription: "Tequila-flavored lager beer, supplied in 24x multipacks for wholesale and retail distribution.",
-    fullDescription: "<p>Desperados Beer Multipack combines lager beer with a bold tequila flavor, popular in bars, retailers, and distribution chains.</p>",
-    specifications: [
-      { label: "Alcohol Content", value: "5.9% ABV" },
-      { label: "Bottle Size", value: "330ml" },
-      { label: "Units per Case", value: "24 Bottles" },
-      { label: "Packaging", value: "Carton / Pallet" }
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=800&q=80"
-    ]
-  },
-  {
-    id: 1012,
-    slug: "corona-extra-beer-pack",
-    sku: "CRN-7742-B",
-    title: "Corona Extra Beer Pack",
-    category: "Beverages",
-    collectionSlug: "beverages",
-    featured: false,
-    price: "$38.50",
-    tags: { weeklyFeatured: true },
-    shortDescription: "Classic Mexican lager beer, imported and packed for wholesale distribution to retailers and bars.",
-    fullDescription: "<p>Corona Extra Beer Pack is one of the world's best-selling beers, available for bulk import with full documentation.</p>",
-    specifications: [
-      { label: "Alcohol Content", value: "4.5% ABV" },
-      { label: "Bottle Size", value: "355ml" },
-      { label: "Units per Case", value: "24 Bottles" },
-      { label: "Packaging", value: "Carton / Pallet" }
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1535958636474-b021ee887b13?auto=format&fit=crop&w=800&q=80"
-    ]
-  },
-  {
-    id: 1013,
-    slug: "kronenbourg-1664-blanc-beer",
-    sku: "KRN-8853-B",
-    title: "Kronenbourg 1664 Blanc Beer",
-    category: "Beverages",
-    collectionSlug: "beverages",
-    featured: false,
-    price: "$36.00",
-    tags: { weeklyFeatured: true },
-    shortDescription: "French wheat beer with a citrus twist, imported and distributed in wholesale case quantities.",
-    fullDescription: "<p>Kronenbourg 1664 Blanc is a premium French wheat beer, offering a smooth citrus finish popular across European and international markets.</p>",
-    specifications: [
-      { label: "Alcohol Content", value: "5.0% ABV" },
-      { label: "Bottle Size", value: "330ml" },
-      { label: "Units per Case", value: "24 Bottles" },
-      { label: "Packaging", value: "Carton / Pallet" }
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1567696911980-2eed69a46042?auto=format&fit=crop&w=800&q=80"
-    ]
-  },
-  {
     id: 1014,
     slug: "sunflower-oil-pure",
     sku: "SFO-7702-P",
@@ -442,7 +354,7 @@ export const CATEGORY_CARDS = [
   { title: "FROZEN FOOD", slug: "frozen-food", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=300&auto=format&fit=crop" },
   { title: "CONFECTIONERY", slug: "confectionery", image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=300&auto=format&fit=crop" },
   { title: "COOKING OIL", slug: "cooking-oil", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=300&auto=format&fit=crop" },
-  { title: "BEVERAGES & BEER", slug: "beverages", image: "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=300&auto=format&fit=crop" },
+  { title: "BEVERAGES", slug: "beverages", image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?q=80&w=300&auto=format&fit=crop" },
   { title: "AGRICULTURAL", slug: "agricultural", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=300&auto=format&fit=crop" }
 ].map((cat) => ({
   ...cat,

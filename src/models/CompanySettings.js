@@ -30,7 +30,7 @@ const CompanySettingsSchema = new mongoose.Schema(
     country: { type: String, default: '' },
     yearEstablished: { type: String, default: '' },
     businessTypes: [{ type: String }], // e.g. Wholesaler, Distributor, Exporter, Trading Company
-    mainProducts: [{ type: String }], // e.g. Beer, Wine, Spirits, Soft Drinks
+    mainProducts: [{ type: String }], // e.g. Soft Drinks, Snacks, Grocery
     exportMarkets: [{ type: String }], // e.g. Western Europe, North America
     responseTime: { type: String, default: '' }, // e.g. "≤ 24 hours"
     onTimeDelivery: { type: String, default: '' }, // e.g. "98.6%"
