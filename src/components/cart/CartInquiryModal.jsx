@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 
 export default function CartInquiryModal({ isOpen, onClose }) {
   const { items, removeItem, updateQuantity, clearCart } = useCart();
@@ -10,6 +11,8 @@ export default function CartInquiryModal({ isOpen, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { SlidersHorizontal, ChevronRight, Menu, X } from 'lucide-react';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 
 // Keeps the sidebar a fixed, short height regardless of how many collections
 // exist — beyond this many, the rest live in a slide-out drawer (opened via
@@ -51,6 +52,8 @@ function AllProductsLink({ isAllProducts, onNavigate }) {
 // Groups drawer and the desktop More Categories drawer. scrollbar-hide keeps
 // the body scrollable without an ugly visible scrollbar.
 function SlideDrawer({ isOpen, onClose, title, children, responsiveClass = '' }) {
+  useLockBodyScroll(isOpen);
+
   return (
     <>
       <div

@@ -40,7 +40,7 @@ export default function ProductCard({ product }) {
       </button>
 
       {/* Image */}
-      <div className="relative w-full h-56 bg-slate-50 overflow-hidden">
+      <div className="relative w-full h-40 sm:h-48 lg:h-56 bg-slate-50 overflow-hidden">
         {product.image && (
           <img
             src={product.image}

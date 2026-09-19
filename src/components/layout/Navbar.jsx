@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, Search, Phone, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import CartDrawer from '@/components/cart/CartDrawer';
 import SearchAutocomplete from './SearchAutocomplete';
 import { MenuItem, HoveredLink } from '@/components/ui/navbar-menu';
@@ -14,6 +15,8 @@ export default function Navbar({ collections = [] }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
+
+  useLockBodyScroll(isMobileMenuOpen);
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
@@ -200,7 +203,7 @@ export default function Navbar({ collections = [] }) {
             </Link>
 
             <Link
-              href="/collections"
+              href="/shop"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >

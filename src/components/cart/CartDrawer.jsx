@@ -4,11 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { X, ShoppingCart, Trash2, ChevronRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import CartInquiryModal from './CartInquiryModal';
 
 export default function CartDrawer({ isOpen, onClose }) {
   const { items, removeItem, updateQuantity, clearCart } = useCart();
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  useLockBodyScroll(isOpen);
 
   function handleInquire() {
     onClose();

@@ -3,6 +3,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper/modules';
 import RevealText from '@/components/ui/RevealText';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -47,6 +48,7 @@ function buildSlides(partners) {
 
 export default function PartnersMarquee({ partners = DEFAULT_PARTNERS }) {
   const slides = buildSlides(partners);
+  const prefersReducedMotion = usePrefersReducedMotion();
   if (slides.length === 0) return null;
 
   return (
@@ -69,7 +71,7 @@ export default function PartnersMarquee({ partners = DEFAULT_PARTNERS }) {
         slidesPerView="auto"
         speed={5000}
         allowTouchMove={false}
-        autoplay={{ delay: 1, disableOnInteraction: false, pauseOnMouseEnter: true }}
+        autoplay={prefersReducedMotion ? false : { delay: 1, disableOnInteraction: false, pauseOnMouseEnter: true }}
         coverflowEffect={{ rotate: 12, stretch: 0, depth: 90, modifier: 1, slideShadows: false }}
         className="partners-swiper"
       >

@@ -1,3 +1,4 @@
+import { MotionConfig } from 'framer-motion';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
@@ -16,16 +17,22 @@ export default async function StorefrontLayout({ children }) {
 
   return (
     <CartProvider>
-      {/* Lenis momentum scroll — every storefront page, not just the home page.
-          Scoped to this layout only, so /admin keeps native scroll. */}
-      <SmoothScroll>
-        <Header companySettings={companySettings} collections={collections} />
-        {children}
-        <Footer />
-      </SmoothScroll>
+      {/* Makes every framer-motion component under the storefront respect the
+          OS-level "reduce motion" setting automatically (transform-based
+          animations skip; opacity fades still play), without threading a
+          check through each component individually. */}
+      <MotionConfig reducedMotion="user">
+        {/* Lenis momentum scroll — every storefront page, not just the home page.
+            Scoped to this layout only, so /admin keeps native scroll. */}
+        <SmoothScroll>
+          <Header companySettings={companySettings} collections={collections} />
+          {children}
+          <Footer />
+        </SmoothScroll>
 
-      {/* AI Chatbot + WhatsApp widget — every storefront page, not just the home page */}
-      <Chatbot whatsappNumber={companySettings.whatsapp} />
+        {/* AI Chatbot + WhatsApp widget — every storefront page, not just the home page */}
+        <Chatbot whatsappNumber={companySettings.whatsapp} />
+      </MotionConfig>
     </CartProvider>
   );
 }

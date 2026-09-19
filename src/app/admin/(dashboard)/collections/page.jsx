@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 
 export default function AdminCollectionsPage() {
+  const router = useRouter();
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -160,8 +162,12 @@ export default function AdminCollectionsPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {collections.map((c) => (
-                <tr key={c._id} className={selected.has(c._id) ? 'bg-brand-navy/5' : undefined}>
-                  <td className="px-5 py-3">
+                <tr
+                  key={c._id}
+                  onClick={() => router.push(`/admin/collections/${c._id}`)}
+                  className={`cursor-pointer hover:bg-slate-50 ${selected.has(c._id) ? 'bg-brand-navy/5' : ''}`}
+                >
+                  <td className="px-5 py-3" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selected.has(c._id)}
@@ -172,7 +178,7 @@ export default function AdminCollectionsPage() {
                   </td>
                   <td className="px-5 py-3 font-semibold text-gray-800">{c.title}</td>
                   <td className="px-5 py-3 text-gray-500 font-mono text-xs">{c.slug}</td>
-                  <td className="px-5 py-3">
+                  <td className="px-5 py-3" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-end gap-2">
                       <Link
                         href={`/admin/collections/${c._id}/edit`}

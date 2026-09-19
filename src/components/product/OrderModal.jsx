@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X, ChevronDown } from 'lucide-react';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 
 const UNITS = ['Cartons', 'Pallets', 'Tons', 'Kg', 'Pieces', 'Containers', 'Other'];
 
@@ -71,6 +72,8 @@ export default function OrderModal({ isOpen, onClose, product, company }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 

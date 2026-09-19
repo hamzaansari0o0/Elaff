@@ -4,6 +4,25 @@ import { notFound } from 'next/navigation';
 import { getCollectionBySlug, getProductsByCollection } from '@/lib/products';
 import RevealText from '@/components/ui/RevealText';
 
+// Refreshes each collection's cached page at most once a minute, same
+// pattern as the About/home pages — without it, admin edits to a collection
+// wouldn't show up until the next deploy.
+export const revalidate = 60;
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const collection = await getCollectionBySlug(slug);
+
+  if (!collection) {
+    return { title: 'Collection Not Found | Elaff Trade Co.' };
+  }
+
+  return {
+    title: `${collection.title} | Elaff Trade Co.`,
+    description: collection.description || `Browse ${collection.title} from Elaff Trade Co.`,
+  };
+}
+
 export default async function CollectionPage({ params }) {
   const { slug } = await params;
   const collection = await getCollectionBySlug(slug);

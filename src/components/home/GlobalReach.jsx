@@ -1,9 +1,9 @@
 import { WorldMap } from '@/components/ui/world-map';
 import RevealText from '@/components/ui/RevealText';
 
-// Every route starts from our sourcing hub in China, fanning out to the
-// regions that matter most to our buyers — visualizing the "China to
-// Worldwide" trade network the rest of the site's copy references.
+// Every route fans out from our sourcing network to the regions that
+// matter most to our buyers — visualizing the "Delivery to Worldwide"
+// trade network the rest of the site's copy references.
 const TRADE_ROUTES = [
   { start: { lat: 31.2304, lng: 121.4737 }, end: { lat: 25.2048, lng: 55.2708 } }, // Shanghai -> Dubai (Gulf)
   { start: { lat: 31.2304, lng: 121.4737 }, end: { lat: 51.5074, lng: -0.1278 } }, // Shanghai -> London (UK)
@@ -22,7 +22,7 @@ export default function GlobalReach() {
           One Trusted Source, Worldwide Reach
         </RevealText>
         <p className="font-bricolage text-xs md:text-sm text-gray-400 max-w-xl mx-auto">
-          From our sourcing hubs in China to wholesalers, distributors, and retailers across
+          Delivering to wholesalers, distributors, and retailers across
           the Gulf, the UK, the USA, and South Africa — reliable B2B trade, wherever your
           business operates.
         </p>

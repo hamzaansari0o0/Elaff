@@ -9,7 +9,7 @@ import {
   useMotionValue,
   useSpring,
   useMotionValueEvent,
-} from 'motion/react';
+} from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 // ---------------------------------------------------------------------------

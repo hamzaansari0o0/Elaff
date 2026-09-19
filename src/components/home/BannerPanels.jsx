@@ -40,6 +40,13 @@ export default function BannerPanels({ images = [], collections = [] }) {
       // never runs against a display:none, zero-height section.
       if (typeof window !== 'undefined' && window.innerWidth < 640) return;
 
+      // Snapshot once at setup, matching the mobile-width check above — the
+      // scroll-pinned panel-switching itself stays intact either way (it's how
+      // panels 2+ become reachable at all, not just decorative motion); only
+      // the per-panel text's slide/scale-in is skipped for reduced motion.
+      const prefersReducedMotion =
+        typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       const panelEls = gsap.utils.toArray(stackRef.current?.children || []);
       const n = panelEls.length;
       if (n === 0) return;
@@ -99,7 +106,9 @@ export default function BannerPanels({ images = [], collections = [] }) {
             }
             revealTl.from(
               self.lines,
-              { yPercent: 110, opacity: 0, scale: 1.04, duration: 0.85, stagger: 0.09, ease: 'power4.out' },
+              prefersReducedMotion
+                ? { opacity: 0, duration: 0.4 }
+                : { yPercent: 110, opacity: 0, scale: 1.04, duration: 0.85, stagger: 0.09, ease: 'power4.out' },
               eyebrowEl ? '-=0.25' : 0
             );
             // A paused timeline doesn't auto-render its first frame just by
@@ -245,7 +254,7 @@ export default function BannerPanels({ images = [], collections = [] }) {
                       >
                         <Globe2 className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
                         <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.25em]">
-                          From China to Worldwide
+                          Delivery To WorldWide
                         </span>
                         <span className={`w-8 sm:w-12 h-px shrink-0 ${theme.divider}`} />
                         <Plane className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 -rotate-12" />

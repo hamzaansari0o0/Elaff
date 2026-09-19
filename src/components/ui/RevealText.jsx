@@ -20,25 +20,47 @@ export default function RevealText({ as: Tag = 'span', className = '', children,
     () => {
       if (!ref.current) return;
 
-      const split = SplitText.create(ref.current, {
-        type: 'lines',
-        mask: 'lines',
-        autoSplit: true,
-        onSplit(self) {
-          return gsap.from(self.lines, {
-            yPercent: 110,
-            opacity: 0,
-            duration: 0.9,
-            stagger: 0.07,
-            ease: 'power4.out',
-            delay,
-            scrollTrigger:
-              trigger === 'scroll' ? { trigger: ref.current, start: 'top 85%' } : undefined,
-          });
-        },
+      const mm = gsap.matchMedia();
+      let split;
+
+      // Reduced-motion users get the fully-revealed text immediately — no
+      // line-mask slide-up — instead of skipping SplitText entirely, so line
+      // wrapping (and the layout it produces) stays identical either way.
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        split = SplitText.create(ref.current, {
+          type: 'lines',
+          mask: 'lines',
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.set(self.lines, { yPercent: 0, opacity: 1 });
+          },
+        });
       });
 
-      return () => split.revert();
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        split = SplitText.create(ref.current, {
+          type: 'lines',
+          mask: 'lines',
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.from(self.lines, {
+              yPercent: 110,
+              opacity: 0,
+              duration: 0.9,
+              stagger: 0.07,
+              ease: 'power4.out',
+              delay,
+              scrollTrigger:
+                trigger === 'scroll' ? { trigger: ref.current, start: 'top 85%' } : undefined,
+            });
+          },
+        });
+      });
+
+      return () => {
+        mm.revert();
+        split?.revert();
+      };
     },
     { scope: ref, dependencies: [trigger, delay] }
   );

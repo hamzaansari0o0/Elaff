@@ -19,8 +19,8 @@ const SOLUTIONS = [
     ],
   },
   {
-    tag: 'Export Solutions — Chinese FMCG',
-    title: 'Bringing "Made in China" to Global Shelves',
+    tag: 'Export Solutions — Global FMCG',
+    title: 'Bringing Trusted Brands to Global Shelves',
     points: [
       'Curated product portfolio: time-honored foods, emerging beverages, and viral snacks.',
       'Export customization: packaging redesigned for the target market, with Halal/HACCP certification support.',

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X, Send, CircleCheckBig, Loader2 } from 'lucide-react';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 
 const VOLUME_PLACEHOLDER = 'e.g. 5 tons / month, 2 x 20ft containers, 1,000 cartons';
 
@@ -15,6 +16,8 @@ export default function InquiryDrawer({ isOpen, onClose, categories = [] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  useLockBodyScroll(isOpen);
 
   function handleChange(e) {
     const { name, value } = e.target;

@@ -1,5 +1,6 @@
 // Data Fetching Helpers — reads live catalog data from MongoDB (managed via /admin).
 
+import { cache } from 'react';
 import { connectDB } from './mongodb';
 import Product from '@/models/Product';
 import Collection from '@/models/Collection';
@@ -42,11 +43,13 @@ export async function getAllProducts() {
   return products.map(serialize);
 }
 
-export async function getProductBySlug(slug) {
+// Wrapped in React's cache() so generateMetadata and the page component
+// (both called with the same slug per request) share one DB read instead of two.
+export const getProductBySlug = cache(async function getProductBySlug(slug) {
   await connectDB();
   const product = await Product.findOne({ slug }).populate('collections', 'title slug').lean();
   return product ? serialize(product) : null;
-}
+});
 
 // Other active products sharing the same first collection, for the product page's "Related Products" carousel.
 export async function getRelatedProducts(product, limit = 10) {
@@ -169,11 +172,13 @@ export async function getAllCollections() {
   return collections.map(serialize);
 }
 
-export async function getCollectionBySlug(slug) {
+// Wrapped in React's cache() so generateMetadata and the page component
+// (both called with the same slug per request) share one DB read instead of two.
+export const getCollectionBySlug = cache(async function getCollectionBySlug(slug) {
   await connectDB();
   const collection = await Collection.findOne({ slug }).lean();
   return collection ? serialize(collection) : null;
-}
+});
 
 export async function getProductsByCollection(collectionSlug) {
   await connectDB();

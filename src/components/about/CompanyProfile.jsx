@@ -48,7 +48,7 @@ export default function CompanyProfile() {
             make that possible.
           </p>
           <p>
-            As a China-based B2B trading company, we handle import, export, wholesale, and
+            As a global B2B trading company, we handle import, export, wholesale, and
             distribution for wholesalers, distributors, and retailers across the globe. Our reach
             extends to international brands as well, bringing their products into new markets while
             holding to the standards those brands are built on.

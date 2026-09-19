@@ -7,6 +7,7 @@ import { Autoplay } from 'swiper/modules';
 import { ArrowRight, Globe2, Plane } from 'lucide-react';
 import InquiryDrawer from './InquiryDrawer';
 import { CATEGORY_THEME, DEFAULT_THEME } from './bannerTheme';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 import 'swiper/css';
 
@@ -23,6 +24,7 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const ringRef = useRef(null);
   const secondsRef = useRef(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   // Fires every animation frame while autoplay counts down — mutating the ring
   // and label directly (instead of via setState) avoids re-rendering the whole
@@ -45,7 +47,7 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
           modules={[Autoplay]}
           loop
           slidesPerView={1}
-          autoplay={{ delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
+          autoplay={prefersReducedMotion ? false : { delay: AUTOPLAY_DELAY, disableOnInteraction: false }}
           onAutoplayTimeLeft={handleAutoplayTimeLeft}
           className="h-full w-full"
         >
@@ -61,7 +63,7 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
                     <div className={`flex items-center gap-1.5 mb-1.5 ${theme.text}`}>
                       <Globe2 className="w-3.5 h-3.5 shrink-0" />
                       <span className="text-[9px] font-extrabold uppercase tracking-[0.2em]">
-                        From China to Worldwide
+                        Delivery To WorldWide
                       </span>
                       <span className={`w-5 h-px shrink-0 ${theme.divider}`} />
                       <Plane className="w-3 h-3 shrink-0 -rotate-12" />

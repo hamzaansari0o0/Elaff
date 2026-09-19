@@ -14,8 +14,8 @@ export default function AboutHero({ images }) {
           On Trust.
         </h1>
         <p className="max-w-xl font-bricolage text-sm md:text-base text-white/85 leading-relaxed">
-          Elaff Trade Co. is the B2B name businesses already know — sourcing and shipping grocery,
-          agricultural, frozen, and confectionery products from China to partners and international
+          Elaff Trade Co. is the B2B name businesses already know — sourcing and delivering grocery,
+          agricultural, frozen, and confectionery products to partners and international
           brands worldwide.
         </p>
       </div>
