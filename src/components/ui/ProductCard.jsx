@@ -63,12 +63,16 @@ export default function ProductCard({ product }) {
 
         {/* Price & CTA */}
         <div className="mt-4 pt-3 border-t border-dashed border-gray-200">
-          <div className="flex items-baseline gap-1.5 mb-3">
-            <span className="font-bricolage text-lg font-extrabold text-gray-900">{product.price}</span>
-            {product.oldPrice && (
-              <span className="font-bricolage text-xs text-gray-400 line-through">{product.oldPrice}</span>
-            )}
-          </div>
+          {(product.price || product.oldPrice) && (
+            <div className="flex items-baseline gap-1.5 mb-3">
+              {product.price && (
+                <span className="font-bricolage text-lg font-extrabold text-gray-900">{product.price}</span>
+              )}
+              {product.oldPrice && (
+                <span className="font-bricolage text-xs text-gray-400 line-through">{product.oldPrice}</span>
+              )}
+            </div>
+          )}
 
           <span className="w-full bg-brand-cta group-hover:bg-brand-cta-hover text-white text-xs font-bold py-2.5 px-4 rounded-lg uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-sm group-hover:shadow-lg">
             {inCart ? <Check className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}

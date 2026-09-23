@@ -1,11 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Pencil, Trash2, Upload } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Plus, Pencil, Trash2, Upload, Search, X } from 'lucide-react';
+import Pagination from '@/components/shop/Pagination';
 
+// useSearchParams() requires a Suspense boundary around the page — without
+// it, Next.js can't produce a static fallback shell during prerendering.
 export default function AdminProductsPage() {
+  return (
+    <Suspense fallback={<p className="p-6 text-sm text-gray-500">Loading...</p>}>
+      <AdminProductsPageContent />
+    </Suspense>
+  );
+}
+
+function AdminProductsPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = Math.max(1, parseInt(searchParams.get('page'), 10) || 1);
+  const search = searchParams.get('search') || '';
+
+  const [searchInput, setSearchInput] = useState(search);
   const [products, setProducts] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selected, setSelected] = useState(new Set());
@@ -13,15 +33,44 @@ export default function AdminProductsPage() {
 
   async function load() {
     setLoading(true);
-    const res = await fetch('/api/products');
+    const params = new URLSearchParams();
+    params.set('page', String(page));
+    if (search) params.set('search', search);
+    const res = await fetch(`/api/products?${params.toString()}`);
     const data = await res.json();
-    setProducts(data);
+    setProducts(data.products);
+    setTotal(data.total);
+    setTotalPages(data.totalPages);
+    setSelected(new Set());
     setLoading(false);
   }
 
   useEffect(() => {
     load();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, search]);
+
+  // Keeps the input in sync if the URL changes some other way (e.g. back/forward).
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
+
+  // Debounced so every keystroke doesn't trigger a fetch + URL update — resets
+  // to page 1 since a filtered result set rarely still has the same page count.
+  useEffect(() => {
+    const trimmed = searchInput.trim();
+    if (trimmed === search) return;
+    const id = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (trimmed) params.set('search', trimmed);
+      else params.delete('search');
+      params.delete('page');
+      const qs = params.toString();
+      router.replace(`/admin/products${qs ? `?${qs}` : ''}`);
+    }, 300);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput]);
 
   async function handleDelete(id) {
     if (!confirm('Delete this product?')) return;
@@ -96,6 +145,26 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
+      <div className="relative mb-4 max-w-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Search products by name..."
+          className="w-full border border-gray-300 rounded-lg pl-9 pr-9 py-2.5 text-sm outline-none focus:border-brand-navy transition-colors"
+        />
+        {searchInput && (
+          <button
+            onClick={() => setSearchInput('')}
+            aria-label="Clear search"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
       {error && (
         <p className="text-xs font-semibold text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-4">
           {error}
@@ -126,11 +195,19 @@ export default function AdminProductsPage() {
         </div>
       )}
 
+      {!loading && total > 0 && (
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+          {total} product{total !== 1 ? 's' : ''}{search ? ` matching "${search}"` : ''}
+        </p>
+      )}
+
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         {loading ? (
           <p className="p-6 text-sm text-gray-500">Loading...</p>
         ) : products.length === 0 ? (
-          <p className="p-6 text-sm text-gray-500">No products yet.</p>
+          <p className="p-6 text-sm text-gray-500">
+            {search ? `No products match "${search}".` : 'No products yet.'}
+          </p>
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -217,6 +294,8 @@ export default function AdminProductsPage() {
           </div>
         )}
       </div>
+
+      <Pagination currentPage={page} totalPages={totalPages} basePath="/admin/products" />
     </div>
   );
 }

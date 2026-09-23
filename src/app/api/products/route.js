@@ -2,7 +2,12 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { requireAdmin } from '@/lib/auth';
 import Product from '@/models/Product';
+import { escapeRegex } from '@/lib/products';
 import { deleteCloudinaryImages, collectProductImageUrls } from '@/lib/cloudinary';
+
+// Matches the shop page's page size — the admin product list is the only
+// caller of this unfiltered/paginated shape, so both can move together.
+const ADMIN_PAGE_SIZE = 10;
 
 export async function GET(request) {
   await connectDB();
@@ -10,17 +15,33 @@ export async function GET(request) {
   const collectionId = searchParams.get('collection');
   const status = searchParams.get('status');
   const tag = searchParams.get('tag');
+  const search = searchParams.get('search');
+  const page = Math.max(1, parseInt(searchParams.get('page'), 10) || 1);
 
   const filter = {};
   if (collectionId) filter.collections = collectionId;
   if (status) filter.status = status;
   if (tag) filter.tags = tag;
+  if (search) {
+    const regex = new RegExp(escapeRegex(search.trim()), 'i');
+    filter.$or = [{ title: regex }, { sku: regex }, { category: regex }];
+  }
 
-  const products = await Product.find(filter)
-    .populate('collections', 'title slug')
-    .sort({ createdAt: -1 });
+  const [total, products] = await Promise.all([
+    Product.countDocuments(filter),
+    Product.find(filter)
+      .populate('collections', 'title slug')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * ADMIN_PAGE_SIZE)
+      .limit(ADMIN_PAGE_SIZE),
+  ]);
 
-  return NextResponse.json(products);
+  return NextResponse.json({
+    products,
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / ADMIN_PAGE_SIZE)),
+  });
 }
 
 export async function POST(request) {

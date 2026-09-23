@@ -18,7 +18,7 @@ function getPageList(current, total) {
   return withGaps;
 }
 
-export default function Pagination({ currentPage, totalPages }) {
+export default function Pagination({ currentPage, totalPages, basePath = '/shop' }) {
   const searchParams = useSearchParams();
 
   if (totalPages <= 1) return null;
@@ -31,7 +31,7 @@ export default function Pagination({ currentPage, totalPages }) {
       params.set('page', String(page));
     }
     const qs = params.toString();
-    return `/shop${qs ? `?${qs}` : ''}`;
+    return `${basePath}${qs ? `?${qs}` : ''}`;
   }
 
   const pages = getPageList(currentPage, totalPages);

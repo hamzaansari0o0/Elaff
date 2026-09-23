@@ -14,7 +14,7 @@ function serialize(doc) {
   return obj;
 }
 
-function escapeRegex(str) {
+export function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 

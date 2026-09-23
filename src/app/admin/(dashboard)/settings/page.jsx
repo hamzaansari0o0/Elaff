@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import TagListEditor from '@/components/admin/TagListEditor';
 import KeyValueListEditor from '@/components/admin/KeyValueListEditor';
 import CertificationsEditor from '@/components/admin/CertificationsEditor';
+import ChangePasswordForm from '@/components/admin/ChangePasswordForm';
 
 const TABS = [
   { key: 'profile', label: 'Company Profile' },
   { key: 'certifications', label: 'Certifications' },
   { key: 'payment', label: 'Payment' },
   { key: 'contact', label: 'Contact Page' },
+  { key: 'account', label: 'Account' },
 ];
 
 export default function AdminSettingsPage() {
@@ -65,7 +67,7 @@ export default function AdminSettingsPage() {
         Written once here, shown automatically on every product page — no need to repeat it per product.
       </p>
 
-      <form onSubmit={handleSubmit} className="max-w-2xl pb-16">
+      <div className="max-w-2xl pb-16">
         {/* Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide border-b border-gray-200 mb-6">
           {TABS.map((tab) => (
@@ -84,6 +86,13 @@ export default function AdminSettingsPage() {
           ))}
         </div>
 
+        {/* Account tab has its own independent form/submit (password change),
+            so it renders outside the company-settings form below instead of
+            nesting a second <form> inside it. */}
+        {activeTab === 'account' ? (
+          <ChangePasswordForm />
+        ) : (
+        <form onSubmit={handleSubmit}>
         <div className="space-y-6">
           {/* Company Profile */}
           {activeTab === 'profile' && (
@@ -345,7 +354,9 @@ export default function AdminSettingsPage() {
           </button>
           {saved && <span className="text-xs font-bold text-brand-green">Saved</span>}
         </div>
-      </form>
+        </form>
+        )}
+      </div>
     </div>
   );
 }

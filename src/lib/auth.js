@@ -31,4 +31,19 @@ export async function requireAdmin() {
   return true;
 }
 
+// Like requireAdmin(), but returns the decoded session (userId/username) instead
+// of a boolean — for routes that need to know *which* admin is making the request,
+// e.g. changing that admin's own password.
+export async function getAdminSession() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (!token) return null;
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    return payload.role === 'admin' ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
 export const ADMIN_COOKIE_NAME = COOKIE_NAME;
