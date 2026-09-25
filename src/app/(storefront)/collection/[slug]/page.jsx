@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCollectionBySlug, getProductsByCollection } from '@/lib/products';
 import RevealText from '@/components/ui/RevealText';
+import RevealCard from '@/components/ui/RevealCard';
 
 // Refreshes each collection's cached page at most once a minute, same
 // pattern as the About/home pages — without it, admin edits to a collection
@@ -52,39 +53,40 @@ export default async function CollectionPage({ params }) {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <Link 
-              key={product.id} 
-              href={`/product/${product.slug}`}
-              className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col justify-between"
-            >
-              <div>
-                <div className="aspect-square bg-gray-100 overflow-hidden">
-                  <img 
-                    src={product.images[0]} 
-                    alt={product.title} 
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
+          {products.map((product, i) => (
+            <RevealCard key={product.id} index={i}>
+              <Link
+                href={`/product/${product.slug}`}
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col justify-between h-full"
+              >
+                <div>
+                  <div className="aspect-square bg-gray-100 overflow-hidden">
+                    <img
+                      src={product.images[0]}
+                      alt={product.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <span className="text-[10px] font-extrabold text-brand-amber uppercase tracking-wider">
+                      {product.sku}
+                    </span>
+                    <h3 className="text-lg font-extrabold text-gray-900 uppercase mt-1 mb-2">
+                      {product.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 line-clamp-2">
+                      {product.shortDescription}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-5">
-                  <span className="text-[10px] font-extrabold text-brand-amber uppercase tracking-wider">
-                    {product.sku}
-                  </span>
-                  <h3 className="text-lg font-extrabold text-gray-900 uppercase mt-1 mb-2">
-                    {product.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 line-clamp-2">
-                    {product.shortDescription}
-                  </p>
-                </div>
-              </div>
 
-              <div className="p-5 pt-0">
-                <span className="inline-block w-full text-center bg-slate-100 hover:bg-brand-cta hover:text-white text-gray-800 text-xs font-bold py-2.5 rounded-lg transition-colors uppercase tracking-wider">
-                  View Details & Inquire
-                </span>
-              </div>
-            </Link>
+                <div className="p-5 pt-0">
+                  <span className="inline-block w-full text-center bg-slate-100 hover:bg-brand-cta hover:text-white text-gray-800 text-xs font-bold py-2.5 rounded-lg transition-colors uppercase tracking-wider">
+                    View Details & Inquire
+                  </span>
+                </div>
+              </Link>
+            </RevealCard>
           ))}
         </div>
 

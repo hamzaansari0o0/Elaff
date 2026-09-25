@@ -10,6 +10,12 @@
   --color-brand-slate: #F8FAFC;     /* Light page background */
   --color-brand-cta: #0D9488;       /* Primary action buttons */
   --color-brand-cta-hover: #0F766E;
+
+  /* Extra breakpoints beyond Tailwind's defaults (sm 640 .. 2xl 1536) — xs
+     gives small phones (~375-428px) a step before the tablet-oriented sm
+     jump; 3xl targets 4K/ultra-wide (2560px+) monitors specifically. */
+  --breakpoint-xs: 25rem;   /* 400px */
+  --breakpoint-3xl: 160rem; /* 2560px */
 }
 
 /* Global Root Variables */

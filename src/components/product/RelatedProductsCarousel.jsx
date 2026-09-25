@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -16,7 +17,13 @@ export default function RelatedProductsCarousel({ products }) {
   if (!products?.length) return null;
 
   return (
-    <div className="relative">
+    <motion.div
+      className="relative"
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
       <Swiper
         modules={[Navigation]}
         onBeforeInit={(swiper) => {
@@ -56,6 +63,6 @@ export default function RelatedProductsCarousel({ products }) {
       >
         <ChevronRight className="w-4 h-4" />
       </button>
-    </div>
+    </motion.div>
   );
 }

@@ -69,11 +69,11 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
                       <Plane className="w-3 h-3 shrink-0 -rotate-12" />
                     </div>
                     <h2
-                      className={`font-fraunces text-xl min-[400px]:text-2xl font-black leading-tight mb-1 whitespace-nowrap ${theme.text}`}
+                      className={`font-fraunces text-xl xs:text-2xl font-black leading-tight mb-1 whitespace-normal xs:whitespace-nowrap ${theme.text}`}
                     >
                       {panel.title}
                     </h2>
-                    <p className={`text-xs min-[400px]:text-sm font-semibold max-w-[80%] ${theme.text}`}>
+                    <p className={`text-xs xs:text-sm font-semibold max-w-[80%] ${theme.text}`}>
                       {panel.subtitle}
                     </p>
                   </div>

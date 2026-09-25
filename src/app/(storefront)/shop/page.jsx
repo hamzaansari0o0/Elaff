@@ -50,12 +50,12 @@ export default async function ShopPage({ searchParams }) {
       {/* Banner — shown at full brightness with no overlay. The heading is
           kept for screen readers/SEO but isn't visible. */}
       <h1 className="sr-only">{title}</h1>
-      <div className="w-full h-40 sm:h-56 md:h-72 overflow-hidden">
+      <div className="w-full h-56 sm:h-72 md:h-96 3xl:h-[32rem] overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/shop-banner.jpg" alt="" className="w-full h-full object-cover block" />
+        <img src="/shop-banner.jpg" alt="" className="w-full h-full object-[inherit] block" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-10">
+      <div className="max-w-7xl 3xl:max-w-[1800px] mx-auto px-4 md:px-8 py-8 md:py-10">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           <ShopSidebar categoryCards={categoryCards} activeSlug={collection} isAllProducts={isAllProducts} />
           <ShopResults cards={cards} total={shopResult.total} page={shopResult.page} totalPages={shopResult.totalPages} />

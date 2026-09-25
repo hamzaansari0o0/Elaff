@@ -260,7 +260,7 @@ export default function BannerPanels({ images = [], collections = [] }) {
                         <Plane className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 -rotate-12" />
                       </div>
                       <h2
-                        className={`font-fraunces text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] mb-2 sm:mb-3 whitespace-nowrap ${theme.text}`}
+                        className={`font-fraunces text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl 3xl:text-8xl font-black leading-[1.05] mb-2 sm:mb-3 whitespace-normal sm:whitespace-nowrap ${theme.text}`}
                       >
                         <GradualSpacing ref={(el) => (titleRefs.current[i] = el)} text={panel.title} />
                       </h2>

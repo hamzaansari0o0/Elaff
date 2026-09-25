@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PackageSearch, ArrowUpDown } from 'lucide-react';
 import ProductCard from '@/components/ui/ProductCard';
+import RevealCard from '@/components/ui/RevealCard';
 import Pagination from './Pagination';
 import { startRouteLoading } from '@/lib/routeLoading';
 
@@ -72,9 +73,11 @@ export default function ShopResults({ cards, total, page, totalPages }) {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
-            {cards.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 md:gap-6">
+            {cards.map((product, i) => (
+              <RevealCard key={product.id} index={i}>
+                <ProductCard product={product} />
+              </RevealCard>
             ))}
           </div>
           <Pagination currentPage={page} totalPages={totalPages} />
