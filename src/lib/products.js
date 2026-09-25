@@ -95,7 +95,7 @@ export async function searchProducts(query) {
   return products.map(serialize);
 }
 
-export const SHOP_PAGE_SIZE = 10;
+export const SHOP_PAGE_SIZE = 12;
 
 const SHOP_SORTS = {
   featured: { createdAt: -1 },
