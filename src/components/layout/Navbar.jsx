@@ -96,7 +96,7 @@ export default function Navbar({ collections = [] }) {
               {collections.length > 0 ? (
                 <div className="grid grid-flow-col grid-rows-4 auto-cols-[8.5rem] gap-x-6 gap-y-3 text-sm font-semibold leading-snug tracking-normal">
                   {collections.map((c) => (
-                    <HoveredLink key={c.slug} href={`/collection/${c.slug}`} title={c.title}>
+                    <HoveredLink key={c.slug} href={`/shop?collection=${c.slug}`} title={c.title}>
                       {c.title.length > 15 ? `${c.title.slice(0, 15)}...` : c.title}
                     </HoveredLink>
                   ))}
