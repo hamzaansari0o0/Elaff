@@ -28,6 +28,13 @@ const parallaxDepth = (i, total) => (total <= 1 ? 1 : 0.55 + (i / (total - 1)) *
 const RESPONSIVE = {
   desktop: { scale: null, small: false, colX: null, card: null },
   small: { scale: 0.72, small: true, colX: 22, card: { w: 40, h: 20 } },
+  // colX is in vw, so the same percentage sits much closer to centre in
+  // absolute terms on a narrow phone than on a tablet — close enough at
+  // small phone widths (~320-425px) to cover the centred heading/subtitle.
+  // Pushed out to 50 (screen edge) so each card sits half on/half off
+  // screen instead, clearing the text; tablets keep the `small` profile
+  // above since they already have enough width for colX 22 to clear it.
+  phone: { scale: 0.72, small: true, colX: 50, card: { w: 40, h: 20 } },
 };
 
 function useResponsive() {
@@ -36,11 +43,19 @@ function useResponsive() {
     // Touch vs. mouse, not raw width: a narrow but mouse-driven window keeps
     // the desktop scatter + pointer parallax; only real touch devices drop
     // to the stacked column layout.
-    const mq = window.matchMedia('(pointer: coarse)');
-    const read = () => setR(mq.matches ? RESPONSIVE.small : RESPONSIVE.desktop);
+    const coarse = window.matchMedia('(pointer: coarse)');
+    const narrow = window.matchMedia('(max-width: 480px)');
+    const read = () => {
+      if (!coarse.matches) return setR(RESPONSIVE.desktop);
+      setR(narrow.matches ? RESPONSIVE.phone : RESPONSIVE.small);
+    };
     read();
-    mq.addEventListener('change', read);
-    return () => mq.removeEventListener('change', read);
+    coarse.addEventListener('change', read);
+    narrow.addEventListener('change', read);
+    return () => {
+      coarse.removeEventListener('change', read);
+      narrow.removeEventListener('change', read);
+    };
   }, []);
   return r;
 }
