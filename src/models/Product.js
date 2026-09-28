@@ -49,6 +49,7 @@ const ProductSchema = new mongoose.Schema(
     specifications: [SpecificationSchema],
     shippingInfo: [SpecificationSchema], // per-product Shipping & Payment tab rows (e.g. FOB Port, Packaging)
     images: [{ type: String }],
+    video: { type: String, default: '' }, // Cloudinary video URL, shown in place of the main image when set
     pageSections: [PageSectionSchema],
   },
   { timestamps: true }

@@ -165,7 +165,15 @@ export default function OrderModal({ isOpen, onClose, product, company }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto z-10">
+      {/* data-lenis-prevent: without it, Lenis (the site's global smooth-scroll
+          library) intercepts the wheel event and tries to scroll the page
+          behind the modal instead of letting this element's own overflow-y-auto
+          scroll natively. scrollbar-hide keeps it scrollable without a visible
+          scrollbar. */}
+      <div
+        data-lenis-prevent
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto scrollbar-hide z-10"
+      >
         {/* Header */}
         <div className="bg-brand-navy p-5 flex items-center justify-between text-white sticky top-0 z-10">
           <h3 className="text-lg font-black uppercase tracking-wide">Send Inquiry</h3>

@@ -31,12 +31,21 @@ export function publicIdFromUrl(url) {
   return match ? match[1] : null;
 }
 
+// Cloudinary's destroy call needs the resource_type that matches how the asset
+// was uploaded — "video" for videos, "image" for everything else (the default).
+// Present in the URL itself, e.g. .../video/upload/... vs .../image/upload/...
+export function resourceTypeFromUrl(url) {
+  return /\/video\/upload\//.test(url) ? 'video' : 'image';
+}
+
 // Best-effort bulk delete — a network blip or an already-missing asset
 // shouldn't block whatever caller (product delete, image removal) triggered this.
 export async function deleteCloudinaryImages(urls = []) {
-  const ids = urls.map(publicIdFromUrl).filter(Boolean);
-  if (ids.length === 0) return;
-  await Promise.allSettled(ids.map((id) => cloudinary.uploader.destroy(id)));
+  const targets = urls.map((url) => ({ id: publicIdFromUrl(url), resourceType: resourceTypeFromUrl(url) })).filter((t) => t.id);
+  if (targets.length === 0) return;
+  await Promise.allSettled(
+    targets.map((t) => cloudinary.uploader.destroy(t.id, { resource_type: t.resourceType }))
+  );
 }
 
 // Product images live in the main gallery and can also be embedded in Company
@@ -45,6 +54,7 @@ export async function deleteCloudinaryImages(urls = []) {
 // and bulk product-delete routes.
 export function collectProductImageUrls(product) {
   const urls = [...(product.images || [])];
+  if (product.video) urls.push(product.video);
   for (const section of product.pageSections || []) {
     if (section.image) urls.push(section.image);
     if (Array.isArray(section.images)) urls.push(...section.images);

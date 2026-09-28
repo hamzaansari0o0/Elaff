@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { slugify } from '@/lib/slugify';
 import { startRouteLoading } from '@/lib/routeLoading';
 import ImageUploader from '@/components/admin/ImageUploader';
+import VideoUploader from '@/components/admin/VideoUploader';
 import PageSectionsBuilder from '@/components/admin/PageSectionsBuilder';
 import KeyValueListEditor from '@/components/admin/KeyValueListEditor';
 
@@ -41,6 +42,7 @@ export default function ProductForm({ initialData, productId }) {
   const [specifications, setSpecifications] = useState(initialData?.specifications || []);
   const [shippingInfo, setShippingInfo] = useState(initialData?.shippingInfo || []);
   const [images, setImages] = useState(initialData?.images || []);
+  const [video, setVideo] = useState(initialData?.video || '');
   const [pageSections, setPageSections] = useState(initialData?.pageSections || []);
 
   const [error, setError] = useState('');
@@ -111,6 +113,7 @@ export default function ProductForm({ initialData, productId }) {
       specifications: specifications.filter((s) => s.label && s.value),
       shippingInfo: shippingInfo.filter((s) => s.label && s.value),
       images,
+      video,
       pageSections: pageSections
         .filter(isSectionMeaningful)
         .map((s) =>
@@ -350,6 +353,16 @@ export default function ProductForm({ initialData, productId }) {
       <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
         <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Images</h2>
         <ImageUploader images={images} onChange={setImages} max={6} collectionName={primaryCollectionName} />
+      </section>
+
+      {/* Video */}
+      <section className="bg-white border border-gray-200 rounded-xl p-6 space-y-3">
+        <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Product Video</h2>
+        <p className="text-xs text-gray-500">
+          Optional. Shown in place of the main image on the product page, and autoplays (muted) when a
+          visitor scrolls to it.
+        </p>
+        <VideoUploader video={video} onChange={setVideo} collectionName={primaryCollectionName} />
       </section>
 
       {/* Description */}

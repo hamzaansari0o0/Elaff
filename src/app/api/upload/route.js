@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth';
-import cloudinary, { productImageFolder, publicIdFromUrl } from '@/lib/cloudinary';
+import cloudinary, { productImageFolder, publicIdFromUrl, resourceTypeFromUrl } from '@/lib/cloudinary';
 
 export async function POST(request) {
   if (!(await requireAdmin())) {
@@ -20,8 +20,10 @@ export async function POST(request) {
   const folder = productImageFolder(collectionName);
 
   const result = await new Promise((resolve, reject) => {
+    // 'auto' lets Cloudinary detect image vs video from the file itself,
+    // rather than trusting a client-supplied type.
     const stream = cloudinary.uploader.upload_stream(
-      { folder },
+      { folder, resource_type: 'auto' },
       (error, uploadResult) => {
         if (error) reject(error);
         else resolve(uploadResult);
@@ -49,6 +51,6 @@ export async function DELETE(request) {
     return NextResponse.json({ success: true, skipped: true });
   }
 
-  await cloudinary.uploader.destroy(publicId);
+  await cloudinary.uploader.destroy(publicId, { resource_type: resourceTypeFromUrl(url) });
   return NextResponse.json({ success: true });
 }

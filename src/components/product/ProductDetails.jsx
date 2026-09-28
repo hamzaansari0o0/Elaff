@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ChevronRight,
@@ -16,6 +16,7 @@ import {
   Clock,
   Boxes,
   BadgeCheck,
+  Play,
 } from 'lucide-react';
 import { formatPrice } from '@/lib/formatPrice';
 import { useCart } from '@/context/CartContext';
@@ -24,6 +25,7 @@ import OrderModal from '@/components/product/OrderModal';
 import ProductProfileTabs from '@/components/product/ProductProfileTabs';
 import InlineInquiryForm from '@/components/product/InlineInquiryForm';
 import RelatedProductsCarousel from '@/components/product/RelatedProductsCarousel';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 // lucide-react dropped brand/logo icons — small inline marks for the share row instead.
 function FacebookIcon(props) {
@@ -90,10 +92,40 @@ function iconForSpecLabel(label = '') {
   return Tag;
 }
 
+function GalleryThumb({ item, idx, active, onSelect, product }) {
+  return (
+    <button
+      onClick={onSelect}
+      className={`relative w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+        active ? 'border-brand-navy opacity-100' : 'border-gray-200 opacity-70 hover:opacity-100'
+      }`}
+    >
+      {item.type === 'video' ? (
+        <>
+          <video src={item.src} className="w-full h-full object-cover" muted playsInline preload="metadata" />
+          <span className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <Play className="w-4 h-4 text-white fill-white" />
+          </span>
+        </>
+      ) : (
+        <img src={item.src} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+      )}
+    </button>
+  );
+}
+
 function Gallery({ product }) {
   const images = product.images?.length ? product.images : ['/placeholder.jpg'];
-  const [activeImage, setActiveImage] = useState(images[0]);
+  // Video takes the main image's place by default when the product has one —
+  // still browsable back to the images via the thumbnail rail.
+  const items = product.video
+    ? [{ type: 'video', src: product.video }, ...images.map((src) => ({ type: 'image', src }))]
+    : images.map((src) => ({ type: 'image', src }));
+
+  const [active, setActive] = useState(items[0]);
   const [zoomStyle, setZoomStyle] = useState({ transform: 'scale(1)' });
+  const videoRef = useRef(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   function handleMouseMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -102,60 +134,94 @@ function Gallery({ product }) {
     setZoomStyle({ transformOrigin: `${x}% ${y}%`, transform: 'scale(1.7)' });
   }
 
+  // Plays the video once it scrolls into view and pauses once it scrolls back
+  // out, rather than autoplaying immediately on page load. Muted, so this is
+  // allowed under every browser's autoplay policy; skipped entirely for
+  // visitors with reduced motion enabled.
+  useEffect(() => {
+    if (active.type !== 'video' || prefersReducedMotion) return undefined;
+    const el = videoRef.current;
+    if (!el) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [active, prefersReducedMotion]);
+
   return (
     <div className="flex gap-3">
       {/* Vertical thumbnail rail (desktop) */}
-      {images.length > 1 && (
+      {items.length > 1 && (
         <div className="hidden md:flex flex-col gap-2 w-16 shrink-0 max-h-[420px] overflow-y-auto scrollbar-hide">
-          {images.map((img, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveImage(img)}
-              className={`w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                activeImage === img ? 'border-brand-navy opacity-100' : 'border-gray-200 opacity-70 hover:opacity-100'
-              }`}
-            >
-              <img src={img} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
-            </button>
+          {items.map((item, idx) => (
+            <GalleryThumb
+              key={item.src}
+              item={item}
+              idx={idx}
+              active={active.src === item.src}
+              onSelect={() => setActive(item)}
+              product={product}
+            />
           ))}
         </div>
       )}
 
       <div className="flex-1 min-w-0">
         <div
-          className="relative aspect-square rounded-xl overflow-hidden border border-gray-100 bg-slate-50 cursor-zoom-in"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={() => setZoomStyle({ transform: 'scale(1)' })}
+          className={`relative aspect-square rounded-xl overflow-hidden border border-gray-100 bg-slate-50 ${
+            active.type === 'image' ? 'cursor-zoom-in' : ''
+          }`}
+          onMouseMove={active.type === 'image' ? handleMouseMove : undefined}
+          onMouseLeave={active.type === 'image' ? () => setZoomStyle({ transform: 'scale(1)' }) : undefined}
         >
           {product.badge && (
             <span className="absolute top-4 left-4 z-10 -rotate-6 bg-brand-amber text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md ring-1 ring-inset ring-white/40">
               {product.badge}
             </span>
           )}
-          <span className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-md">
-            <Search className="w-3.5 h-3.5 text-gray-500" />
-          </span>
-          <img
-            src={activeImage}
-            alt={product.title}
-            className="w-full h-full object-cover transition-transform duration-200"
-            style={zoomStyle}
-          />
+          {active.type === 'video' ? (
+            <video
+              ref={videoRef}
+              src={active.src}
+              className="w-full h-full object-cover"
+              controls
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <>
+              <span className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-md">
+                <Search className="w-3.5 h-3.5 text-gray-500" />
+              </span>
+              <img
+                src={active.src}
+                alt={product.title}
+                className="w-full h-full object-cover transition-transform duration-200"
+                style={zoomStyle}
+              />
+            </>
+          )}
         </div>
 
         {/* Horizontal thumbnails (mobile/tablet) */}
-        {images.length > 1 && (
+        {items.length > 1 && (
           <div className="flex md:hidden gap-3 overflow-x-auto scrollbar-hide pt-3">
-            {images.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveImage(img)}
-                className={`w-16 h-16 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                  activeImage === img ? 'border-brand-navy opacity-100' : 'border-gray-200 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img src={img} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
-              </button>
+            {items.map((item, idx) => (
+              <GalleryThumb
+                key={item.src}
+                item={item}
+                idx={idx}
+                active={active.src === item.src}
+                onSelect={() => setActive(item)}
+                product={product}
+              />
             ))}
           </div>
         )}
