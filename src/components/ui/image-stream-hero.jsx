@@ -30,8 +30,16 @@ import { cn } from '@/lib/utils';
  *    needs no fade in. Birthing on its own side instead leaves a hole
  *    at dead centre that blinks open once every cycle.
  *
- * Every length is in `cqw` — a percentage of the container's width —
- * so the whole corridor keeps its proportions at any size. The
+ * Every length is in `vw` — a percentage of the viewport width — so
+ * the whole corridor keeps its proportions at any size. Originally
+ * authored in `cqw` (container query units) so the corridor would
+ * scale to its own box rather than the viewport, but Safari has a
+ * long-standing bug where `cqw`/`cqh` values inside a `transform`
+ * function (as opposed to a plain layout property) don't resolve —
+ * the whole animation collapses to a point in Safari on macOS/iOS
+ * while working fine in Chrome/Firefox. `vw` has universal transform
+ * support and is numerically identical here since this component is
+ * always rendered full-viewport-width (see AboutHero.jsx). The
  * defaults were fitted numerically against a reference recording's
  * card-height and edge-position profile, not eyeballed.
  * ─────────────────────────────────────────────────────────────── */
@@ -63,7 +71,7 @@ function keyframes(dir, name, p) {
     const rail = p.railExit - (p.railExit - p.railBirth) * Math.pow(1 - u, p.fan);
     const turn = p.turnBirth + (p.turnExit - p.turnBirth) * u;
     steps.push(
-      `${(u * 100).toFixed(2)}%{transform:translate3d(${(dir * rail).toFixed(2)}cqw,0,${z.toFixed(2)}cqw) rotateY(${(-dir * turn).toFixed(2)}deg)}`
+      `${(u * 100).toFixed(2)}%{transform:translate3d(${(dir * rail).toFixed(2)}vw,0,${z.toFixed(2)}vw) rotateY(${(-dir * turn).toFixed(2)}deg)}`
     );
   }
   return `@keyframes ${name}{${steps.join('')}}`;
@@ -88,14 +96,14 @@ export function ImageStreamHero({ images, cards = 9, speed = 18, axis = 55, path
   );
 
   return (
-    <div className={cn('relative overflow-hidden', className)} {...props} style={{ containerType: 'inline-size', ...props.style }}>
+    <div className={cn('relative overflow-hidden', className)} {...props} style={props.style}>
       <style>{css}</style>
 
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          perspective: `${p.perspective}cqw`,
+          perspective: `${p.perspective}vw`,
           perspectiveOrigin: `50% ${axis}%`,
         }}
       >
@@ -112,11 +120,11 @@ export function ImageStreamHero({ images, cards = 9, speed = 18, axis = 55, path
                   style={{
                     left: '50%',
                     top: `${axis}%`,
-                    width: `${p.cardWidth}cqw`,
-                    height: `${p.cardHeight}cqw`,
-                    marginLeft: `${-p.cardWidth / 2}cqw`,
-                    marginTop: `${-p.cardHeight / 2}cqw`,
-                    borderRadius: `${p.cardRadius}cqw`,
+                    width: `${p.cardWidth}vw`,
+                    height: `${p.cardHeight}vw`,
+                    marginLeft: `${-p.cardWidth / 2}vw`,
+                    marginTop: `${-p.cardHeight / 2}vw`,
+                    borderRadius: `${p.cardRadius}vw`,
                     animation: `${name} ${speed}s linear infinite`,
                     // Negative delay drops each card mid-flight, so the
                     // corridor is already full on the first frame.

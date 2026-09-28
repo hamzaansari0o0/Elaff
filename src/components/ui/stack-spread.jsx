@@ -95,17 +95,25 @@ function Card({ card, progress, reduce, clusterRotation, scaleMul, isSmall, colX
   const endY = sm ? sm.y : target.y;
   const endRotate = flat || isSmall ? 0 : target.rotate;
 
-  // -50% keeps card centred on its anchor
-  const translate = useTransform([progress, pointer.x, pointer.y], ([p, px, py]) => {
+  // -50% keeps card centred on its anchor. Combined into one `transform`
+  // string (rather than the separate translate/rotate/scale CSS properties)
+  // because Framer Motion writes those separate properties straight to the
+  // element via `element.style.translate = …` each frame, and Safari has
+  // long-standing bugs applying that path with calc()-based values — the
+  // classic `transform` property doesn't have that problem in any browser.
+  // Order matches the spec-defined application order of the individual
+  // properties (translate, then rotate, then scale), so this is a visual
+  // no-op everywhere else.
+  const transform = useTransform([progress, pointer.x, pointer.y], ([p, px, py]) => {
     const tx = stackOffset.x + (endX - stackOffset.x) * p;
     const ty = stackOffset.y + (endY - stackOffset.y) * p;
     const drift = depth * p;
     const dx = tx - px * PARALLAX_X * drift;
     const dy = ty - py * PARALLAX_Y * drift;
-    return `calc(-50% + ${dx}vw) calc(-50% + ${dy}vh)`;
+    const r = stackRotate + (endRotate - stackRotate) * p;
+    const s = stackScale + (restScale - stackScale) * p;
+    return `translate(calc(-50% + ${dx}vw), calc(-50% + ${dy}vh)) rotate(${r}deg) scale(${s})`;
   });
-  const rotate = useTransform(progress, [0, 1], [stackRotate, endRotate]);
-  const scale = useTransform(progress, [0, 1], [stackScale, restScale]);
 
   return (
     <motion.div
@@ -114,9 +122,7 @@ function Card({ card, progress, reduce, clusterRotation, scaleMul, isSmall, colX
         width: `${fixedCard ? fixedCard.w : target.w}vw`,
         height: `${fixedCard ? fixedCard.h : target.h}vh`,
         zIndex: card.z ?? 1,
-        translate,
-        rotate,
-        scale,
+        transform,
       }}
     >
       <CardFace item={item} cardRadius={cardRadius} />
