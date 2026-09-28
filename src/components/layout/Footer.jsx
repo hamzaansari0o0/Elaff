@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail } from 'lucide-react';
+import { Phone, Mail, MapPin } from 'lucide-react';
 import RevealText from '@/components/ui/RevealText';
 
 export default function Footer() {
@@ -47,6 +47,10 @@ export default function Footer() {
           </RevealText>
           <div className="font-bricolage space-y-3 text-gray-200">
             <p>Please contact us if you have any questions about our shop. We generally reply within an hour.</p>
+            <div className="flex items-start gap-2">
+              <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <span>Yiwu City, Zhejiang Province, China</span>
+            </div>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-amber-400" />
               <span><strong>TEL:</strong> +92 308 4888399</span>

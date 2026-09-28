@@ -1,4 +1,4 @@
-import { MessageCircle, Clock, Phone, Mail } from 'lucide-react';
+import { MessageCircle, Clock, Phone, Mail, MapPin } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import RevealText from '@/components/ui/RevealText';
 import { getCompanySettings } from '@/lib/settings';
@@ -88,6 +88,20 @@ export default async function ContactPage() {
                 </div>
               </div>
             </div>
+
+            {settings.address && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-full bg-brand-navy/5 text-brand-navy flex items-center justify-center shrink-0">
+                    <MapPin className="w-4.5 h-4.5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-1">Our Address</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed whitespace-pre-line">{settings.address}</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
