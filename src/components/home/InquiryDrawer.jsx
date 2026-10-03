@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Send, CircleCheckBig, Loader2 } from 'lucide-react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { trackEvent } from '@/lib/analytics';
 
 const VOLUME_PLACEHOLDER = 'e.g. 5 tons / month, 2 x 20ft containers, 1,000 cartons';
 
@@ -18,6 +19,10 @@ export default function InquiryDrawer({ isOpen, onClose, categories = [] }) {
   const [error, setError] = useState('');
 
   useLockBodyScroll(isOpen);
+
+  useEffect(() => {
+    if (isOpen) trackEvent('inquiry_open', { from: 'drawer' });
+  }, [isOpen]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -63,6 +68,7 @@ export default function InquiryDrawer({ isOpen, onClose, categories = [] }) {
       }
 
       setIsSuccess(true);
+      trackEvent('inquiry_submit', { from: 'drawer' });
     } catch (err) {
       setError(err.message);
     } finally {

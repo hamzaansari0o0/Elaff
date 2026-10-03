@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Check, Send } from 'lucide-react';
 import RevealText from '@/components/ui/RevealText';
+import { trackEvent } from '@/lib/analytics';
 
 const MESSAGE_LIMIT = 1000;
 
@@ -63,6 +64,7 @@ export default function ContactForm() {
       }
 
       setIsSuccess(true);
+      trackEvent('contact_submit');
       setFormData({ name: '', email: '', phone: '', message: '' });
       setAgreed(false);
     } catch (err) {

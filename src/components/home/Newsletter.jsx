@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import RevealText from '@/components/ui/RevealText';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -20,6 +21,7 @@ export default function Newsletter() {
       });
       if (!res.ok) throw new Error();
       setStatus('success');
+      trackEvent('newsletter_signup');
       setEmail('');
       setTimeout(() => setStatus('idle'), 4000);
     } catch {

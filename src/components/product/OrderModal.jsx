@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { trackEvent } from '@/lib/analytics';
 
 const UNITS = ['Cartons', 'Pallets', 'Tons', 'Kg', 'Pieces', 'Containers', 'Other'];
 
@@ -136,6 +137,7 @@ export default function OrderModal({ isOpen, onClose, product, company }) {
       }
 
       setIsSuccess(true);
+      trackEvent('inquiry_submit', { from: 'product_modal', slug: product.slug });
 
       setTimeout(() => {
         setIsSuccess(false);

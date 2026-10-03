@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Clock, BadgeDollarSign, ShieldCheck, ShoppingCart, Check, Send } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { trackEvent } from '@/lib/analytics';
 
 const MESSAGE_LIMIT = 1000;
 
@@ -49,6 +50,7 @@ export default function InlineInquiryForm({ product, companyName, price }) {
       }
 
       setIsSuccess(true);
+      trackEvent('inquiry_submit', { from: 'inline', slug: product.slug });
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {
       setError(err.message);

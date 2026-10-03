@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { trackEvent } from '@/lib/analytics';
 
 export default function CartInquiryModal({ isOpen, onClose }) {
   const { items, removeItem, updateQuantity, clearCart } = useCart();
@@ -13,6 +14,10 @@ export default function CartInquiryModal({ isOpen, onClose }) {
   const [error, setError] = useState('');
 
   useLockBodyScroll(isOpen);
+
+  useEffect(() => {
+    if (isOpen) trackEvent('inquiry_open', { from: 'cart' });
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -54,6 +59,7 @@ export default function CartInquiryModal({ isOpen, onClose }) {
       }
 
       setIsSuccess(true);
+      trackEvent('inquiry_submit', { from: 'cart', items: items.length });
       clearCart();
 
       setTimeout(() => {

@@ -3,6 +3,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
 import Chatbot from '@/components/chatbot/Chatbot';
+import AnalyticsTracker from '@/components/analytics/AnalyticsTracker';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import { getCompanySettings } from '@/lib/settings';
 import { getAllCollections } from '@/lib/products';
@@ -22,6 +23,7 @@ export default async function StorefrontLayout({ children }) {
           animations skip; opacity fades still play), without threading a
           check through each component individually. */}
       <MotionConfig reducedMotion="user">
+        <AnalyticsTracker />
         {/* Lenis momentum scroll — every storefront page, not just the home page.
             Scoped to this layout only, so /admin keeps native scroll. */}
         <SmoothScroll>

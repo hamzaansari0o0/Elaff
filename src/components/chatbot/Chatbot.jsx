@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Bot, Loader2, Send, X } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 const GREETING = "Hi! I'm the Elaff assistant. Ask me anything about our products or trade services.";
 const SESSION_STORAGE_KEY = 'elaff_chat_session_id';
@@ -132,6 +133,7 @@ export default function Chatbot({ whatsappNumber }) {
       return;
     }
     setShowHint(false);
+    if (!isOpen) trackEvent('chatbot_open');
     setIsOpen((v) => !v);
   }
 
@@ -148,6 +150,7 @@ export default function Chatbot({ whatsappNumber }) {
       return;
     }
     setShowHint(false);
+    trackEvent('whatsapp_click');
   }
 
   const whatsappHref = buildWhatsAppLink(

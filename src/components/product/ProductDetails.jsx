@@ -26,6 +26,7 @@ import ProductProfileTabs from '@/components/product/ProductProfileTabs';
 import InlineInquiryForm from '@/components/product/InlineInquiryForm';
 import RelatedProductsCarousel from '@/components/product/RelatedProductsCarousel';
 import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
+import { trackEvent } from '@/lib/analytics';
 
 // lucide-react dropped brand/logo icons — small inline marks for the share row instead.
 function FacebookIcon(props) {
@@ -272,6 +273,14 @@ export default function ProductDetails({ product, related = [], company = null }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addItem, isInCart } = useCart();
 
+  // The ref keeps React strict-mode's double effect from counting one view twice.
+  const viewedSlugRef = useRef(null);
+  useEffect(() => {
+    if (!product?.slug || viewedSlugRef.current === product.slug) return;
+    viewedSlugRef.current = product.slug;
+    trackEvent('product_view', { slug: product.slug, title: product.title });
+  }, [product?.slug]); // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!product) return <div className="p-10 text-center font-sans font-medium text-gray-500">Loading product...</div>;
 
   const price = formatPrice(product.price, product.priceUnit);
@@ -282,6 +291,7 @@ export default function ProductDetails({ product, related = [], company = null }
   function handleAddToCart() {
     if (inCart) return;
     addItem({ slug: product.slug, title: product.title, image: product.images?.[0] || '', price });
+    trackEvent('add_to_cart', { slug: product.slug });
   }
 
   return (
@@ -372,7 +382,10 @@ export default function ProductDetails({ product, related = [], company = null }
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-3 mb-5">
                 <button
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => {
+                    trackEvent('inquiry_open', { from: 'product', slug: product.slug });
+                    setIsModalOpen(true);
+                  }}
                   className="flex-1 flex items-center justify-center gap-2 bg-brand-navy hover:bg-brand-navy-hover text-white font-extrabold text-xs md:text-sm py-3.5 px-5 rounded-xl uppercase tracking-widest transition-colors shadow-lg hover:shadow-xl"
                 >
                   <ShoppingBag className="w-4 h-4" />

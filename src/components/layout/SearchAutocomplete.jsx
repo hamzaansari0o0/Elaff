@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Loader2 } from 'lucide-react';
 import { startRouteLoading } from '@/lib/routeLoading';
+import { trackEvent } from '@/lib/analytics';
 
 const MIN_QUERY_LENGTH = 2;
 const DEBOUNCE_MS = 250;
@@ -89,6 +90,7 @@ export default function SearchAutocomplete({ inputClassName, formClassName, butt
   function submitFullSearch(rawQuery) {
     const trimmed = rawQuery.trim();
     if (!trimmed) return;
+    trackEvent('search', { query: trimmed.slice(0, 80) });
     setIsOpen(false);
     onNavigate?.();
     startRouteLoading();
