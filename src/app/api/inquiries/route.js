@@ -83,17 +83,23 @@ export async function POST(request) {
     items,
   });
 
-  // Notify the admin by email — best-effort, must never block the inquiry from being saved.
+  // Awaited so serverless runtimes don't freeze the function before the email goes out.
+  // A failed send is logged and never blocks the inquiry from being saved.
   const notifyTo = process.env.INQUIRY_NOTIFY_EMAIL;
   if (notifyTo) {
     const adminUrl = new URL('/admin/inquiries', request.nextUrl.origin).toString();
     const { html, text } = buildNotificationEmail(inquiry, adminUrl);
-    sendMail({
-      to: notifyTo,
-      subject: `New Inquiry from ${inquiry.name} — Elaff Trade Co.`,
-      html,
-      text,
-    }).catch((err) => console.error('Failed to send inquiry notification email:', err));
+    try {
+      await sendMail({
+        to: notifyTo,
+        subject: `New Inquiry from ${inquiry.name} — Elaff Trade Co.`,
+        html,
+        text,
+        replyTo: inquiry.email,
+      });
+    } catch (err) {
+      console.error('Failed to send inquiry notification email:', err);
+    }
   }
 
   return NextResponse.json(inquiry, { status: 201 });

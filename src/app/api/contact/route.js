@@ -44,17 +44,23 @@ export async function POST(request) {
     message: body.message,
   });
 
-  // Notify the admin by email — best-effort, must never block the message from being saved.
+  // Awaited so serverless runtimes don't freeze the function before the email goes out.
+  // A failed send is logged and never blocks the message from being saved.
   const notifyTo = process.env.INQUIRY_NOTIFY_EMAIL;
   if (notifyTo) {
     const adminUrl = new URL('/admin/contact-messages', request.nextUrl.origin).toString();
     const { html, text } = buildNotificationEmail(contactMessage, adminUrl);
-    sendMail({
-      to: notifyTo,
-      subject: `New Contact Message from ${contactMessage.name} — Elaff Trade Co.`,
-      html,
-      text,
-    }).catch((err) => console.error('Failed to send contact notification email:', err));
+    try {
+      await sendMail({
+        to: notifyTo,
+        subject: `New Contact Message from ${contactMessage.name} — Elaff Trade Co.`,
+        html,
+        text,
+        replyTo: contactMessage.email,
+      });
+    } catch (err) {
+      console.error('Failed to send contact notification email:', err);
+    }
   }
 
   return NextResponse.json(contactMessage, { status: 201 });
