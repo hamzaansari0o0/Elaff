@@ -1,6 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { productBreadcrumbs, collectionBreadcrumbs } from './breadcrumbs.js';
+import { productBreadcrumbs, collectionBreadcrumbs, blogBreadcrumbs, articleBreadcrumbs } from './breadcrumbs.js';
 
 const HOME = { name: 'Home', path: '/' };
 const SHOP = { name: 'Shop', path: '/shop' };
@@ -44,6 +44,22 @@ describe('collectionBreadcrumbs', () => {
       HOME,
       SHOP,
       { name: 'Seafood', path: '/collection/seafood' },
+    ]);
+  });
+});
+
+describe('blog breadcrumbs', () => {
+  const BLOG = { name: 'Blog', path: '/blog' };
+
+  test('the blog list runs Home, then Blog', () => {
+    assert.deepEqual(blogBreadcrumbs(), [HOME, BLOG]);
+  });
+
+  test('an article runs Home, Blog, then the article', () => {
+    assert.deepEqual(articleBreadcrumbs({ title: 'EXW vs FOB vs CNF', slug: 'exw-vs-fob-vs-cnf' }), [
+      HOME,
+      BLOG,
+      { name: 'EXW vs FOB vs CNF', path: '/blog/exw-vs-fob-vs-cnf' },
     ]);
   });
 });

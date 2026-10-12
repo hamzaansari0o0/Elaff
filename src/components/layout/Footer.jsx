@@ -25,6 +25,7 @@ export default function Footer({ collections = [] }) {
           </RevealText>
           <ul className="font-bricolage space-y-2.5 font-semibold text-gray-200">
             <li><Link href="/about" prefetch={false} className="hover:underline">ABOUT US</Link></li>
+            <li><Link href="/blog" prefetch={false} className="hover:underline">BLOG</Link></li>
             <li><Link href="/contact" className="hover:underline">CONTACT US</Link></li>
             <li><Link href="/" className="hover:underline">HOMEPAGE</Link></li>
           </ul>

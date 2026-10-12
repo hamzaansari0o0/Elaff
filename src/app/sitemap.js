@@ -1,5 +1,6 @@
 import { getAllProducts, getAllCollections } from '@/lib/products';
 import { getCompanySettings } from '@/lib/settings';
+import { getAllArticles } from '@/lib/blog';
 import { buildSitemapEntries } from '@/lib/sitemapEntries';
 
 // Without this the sitemap is generated once at build time and never again, so
@@ -16,5 +17,5 @@ export default async function sitemap() {
     getCompanySettings(),
   ]);
 
-  return buildSitemapEntries({ products, collections, settings });
+  return buildSitemapEntries({ products, collections, settings, articles: getAllArticles() });
 }

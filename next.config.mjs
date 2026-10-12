@@ -8,6 +8,15 @@ const nextConfig = {
   // Every page here waits for its data before it is sent anyway, so streaming
   // the metadata gains nothing; matching every visitor means it always lands in <head>.
   htmlLimitedBots: /.*/,
+
+  // The blog reads its articles from content/blog at runtime (pages and the
+  // sitemap regenerate in the background), and Next only ships files it can see
+  // being used. This guarantees the articles are in those routes' bundles.
+  outputFileTracingIncludes: {
+    '/blog': ['./content/blog/**/*'],
+    '/blog/*': ['./content/blog/**/*'],
+    '/sitemap.xml': ['./content/blog/**/*'],
+  },
 };
 
 export default nextConfig;

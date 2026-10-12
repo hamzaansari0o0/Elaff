@@ -33,6 +33,13 @@ export const TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
 export const SITE_DESCRIPTION =
   'B2B trading company sourcing and exporting grocery, confectionery, beverages, frozen and agricultural products for wholesalers and distributors worldwide.';
 
+// The blog's list page (/blog): its title (the layout adds the brand), its meta
+// description (search results show roughly 155 characters), and the same two
+// as published in the Blog structured data.
+export const BLOG_TITLE = 'Wholesale Food Import & Sourcing Guides';
+export const BLOG_DESCRIPTION =
+  'Practical guides for importers and wholesale buyers: frozen food, fresh fruit, trade terms, halal and HACCP, shipping and choosing a supplier.';
+
 // Shown in link previews (WhatsApp, LinkedIn, Facebook, X) for pages without a
 // picture of their own. The logo is transparent, which previews often paint
 // black, so this is the logo centred on white at the standard 1200x630.
@@ -358,6 +365,66 @@ export function faqLd(items, path) {
   });
 }
 
+// The company as the author or publisher of an article. Google's article
+// checks want a name and address on the node itself, and may not join it to the
+// Organization in the layout's separate script tag, so the essentials are
+// repeated here under the same @id.
+function organizationRole(settings, extra) {
+  return compact({
+    '@type': 'Organization',
+    '@id': ORGANIZATION_ID,
+    name: text(settings?.companyName) || SITE_NAME,
+    url: absoluteUrl('/'),
+    ...extra,
+  });
+}
+
+// `article` comes from lib/blogParse.js. `settings` is Company Settings.
+export function articleLd(article, settings) {
+  const url = absoluteUrl(`/blog/${article.slug}`);
+
+  return compact({
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    headline: text(article.title),
+    description: text(article.description),
+    datePublished: article.date,
+    dateModified: article.updated,
+    inLanguage: LANGUAGE,
+    keywords: [article.keyword, ...(article.keywords || [])].map(text).filter(Boolean).join(', '),
+    wordCount: article.wordCount,
+    image: [absoluteUrl(DEFAULT_SHARE_IMAGE.url)],
+    isPartOf: { '@id': WEBSITE_ID },
+    author: organizationRole(settings),
+    publisher: organizationRole(settings, { logo: { '@type': 'ImageObject', url: absoluteUrl('/logo.png') } }),
+  });
+}
+
+// The blog list page: the blog itself and a short entry for each post.
+export function blogLd(articles) {
+  const url = absoluteUrl('/blog');
+
+  return compact({
+    '@type': 'Blog',
+    '@id': `${url}#blog`,
+    url,
+    name: BLOG_TITLE,
+    description: BLOG_DESCRIPTION,
+    inLanguage: LANGUAGE,
+    isPartOf: { '@id': WEBSITE_ID },
+    publisher: { '@id': ORGANIZATION_ID },
+    blogPost: articles.map((article) => ({
+      '@type': 'BlogPosting',
+      headline: text(article.title),
+      url: absoluteUrl(`/blog/${article.slug}`),
+      datePublished: article.date,
+      dateModified: article.updated,
+    })),
+  });
+}
+
 // Missing nodes (e.g. an FAQ with no questions) are skipped rather than
 // emitted as null.
 export function jsonLdGraph(nodes) {
@@ -379,13 +446,18 @@ export function jsonLdHtml(nodes) {
 // X). Next replaces — it does not merge — a layout's `openGraph` with a page's,
 // so every page must supply a complete set; this builds one. `title` is the
 // bare page title; none means the home page.
-function socialMetadata({ title, description, path, image }) {
+function socialMetadata({ title, description, path, image, article }) {
   const pageImage = text(image);
   const socialTitle = title ? TITLE_TEMPLATE.replace('%s', () => title) : HOME_TITLE;
 
   return compact({
     openGraph: {
       ...SOCIAL_DEFAULTS.openGraph,
+      ...(article && {
+        type: 'article',
+        publishedTime: article.publishedTime,
+        modifiedTime: article.modifiedTime,
+      }),
       title: socialTitle,
       description,
       url: CAN_ADDRESS_PAGES ? path : undefined,
@@ -408,7 +480,10 @@ function socialMetadata({ title, description, path, image }) {
 // `noindex` keeps a page out of search results (it can still be followed for
 // links). Such a page gets no canonical or og:url: pointing a noindex page at
 // an address is a mixed signal.
-export function pageMetadata({ title, description, path, image, noindex = false }) {
+//
+// `article` ({ publishedTime, modifiedTime }) marks a blog article: link
+// previews then see an article, with its dates, instead of a generic website page.
+export function pageMetadata({ title, description, path, image, noindex = false, article }) {
   const address = noindex ? undefined : path;
 
   return compact({
@@ -416,7 +491,7 @@ export function pageMetadata({ title, description, path, image, noindex = false 
     description,
     alternates: { canonical: CAN_ADDRESS_PAGES ? address : undefined },
     robots: noindex ? { index: false, follow: true } : undefined,
-    ...socialMetadata({ title, description, path: address, image }),
+    ...socialMetadata({ title, description, path: address, image, article }),
   });
 }
 

@@ -29,3 +29,13 @@ export function productBreadcrumbs(product) {
 export function collectionBreadcrumbs(collection) {
   return [{ name: 'Home', path: '/' }, { name: 'Shop', path: '/shop' }, collectionCrumb(collection)];
 }
+
+// Home > Blog
+export function blogBreadcrumbs() {
+  return [{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }];
+}
+
+// Home > Blog > <article>
+export function articleBreadcrumbs(article) {
+  return [...blogBreadcrumbs(), { name: article.title, path: `/blog/${article.slug}` }];
+}

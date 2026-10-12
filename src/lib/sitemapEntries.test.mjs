@@ -105,6 +105,47 @@ describe('sitemap entries', () => {
   });
 });
 
+describe('sitemap with blog articles', () => {
+  const articles = [
+    { slug: 'newer', updated: '2026-10-21' },
+    { slug: 'older', updated: '2026-10-14' },
+  ];
+  const withBlog = buildSitemapEntries({ products, collections, settings, articles });
+  const blogAt = (path) => withBlog.find((entry) => entry.url === `https://www.example.com${path}`);
+
+  test('lists /blog among the fixed pages and each article after the products', () => {
+    assert.deepEqual(
+      withBlog.map((entry) => entry.url.replace('https://www.example.com', '')),
+      [
+        '/', '/shop', '/collections', '/blog', '/about', '/partners', '/contact',
+        '/collection/grocery', '/collection/beverages', '/collection/empty',
+        '/product/rice', '/product/tea', '/product/orphan',
+        '/blog/newer', '/blog/older',
+      ]
+    );
+  });
+
+  test('an article is dated by its own last update', () => {
+    assert.equal(blogAt('/blog/newer').lastModified, '2026-10-21T00:00:00.000Z');
+    assert.equal(blogAt('/blog/older').lastModified, '2026-10-14T00:00:00.000Z');
+  });
+
+  test('the blog list is dated by its newest article', () => {
+    assert.equal(blogAt('/blog').lastModified, '2026-10-21T00:00:00.000Z');
+  });
+
+  test('without articles there is no /blog page to list', () => {
+    for (const none of [undefined, []]) {
+      const entries = buildSitemapEntries({ products, collections, settings, articles: none });
+      assert.ok(!entries.some((entry) => entry.url.includes('/blog')));
+    }
+  });
+
+  test('articles carry no images field', () => {
+    assert.ok(!('images' in blogAt('/blog/newer')));
+  });
+});
+
 describe('sitemap XML as Next writes it', () => {
   // Next puts URLs into the XML exactly as given, so an unescaped "&" in an
   // image link would make the whole file unreadable to search engines.

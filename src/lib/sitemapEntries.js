@@ -11,6 +11,8 @@ const FIXED_PAGES = [
   { path: '/', changeFrequency: 'daily', priority: 1, datedBy: 'catalog' },
   { path: '/shop', changeFrequency: 'daily', priority: 0.9, datedBy: 'catalog' },
   { path: '/collections', changeFrequency: 'weekly', priority: 0.8, datedBy: 'catalog' },
+  // The blog list is dated by its newest article, and left out until there is one.
+  { path: '/blog', changeFrequency: 'weekly', priority: 0.8, datedBy: 'articles', needsArticles: true },
   { path: '/about', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/partners', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/contact', changeFrequency: 'monthly', priority: 0.5, datedBy: 'settings' },
@@ -43,8 +45,9 @@ function entry(fields) {
 
 // `products` and `collections` are the active catalog as returned by
 // lib/products.js (products with their collections populated); `settings` is
-// the Company Settings document.
-export function buildSitemapEntries({ products = [], collections = [], settings } = {}) {
+// the Company Settings document; `articles` are the blog articles from
+// lib/blog.js (each with a slug and an `updated` date).
+export function buildSitemapEntries({ products = [], collections = [], settings, articles = [] } = {}) {
   // Without a real site URL every address would be localhost, which search
   // engines ignore — so list nothing until NEXT_PUBLIC_SITE_URL is set.
   if (!CAN_ADDRESS_PAGES) return [];
@@ -52,6 +55,7 @@ export function buildSitemapEntries({ products = [], collections = [], settings 
   const dateOf = {
     catalog: newest([...products, ...collections].map((item) => item.updatedAt)),
     settings: newest([settings?.updatedAt]),
+    articles: newest(articles.map((article) => article.updated)),
   };
 
   // A collection page lists its products, so a product change is a collection change.
@@ -65,13 +69,14 @@ export function buildSitemapEntries({ products = [], collections = [], settings 
     }
   }
 
-  const fixedEntries = FIXED_PAGES.map(({ path, changeFrequency, priority, datedBy }) =>
-    entry({
-      url: xmlSafe(absoluteUrl(path)),
-      lastModified: datedBy && dateOf[datedBy],
-      changeFrequency,
-      priority,
-    })
+  const fixedEntries = FIXED_PAGES.filter(({ needsArticles }) => !needsArticles || articles.length > 0).map(
+    ({ path, changeFrequency, priority, datedBy }) =>
+      entry({
+        url: xmlSafe(absoluteUrl(path)),
+        lastModified: datedBy && dateOf[datedBy],
+        changeFrequency,
+        priority,
+      })
   );
 
   const collectionEntries = collections.map((collection) =>
@@ -94,5 +99,14 @@ export function buildSitemapEntries({ products = [], collections = [], settings 
     })
   );
 
-  return [...fixedEntries, ...collectionEntries, ...productEntries];
+  const articleEntries = articles.map((article) =>
+    entry({
+      url: xmlSafe(absoluteUrl(`/blog/${article.slug}`)),
+      lastModified: newest([article.updated]),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    })
+  );
+
+  return [...fixedEntries, ...collectionEntries, ...productEntries, ...articleEntries];
 }

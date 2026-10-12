@@ -112,6 +112,9 @@ export default function Navbar({ collections = [] }) {
             <Link href="/partners" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
               PARTNERS
             </Link>
+            <Link href="/blog" prefetch={false} className="hover:text-brand-navy transition-colors uppercase">
+              BLOG
+            </Link>
             <Link href="/contact" className="hover:text-brand-navy transition-colors uppercase">
               CONTACT US
             </Link>
@@ -226,6 +229,15 @@ export default function Navbar({ collections = [] }) {
               className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
             >
               Partners
+            </Link>
+
+            <Link
+              href="/blog"
+              prefetch={false}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block px-4 py-3 text-xs font-extrabold text-gray-800 hover:text-brand-navy hover:bg-slate-50 rounded-lg uppercase tracking-wider transition-colors"
+            >
+              Blog
             </Link>
 
             <Link

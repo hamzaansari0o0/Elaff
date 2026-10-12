@@ -26,6 +26,8 @@ const {
   productLd,
   collectionLd,
   faqLd,
+  articleLd,
+  blogLd,
   jsonLdGraph,
   jsonLdHtml,
   truncate,
@@ -237,6 +239,23 @@ describe('page metadata', () => {
 
   test('indexable pages carry no robots directive at all', () => {
     assert.ok(!('robots' in page));
+  });
+
+  test('an article page is typed as an article and says when it was published and changed', () => {
+    const article = pageMetadata({
+      title: 'Guide',
+      description: 'd',
+      path: '/blog/guide',
+      article: { publishedTime: '2026-10-14', modifiedTime: '2026-10-20' },
+    });
+    assert.equal(article.openGraph.type, 'article');
+    assert.equal(article.openGraph.publishedTime, '2026-10-14');
+    assert.equal(article.openGraph.modifiedTime, '2026-10-20');
+    assert.equal(article.openGraph.title, 'Guide | Elaff Trade Co.');
+    assert.equal(article.openGraph.url, '/blog/guide');
+    assert.equal(article.alternates.canonical, '/blog/guide');
+    assert.equal(page.openGraph.type, 'website');
+    assert.ok(!('publishedTime' in page.openGraph));
   });
 
   test('a production build without NEXT_PUBLIC_SITE_URL leaves out canonical and og:url rather than pointing at localhost', async (t) => {
@@ -616,5 +635,113 @@ describe('faqLd', () => {
 
   test('returns nothing when there are no questions', () => {
     assert.equal(faqLd([], '/about'), undefined);
+  });
+});
+
+describe('articleLd', () => {
+  const article = {
+    slug: 'frozen-rice-guide',
+    title: "Frozen Rice: A Buyer's Guide",
+    description: 'How bulk buyers choose frozen rice.',
+    keyword: 'frozen rice wholesale',
+    keywords: ['bulk rice', 'rice supplier'],
+    date: '2026-10-14',
+    updated: '2026-10-20',
+    wordCount: 1042,
+  };
+  const node = articleLd(article, { companyName: 'Elaff Trade Co.' });
+
+  test('describes the article at its own address', () => {
+    assert.equal(node['@type'], 'BlogPosting');
+    assert.equal(node['@id'], 'https://www.example.com/blog/frozen-rice-guide#article');
+    assert.equal(node.url, 'https://www.example.com/blog/frozen-rice-guide');
+    assert.deepEqual(node.mainEntityOfPage, { '@type': 'WebPage', '@id': 'https://www.example.com/blog/frozen-rice-guide' });
+    assert.equal(node.headline, "Frozen Rice: A Buyer's Guide");
+    assert.equal(node.description, 'How bulk buyers choose frozen rice.');
+    assert.equal(node.datePublished, '2026-10-14');
+    assert.equal(node.dateModified, '2026-10-20');
+    assert.equal(node.wordCount, 1042);
+    assert.equal(node.inLanguage, 'en');
+  });
+
+  test('lists the main keyword first, then the others, as one comma-separated string', () => {
+    assert.equal(node.keywords, 'frozen rice wholesale, bulk rice, rice supplier');
+    assert.equal(articleLd({ ...article, keywords: [] }).keywords, 'frozen rice wholesale');
+    assert.equal(articleLd({ ...article, keywords: ['', '  ', ' bulk rice '] }).keywords, 'frozen rice wholesale, bulk rice');
+  });
+
+  test('has an absolute image address', () => {
+    assert.deepEqual(node.image, ['https://www.example.com/og-default.png']);
+  });
+
+  test('is written and published by the organization, with a name and address on the node itself', () => {
+    const org = organizationLd({});
+    for (const role of [node.author, node.publisher]) {
+      assert.equal(role['@type'], 'Organization');
+      assert.equal(role['@id'], org['@id']);
+      assert.equal(role.name, 'Elaff Trade Co.');
+      assert.equal(role.url, 'https://www.example.com/');
+    }
+    assert.deepEqual(node.publisher.logo, { '@type': 'ImageObject', url: 'https://www.example.com/logo.png' });
+    assert.ok(!('logo' in node.author));
+  });
+
+  test('uses the company name from Company Settings and falls back to the site name', () => {
+    assert.equal(articleLd(article, { companyName: 'Elaff Foods' }).author.name, 'Elaff Foods');
+    assert.equal(articleLd(article, { companyName: '  ' }).author.name, 'Elaff Trade Co.');
+    assert.equal(articleLd(article).author.name, 'Elaff Trade Co.');
+  });
+
+  test('is part of the website and carries no empty values', () => {
+    assert.equal(node.isPartOf['@id'], websiteLd({})['@id']);
+    assertNoEmptyValues(node);
+  });
+});
+
+describe('blogLd', () => {
+  const articles = [
+    { slug: 'newer', title: 'Newer', description: 'About newer.', date: '2026-10-20', updated: '2026-10-21' },
+    { slug: 'older', title: 'Older', description: 'About older.', date: '2026-10-14', updated: '2026-10-14' },
+  ];
+  const node = blogLd(articles);
+
+  test('is the blog at /blog, published by the organization, inside the website', () => {
+    assert.equal(node['@type'], 'Blog');
+    assert.equal(node['@id'], 'https://www.example.com/blog#blog');
+    assert.equal(node.url, 'https://www.example.com/blog');
+    assert.equal(node.name, seo.BLOG_TITLE);
+    assert.equal(node.description, seo.BLOG_DESCRIPTION);
+    assert.equal(node.publisher['@id'], organizationLd({})['@id']);
+    assert.equal(node.isPartOf['@id'], websiteLd({})['@id']);
+  });
+
+  test('lists its posts in the given order with absolute addresses and dates', () => {
+    assert.deepEqual(node.blogPost, [
+      {
+        '@type': 'BlogPosting',
+        headline: 'Newer',
+        url: 'https://www.example.com/blog/newer',
+        datePublished: '2026-10-20',
+        dateModified: '2026-10-21',
+      },
+      {
+        '@type': 'BlogPosting',
+        headline: 'Older',
+        url: 'https://www.example.com/blog/older',
+        datePublished: '2026-10-14',
+        dateModified: '2026-10-14',
+      },
+    ]);
+  });
+
+  test('a blog with no posts has no post list, and nothing blank anywhere', () => {
+    assert.ok(!('blogPost' in blogLd([])));
+    assertNoEmptyValues(node);
+    assertNoEmptyValues(blogLd([]));
+  });
+
+  test('the blog title and description fit what search results display', () => {
+    assert.ok(seo.BLOG_TITLE.length <= 60, `title is ${seo.BLOG_TITLE.length} characters`);
+    assert.ok(seo.BLOG_DESCRIPTION.length <= 155, `description is ${seo.BLOG_DESCRIPTION.length} characters`);
   });
 });
