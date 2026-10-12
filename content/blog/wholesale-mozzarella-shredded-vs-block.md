@@ -85,7 +85,7 @@ Our [Frozen Mozzarella Cheese Sherded](/product/frozen-mozzarella-cheese-sherded
 
 ## How to order from Elaff Trade Co.
 
-Choose a trade term with our guide to [EXW, FOB and CNF](/blog/exw-vs-fob-vs-cnf), browse the [frozen foods collection](/collection/frozen-foods), and then [send us an inquiry](/contact) with the form, the quantity, the packing and your destination port.
+Choose a trade term with our guide to [EXW, FOB and CNF](/blog/exw-vs-fob-vs-cnf), browse the [frozen foods collection](/collection/frozen-foods), and then [send us an inquiry](/contact) with the form, the quantity, the packing and your destination port. Supermarket and food-service buyers in the Gulf, the UK, the USA and South Africa can order from us. Dairy import rules are strict and differ by country, so tell us your destination before you choose the form.
 
 ## Frequently asked questions
 

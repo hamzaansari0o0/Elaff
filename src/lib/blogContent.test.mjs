@@ -60,11 +60,56 @@ describe('the launch articles', () => {
     for (const slug of LAUNCH_SLUGS) assert.ok(slugs.has(slug), `${slug} is missing from content/blog`);
   });
 
-  test('add up to about 10,000 words', () => {
+  test('add up to 10,000 to 11,500 words', () => {
     const total = articles
       .filter((article) => LAUNCH_SLUGS.includes(article.slug))
       .reduce((sum, article) => sum + article.wordCount, 0);
-    assert.ok(total >= 9500 && total <= 10500, `the ten articles total ${total} words`);
+    assert.ok(total >= 9500 && total <= 11500, `the ten articles total ${total} words`);
+  });
+});
+
+// Wording the owner asked to have in the launch articles (2026-10-12): the target markets and the
+// long questions people put to AI assistants. Kept as tests so an edit cannot quietly remove them.
+const MARKET_PHRASES = [
+  'FMCG wholesale distributors in the UAE and the wider Gulf',
+  'import FMCG products to the UK from China or Pakistan',
+  'wholesale food suppliers for South African supermarkets',
+  'B2B grocery exporters to the USA',
+  'bulk food procurement in the Gulf region',
+  'Dubai supermarket wholesale suppliers',
+];
+const AI_QUESTIONS = [
+  'How to import FMCG products in bulk with low MOQ?',
+  'Who are the most reliable cross-border wholesale food suppliers?',
+  'Where can I buy 1 pallet of frozen chicken wholesale?',
+  'What is the best B2B trading company for international supermarket sourcing?',
+  'How to get fast delivery for bulk confectionery orders?',
+];
+
+describe('market and AI-question coverage', () => {
+  const launch = articles.filter((article) => LAUNCH_SLUGS.includes(article.slug));
+
+  test('every target-market phrase appears in at least one launch article', () => {
+    for (const phrase of MARKET_PHRASES) {
+      assert.ok(
+        launch.some((article) => visibleText(article).toLowerCase().includes(phrase.toLowerCase())),
+        `no launch article says "${phrase}"`
+      );
+    }
+  });
+
+  test('every question is a FAQ question in exactly one launch article, with an answer of its own', () => {
+    for (const question of AI_QUESTIONS) {
+      const found = launch.flatMap((article) => article.faq.filter((item) => item.question.toLowerCase() === question.toLowerCase()));
+      assert.equal(found.length, 1, `"${question}" appears ${found.length} times as a FAQ question`);
+      assert.ok(wordCount(found[0].answer) >= 40, `the answer to "${question}" is too short to be useful`);
+    }
+  });
+
+  test('every article names at least one of the four target markets', () => {
+    for (const article of launch) {
+      assert.ok(/\b(Gulf|UAE|Dubai|UK|USA|South Africa)/.test(visibleText(article)), `${article.slug}: names no target market`);
+    }
   });
 });
 

@@ -63,7 +63,7 @@ Plan the arrival before the ship sails:
 
 - Book cold storage near the port, so the cargo moves from the container to a freezer without delay.
 - Keep the container plugged in at the port, and clear it quickly, because storage, plug-in and container-detention charges add up every day.
-- Prepare for inspection by the authorities, which may sample the cargo.
+- Prepare for inspection by the authorities, which may sample the cargo. Frozen food arriving in the Gulf, the UK, the USA or South Africa is normally checked at the port, so keep your documents and certificates ready.
 - Compare the product and the temperature record with your specification as soon as you can.
 
 ## Common mistakes

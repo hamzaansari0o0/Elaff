@@ -2,7 +2,7 @@
 title: EXW vs FOB vs CNF: Which Trade Term Should an Importer Choose?
 description: EXW, FOB and CNF explained for food importers: who pays for freight and clearance, where the risk passes, and how to choose the right trade term.
 keyword: EXW vs FOB vs CNF
-keywords: incoterms for food import, what is FOB, CNF meaning, EXW meaning, CFR incoterm
+keywords: incoterms for food import, what is FOB, CNF meaning, EXW meaning, CFR incoterm, bulk confectionery delivery
 date: 2026-10-12
 updated: 2026-10-12
 order: 7
@@ -39,10 +39,11 @@ FOB, CFR and CIF are written for goods carried by sea and inland waterway. The I
 - **You have a forwarder or want to compare freight prices:** FOB lets you choose the carrier and control the cost.
 - **You have an agent who can handle export clearance in the seller's country:** EXW can work, but it puts the most responsibility on you.
 - **You ship frozen or fresh goods:** think about who sets and monitors the temperature, and who claims if it fails. Our guide to [shipping frozen food internationally](/blog/ship-frozen-food-internationally) explains the cold chain.
+- **You ship dry goods such as confectionery:** there is no cold chain to protect, so speed and who books the freight decide the choice. See our [confectionery collection](/collection/confectionery).
 
 ## An example: frozen chicken to a Gulf port
 
-Imagine a distributor buying a container of frozen chicken for delivery to a Gulf port:
+Imagine a distributor in Dubai buying a container of frozen chicken for delivery to a Gulf port such as Jebel Ali:
 
 1. **On EXW,** the distributor's agent collects the goods from the seller's cold store, loads them, clears them for export, books the reefer and the ship, insures the cargo and clears it on arrival.
 2. **On FOB,** the seller loads the goods and clears them for export, and the distributor books the freight and insurance, then clears the cargo on arrival.
@@ -56,7 +57,7 @@ No trade term includes everything. Plan for import duty and taxes, customs broke
 
 ## Terms we work on
 
-We work on EXW, FOB or CNF terms, with warehousing, labelling in your language, international logistics and customs clearance available. For example, our Valencia mandarin listing is quoted FOB Qingdao with CIF and CNF supported. Browse the [frozen foods](/collection/frozen-foods) and [food and beverages](/collection/food-beverages) collections, then ask us which term suits your order, or [send us an inquiry](/contact) with your product and destination port. You can also read how to [check a supplier](/blog/choose-reliable-wholesale-food-supplier) before you agree terms.
+We work on EXW, FOB or CNF terms, with warehousing, labelling in your language, international logistics and customs clearance available. For example, our Valencia mandarin listing is quoted FOB Qingdao with CIF and CNF supported. We deliver to importers across the Gulf, the UK, the USA and South Africa. Browse the [frozen foods](/collection/frozen-foods) and [food and beverages](/collection/food-beverages) collections, then ask us which term suits your order, or [send us an inquiry](/contact) with your product and destination port. You can also read how to [check a supplier](/blog/choose-reliable-wholesale-food-supplier) before you agree terms.
 
 ## Frequently asked questions
 
@@ -74,3 +75,6 @@ CNF or CIF is usually the simplest, since the seller books the freight. Add carg
 
 ### Does the trade term decide who owns the goods?
 No. Trade terms decide delivery, costs and risk. The transfer of ownership and payment terms are set in the sales contract.
+
+### How to get fast delivery for bulk confectionery orders?
+Confectionery does not normally need a refrigerated container, but chocolate can soften in hot weather, so ask about protection on hot routes. For speed, choose goods that are ready to ship, confirm the lead time in writing before you pay, and have your customs broker and documents ready before the goods leave. We ship orders within 24 to 72 hours, and for urgent orders we offer 7-day express delivery by air freight, so give us your deadline in the inquiry.

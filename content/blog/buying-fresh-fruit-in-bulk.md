@@ -59,7 +59,7 @@ Fresh fruit usually needs more paperwork than frozen food. Typical documents are
 - Phytosanitary certificate, issued by the exporting country's plant-health authority.
 - Any extra certificate your country asks for, such as proof of a cold treatment.
 
-Rules differ by country and fruit, so confirm them with your customs broker before ordering. If your market asks for halal or food-safety certificates, read our guide to [halal and HACCP certification](/blog/halal-haccp-certification-importers).
+Rules differ by country and fruit, so confirm them with your customs broker before ordering. This matters most when you buy for supermarkets in the Gulf, the UK, the USA or South Africa, because each market applies its own plant-health, pesticide residue and labelling rules. If your market asks for halal or food-safety certificates, read our guide to [halal and HACCP certification](/blog/halal-haccp-certification-importers).
 
 ## Shipping and temperature
 

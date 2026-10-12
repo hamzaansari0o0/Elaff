@@ -73,7 +73,7 @@ Ask for a sample and a test report before you commit to a container. Check the s
 
 ## How to order from Elaff Trade Co.
 
-Browse the [frozen foods collection](/collection/frozen-foods) or the [fresh fruits collection](/collection/fresh-fruits), then [send us an inquiry](/contact) with the form you need (pulp or IQF pieces), your quantity, your packing wishes and your destination port. The minimum order is shown on each product page.
+Browse the [frozen foods collection](/collection/frozen-foods) or the [fresh fruits collection](/collection/fresh-fruits), then [send us an inquiry](/contact) with the form you need (pulp or IQF pieces), your quantity, your packing wishes and your destination port. The minimum order is shown on each product page. We deliver across the Gulf, the UK, the USA and South Africa, and can deliver to other locations in compliance with local laws, so tell us your destination: labelling and ingredient rules for fruit products differ by market.
 
 ## Frequently asked questions
 

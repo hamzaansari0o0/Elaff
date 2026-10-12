@@ -2,7 +2,7 @@
 title: Frozen Chicken Leg Quarter Wholesale: A Buyer's Guide
 description: What bulk buyers should check when ordering frozen chicken leg quarters: cut, piece weight, IQF or block, halal, packing, container loading and paperwork.
 keyword: frozen chicken leg quarter wholesale
-keywords: halal frozen chicken supplier, bulk frozen chicken, frozen chicken leg quarters export, IQF chicken leg quarters
+keywords: halal frozen chicken supplier, bulk frozen chicken, frozen chicken leg quarters export, IQF chicken leg quarters, 1 pallet frozen chicken wholesale
 date: 2026-10-12
 updated: 2026-10-12
 order: 1
@@ -73,7 +73,7 @@ Keep photographs and the temperature record. If a claim is needed, they are your
 
 ## How to order from Elaff Trade Co.
 
-We supply frozen poultry and other food to wholesalers, distributors and retailers on EXW, FOB or CNF terms. Browse the [Meat & Poultry collection](/collection/meat-poultry) or the wider [frozen foods range](/collection/frozen-foods), then [send us an inquiry](/contact) with the cut, the quantity, your destination port and the certificates you need. If you are unsure about the minimum order, read [how to start from one pallet](/blog/import-food-from-one-pallet).
+We supply frozen poultry and other food to wholesalers, distributors and retailers across the Gulf, the UK, the USA and South Africa, on EXW, FOB or CNF terms. Browse the [Meat & Poultry collection](/collection/meat-poultry) or the wider [frozen foods range](/collection/frozen-foods), then [send us an inquiry](/contact) with the cut, the quantity, your destination port and the certificates you need. Import rules for poultry, including approved plants and health certificates, differ in each country, so tell us your destination first. If you are unsure about the minimum order, read [how to start from one pallet](/blog/import-food-from-one-pallet).
 
 ## Frequently asked questions
 
@@ -91,3 +91,6 @@ Frozen chicken should be kept at -18 °C or colder all the way from the plant to
 
 ### Can you supply halal frozen chicken?
 Our product pages list Halal certification, and we offer Halal and HACCP certification support for export orders. Tell us which certifying body your market requires when you send your inquiry.
+
+### Where can I buy 1 pallet of frozen chicken wholesale?
+You can ask us. Our minimum order can be as low as one pallet, and the minimum for each cut is shown on its product page. Poultry is usually traded by the carton and by the container, so send an inquiry with the cut, the quantity and your destination, and we will tell you whether a one-pallet order is possible.

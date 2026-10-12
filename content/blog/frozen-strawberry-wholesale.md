@@ -80,7 +80,7 @@ Frozen fruit is normally sold by the full container. Ask for the cartons per pal
 
 ## How to order from Elaff Trade Co.
 
-Browse our [frozen foods collection](/collection/frozen-foods), then [send us an inquiry](/contact) with the size, the form (whole, sliced or diced), your quantity and your destination port. The minimum order and packing options appear on each product page.
+Browse our [frozen foods collection](/collection/frozen-foods), then [send us an inquiry](/contact) with the size, the form (whole, sliced or diced), your quantity and your destination port. The minimum order and packing options appear on each product page. Importers in the Gulf, the UK, the USA and South Africa each apply their own pesticide residue limits and labelling rules, so tell us your destination when you inquire.
 
 ## Frequently asked questions
 

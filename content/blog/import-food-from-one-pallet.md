@@ -2,7 +2,7 @@
 title: Starting Small: Importing Food from One Pallet
 description: How small importers and new distributors can start with a low minimum order: pallet or container, MOQ, costs to plan for and a first-order checklist.
 keyword: wholesale food minimum order
-keywords: MOQ one pallet, how to import food, start food import business, small wholesale order
+keywords: MOQ one pallet, how to import food, start food import business, small wholesale order, import FMCG products to UK from China, B2B grocery exporters to USA, Gulf region bulk food procurement
 date: 2026-10-12
 updated: 2026-10-12
 order: 9
@@ -53,6 +53,17 @@ Ask for a quote on each, and compare your total cost per carton with the price y
 8. **Check the delivery** against the specification, and keep records.
 9. **Reorder** once you know how fast the goods sell.
 
+## Importing into the Gulf, the UK, the USA and South Africa
+
+The checklist is the same everywhere, but each market has its own entry rules. We deliver across the Gulf, the UK, the USA and South Africa, and can deliver to other locations in compliance with local laws. Here is what tends to change:
+
+- **UAE and the wider Gulf:** buyers doing bulk food procurement in the Gulf region usually need a halal certificate and Arabic labelling.
+- **UK:** if you import FMCG products to the UK from China or Pakistan, expect border checks. Food of animal origin needs health certificates, and labels must follow UK rules.
+- **USA:** the FDA must be told about food shipments before they arrive, and importers generally have to verify their foreign suppliers. When you shortlist B2B grocery exporters to the USA, ask whether they can support that paperwork.
+- **South Africa:** supermarkets usually ask suppliers for food-safety certificates, and animal products may need an import permit.
+
+We offer labelling in your language and customs clearance agency services, so tell us your destination when you ask for a quote.
+
 ## Documents for your first shipment
 
 Confirm the exact list with your customs broker, because countries differ. Most food shipments need a commercial invoice, a packing list and a bill of lading or air waybill. Add a certificate of origin and, depending on the product, a health certificate, a phytosanitary certificate or a halal certificate. Ask your supplier to send draft copies before the goods ship, so you can correct mistakes while it is still cheap to do so.
@@ -90,3 +101,6 @@ It depends on your country and on the product. Ask your customs broker or local 
 
 ### How do I know the supplier is reliable?
 Check the business details, ask for samples and certificates, and start with a small trial order. Our supplier checklist shows what to ask for.
+
+### How to import FMCG products in bulk with low MOQ?
+Start with a supplier whose minimum order is low. Ours can be as low as one pallet, and each product page shows its own minimum. Ask for a written specification and a sample, agree a trade term (EXW, FOB or CNF), and budget for freight, insurance, duty, port charges and storage. Order one product first, check the delivery against the specification, and reorder once you know how fast it sells.

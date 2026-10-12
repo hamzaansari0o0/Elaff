@@ -2,7 +2,7 @@
 title: Halal and HACCP Certification: What Importers Should Check
 description: What halal and HACCP certificates mean for food importers, what to ask a supplier to show, and how to check that a certificate matches the product you buy.
 keyword: halal certified food supplier
-keywords: HACCP food supplier, halal certification for export, HACCP certificate, halal food importer
+keywords: HACCP food supplier, halal certification for export, HACCP certificate, halal food importer, bulk food procurement Gulf region
 date: 2026-10-12
 updated: 2026-10-12
 order: 8
@@ -65,6 +65,15 @@ HACCP is not a quality grade and does not say a product tastes better. It says t
 ## Checking before the order
 
 Contact the issuing body and ask it to confirm the certificate number. Compare the plant name on the certificate with the plant named on the product labels and documents. Then put the certificate requirement into your purchase order, so the goods can be refused if the paperwork does not match.
+
+## What buyers in key markets ask for
+
+Certificates are checked differently in each market, so ask your customs broker for the current rules. As a general guide:
+
+- **The Gulf:** for bulk food procurement in the Gulf region, a halal certificate from a body your authority accepts is usually the first document buyers check, and Arabic labelling is normally required on the pack.
+- **The UK:** halal is not a legal requirement, but many retailers and caterers ask for it. Food businesses must follow HACCP-based food-safety procedures, and meat and dairy imports need health certificates.
+- **The USA:** the FDA must be told about food shipments before they arrive, and importers generally have to verify that their foreign suppliers make food safely. HACCP is mandatory for meat, poultry, seafood and juice.
+- **South Africa:** retailers and wholesalers often ask for halal certification on meat and many processed foods, and for food-safety certificates from suppliers.
 
 ## How we support certification
 
