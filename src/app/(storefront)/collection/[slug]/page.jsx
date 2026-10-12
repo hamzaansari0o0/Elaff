@@ -4,6 +4,12 @@ import { notFound } from 'next/navigation';
 import { getCollectionBySlug, getProductsByCollection } from '@/lib/products';
 import RevealText from '@/components/ui/RevealText';
 import RevealCard from '@/components/ui/RevealCard';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import { collectionBreadcrumbs } from '@/lib/breadcrumbs';
+import { optimizedImage } from '@/lib/imageUrl';
+import { collectionAnswer } from '@/lib/answerBlocks';
+import { pageMetadata, metaDescription, collectionLd, breadcrumbLd, SITE_NAME } from '@/lib/seo';
+import JsonLd from '@/components/seo/JsonLd';
 
 // Refreshes each collection's cached page at most once a minute, same
 // pattern as the About/home pages — without it, admin edits to a collection
@@ -15,13 +21,18 @@ export async function generateMetadata({ params }) {
   const collection = await getCollectionBySlug(slug);
 
   if (!collection) {
-    return { title: 'Collection Not Found | Elaff Trade Co.' };
+    return { title: 'Collection Not Found' };
   }
 
-  return {
-    title: `${collection.title} | Elaff Trade Co.`,
-    description: collection.description || `Browse ${collection.title} from Elaff Trade Co.`,
-  };
+  return pageMetadata({
+    title: collection.title,
+    description: metaDescription(
+      collection.description,
+      `Wholesale ${collection.title} from ${SITE_NAME}. Browse the range and send an inquiry for prices, minimum orders and lead times.`
+    ),
+    path: `/collection/${collection.slug}`,
+    image: collection.image,
+  });
 }
 
 export default async function CollectionPage({ params }) {
@@ -35,9 +46,11 @@ export default async function CollectionPage({ params }) {
   const products = await getProductsByCollection(slug);
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10 font-sans">
+    <main className="bg-slate-50 min-h-screen py-10 font-sans">
+      <JsonLd nodes={[collectionLd(collection, products), breadcrumbLd(collectionBreadcrumbs(collection))]} />
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        
+        <Breadcrumbs items={collectionBreadcrumbs(collection)} className="mb-4" />
+
         {/* Collection Banner */}
         <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-200 mb-8 shadow-sm">
           <span className="text-brand-cyan text-xs font-extrabold uppercase tracking-widest">Collection</span>
@@ -49,6 +62,7 @@ export default async function CollectionPage({ params }) {
             {collection.title}
           </RevealText>
           <p className="text-gray-600 text-sm max-w-2xl">{collection.description}</p>
+          <p className="text-gray-700 text-sm max-w-2xl mt-3">{collectionAnswer(collection, products.length)}</p>
         </div>
 
         {/* Products Grid */}
@@ -62,7 +76,9 @@ export default async function CollectionPage({ params }) {
                 <div>
                   <div className="aspect-square bg-gray-100 overflow-hidden">
                     <img
-                      src={product.images[0]}
+                      src={optimizedImage(product.images[0], 600)}
+                      loading="lazy"
+                      decoding="async"
                       alt={product.title}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
@@ -96,6 +112,6 @@ export default async function CollectionPage({ params }) {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ShoppingBag, ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { optimizedImage } from '@/lib/imageUrl';
 
 export default function ProductCard({ product }) {
   const { addItem, isInCart } = useCart();
@@ -43,7 +44,9 @@ export default function ProductCard({ product }) {
       <div className="relative w-full h-40 sm:h-48 lg:h-56 bg-slate-50 overflow-hidden">
         {product.image && (
           <img
-            src={product.image}
+            src={optimizedImage(product.image, 600)}
+            loading="lazy"
+            decoding="async"
             alt={product.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />

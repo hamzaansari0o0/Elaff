@@ -2,17 +2,12 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import DottedMap from 'dotted-map';
 
-// Generated once at module load (inputs are fixed, not prop-driven) rather
-// than on every render.
-const map = new DottedMap({ height: 100, grid: 'diagonal' });
-const svgMap = map.getSVG({
-  radius: 0.22,
-  color: '#FFFFFF40',
-  shape: 'circle',
-  backgroundColor: 'black',
-});
+// The dotted world map is the static file public/world-map.svg (generated once
+// with the dotted-map package: height 100, diagonal grid, radius 0.22). It used
+// to be built at load and inlined into the page as a ~960 KB data-URI, which was
+// most of the home page's HTML; as a file it is ~24 KB compressed, cached by the
+// browser and loaded only when scrolled near.
 
 // World map of faint dots with animated curved lines connecting each
 // `dots` pair — used for "global reach" style sections. Always rendered
@@ -43,9 +38,11 @@ export function WorldMap({ dots = [], lineColor = '#0ea5e9' }) {
     <div ref={containerRef} className="w-full aspect-[2/1] bg-black rounded-lg relative font-sans">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
+        src="/world-map.svg"
+        loading="lazy"
+        decoding="async"
         className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none"
-        alt="world map"
+        alt="Map of Elaff Trade Co.'s worldwide delivery routes"
         draggable={false}
       />
       <svg

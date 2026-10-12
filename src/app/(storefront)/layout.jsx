@@ -6,7 +6,10 @@ import Chatbot from '@/components/chatbot/Chatbot';
 import AnalyticsTracker from '@/components/analytics/AnalyticsTracker';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import { getCompanySettings } from '@/lib/settings';
-import { getAllCollections } from '@/lib/products';
+import { getAllCollections, getCategoryCards } from '@/lib/products';
+import { pickFooterCollections } from '@/lib/footerLinks';
+import JsonLd from '@/components/seo/JsonLd';
+import { organizationLd, websiteLd } from '@/lib/seo';
 
 // Applies to every page under this layout — without it, pages that don't set their
 // own revalidate (shop, product, collection) render fully static, so admin edits to
@@ -14,7 +17,15 @@ import { getAllCollections } from '@/lib/products';
 export const revalidate = 60;
 
 export default async function StorefrontLayout({ children }) {
-  const [companySettings, collections] = await Promise.all([getCompanySettings(), getAllCollections()]);
+  const [companySettings, collections, categoryCards] = await Promise.all([
+    getCompanySettings(),
+    getAllCollections(),
+    getCategoryCards(),
+  ]);
+
+  // The footer links to the best-stocked real collections (the old hard-coded
+  // links pointed at collections that don't exist, so they returned 404).
+  const footerCollections = pickFooterCollections(collections, categoryCards);
 
   return (
     <CartProvider>
@@ -23,13 +34,15 @@ export default async function StorefrontLayout({ children }) {
           animations skip; opacity fades still play), without threading a
           check through each component individually. */}
       <MotionConfig reducedMotion="user">
+        {/* Who we are, on every page: the company and the website, from Company Settings. Page-specific nodes refer back to these by @id. */}
+        <JsonLd nodes={[organizationLd(companySettings), websiteLd(companySettings)]} />
         <AnalyticsTracker />
         {/* Lenis momentum scroll — every storefront page, not just the home page.
             Scoped to this layout only, so /admin keeps native scroll. */}
         <SmoothScroll>
           <Header companySettings={companySettings} collections={collections} />
           {children}
-          <Footer />
+          <Footer collections={footerCollections} />
         </SmoothScroll>
 
         {/* AI Chatbot + WhatsApp widget — every storefront page, not just the home page */}

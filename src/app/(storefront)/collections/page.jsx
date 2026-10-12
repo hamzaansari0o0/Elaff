@@ -1,6 +1,15 @@
 import Link from 'next/link';
 import { getCategoryCards } from '@/lib/products';
 import RevealText from '@/components/ui/RevealText';
+import { pageMetadata } from '@/lib/seo';
+import { optimizedImage } from '@/lib/imageUrl';
+
+export const metadata = pageMetadata({
+  title: 'All Collections',
+  description:
+    'Browse every product collection from Elaff Trade Co. for wholesale and export, then open a collection to see its products and send an inquiry.',
+  path: '/collections',
+});
 
 export const revalidate = 60;
 
@@ -8,7 +17,7 @@ export default async function CollectionsPage() {
   const collections = await getCategoryCards();
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10 font-sans">
+    <main className="bg-slate-50 min-h-screen py-10 font-sans">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-200 mb-8 shadow-sm">
           <span className="text-brand-cyan text-xs font-extrabold uppercase tracking-widest">Browse</span>
@@ -32,7 +41,9 @@ export default async function CollectionsPage() {
                 <div className="aspect-[16/9] bg-gray-100 overflow-hidden">
                   {c.image && (
                     <img
-                      src={c.image}
+                      src={optimizedImage(c.image, 800)}
+                      loading="lazy"
+                      decoding="async"
                       alt={c.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -51,6 +62,6 @@ export default async function CollectionsPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

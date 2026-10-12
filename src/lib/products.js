@@ -216,6 +216,7 @@ export async function getCategoryCards() {
       slug: c.slug,
       image: c.image || stat?.sampleImage?.[0] || '',
       count: `${stat?.count || 0} PRODUCTS`,
+      productCount: stat?.count || 0, // numeric form of `count`, for sorting and filtering
     };
   });
 }

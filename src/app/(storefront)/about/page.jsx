@@ -6,12 +6,20 @@ import StackSpread from '@/components/ui/stack-spread';
 import { buildCards } from '@/components/ui/stack-spread-cards';
 import { getAllProducts } from '@/lib/products';
 import { pickDiverseProductImages } from '@/lib/aboutImages';
+import { pageMetadata, webPageLd, serviceLd, ORGANIZATION_ID } from '@/lib/seo';
+import JsonLd from '@/components/seo/JsonLd';
+import FaqSection from '@/components/seo/FaqSection';
+import AnswerBlock from '@/components/seo/AnswerBlock';
+import { aboutAnswer } from '@/lib/answerBlocks';
+import { siteFaqs } from '@/lib/faqs';
+import { SERVICES } from '@/components/about/OurService';
 
-export const metadata = {
-  title: 'About Us | Elaff Trade Co.',
+export const metadata = pageMetadata({
+  title: 'About Us',
   description:
     'Elaff Trade Co. is a B2B trading company sourcing and exporting grocery, agricultural, frozen, and confectionery products worldwide.',
-};
+  path: '/about',
+});
 
 // Without this, Next.js statically renders the page once at build time and
 // newly added product photos never show up in the hero/spread until redeploy.
@@ -48,13 +56,25 @@ export default async function AboutPage() {
 
   return (
     <main className="bg-slate-50">
+      <JsonLd
+        nodes={[
+          webPageLd({ type: 'AboutPage', path: '/about', name: 'About Us', about: { '@id': ORGANIZATION_ID } }),
+          ...SERVICES.map(({ label }) => serviceLd({ name: label, serviceType: label })),
+        ]}
+      />
       <AboutHero images={heroImages} />
+
+      <AnswerBlock>{aboutAnswer()}</AnswerBlock>
 
       <CompanyProfile />
 
       <OurService />
 
       <OurProcess />
+
+      <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <FaqSection items={siteFaqs('about')} path="/about" />
+      </div>
 
       <StackSpread
         cards={cards}

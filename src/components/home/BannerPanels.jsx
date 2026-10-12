@@ -244,7 +244,8 @@ export default function BannerPanels({ images = [], collections = [] }) {
               return (
                 <div key={panel.src + i} className="absolute inset-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={panel.src} alt={panel.alt || ''} className="w-full h-full object-[inherit] bg-[#05070c]" />
+                  {/* Only the first panel is high priority; the rest stay eager (not lazy) so they are ready when the scroll-pinned transition reveals them. */}
+                  <img src={panel.src} alt={panel.alt || ''} fetchPriority={i === 0 ? 'high' : undefined} decoding="async" className="w-full h-full object-[inherit] bg-[#05070c]" />
 
                   {(panel.title || panel.subtitle) && (
                     <div className="absolute top-0 left-0 right-0 z-[120] px-6 sm:px-10 md:px-14 pt-8 sm:pt-12 md:pt-16 pointer-events-none">

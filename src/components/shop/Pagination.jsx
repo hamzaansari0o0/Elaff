@@ -18,6 +18,33 @@ function getPageList(current, total) {
   return withGaps;
 }
 
+// The previous / next arrow. With no page in that direction it is rendered
+// without an href: as a link it used to point back at the same page (page 1's
+// "previous") or at a page that doesn't exist (the last page's "next"), and
+// crawlers followed it. role="link" + aria-disabled keeps it announced as a
+// disabled link to screen readers.
+function PageArrow({ href, label, children }) {
+  const base = 'flex items-center justify-center w-9 h-9 rounded-lg border text-gray-500 transition-colors';
+
+  if (!href) {
+    return (
+      <a role="link" aria-disabled="true" aria-label={label} className={`${base} pointer-events-none opacity-40 border-gray-200`}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      aria-label={label}
+      className={`${base} border-gray-200 bg-white hover:border-brand-navy hover:text-brand-navy`}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function Pagination({ currentPage, totalPages, basePath = '/shop' }) {
   const searchParams = useSearchParams();
 
@@ -38,18 +65,9 @@ export default function Pagination({ currentPage, totalPages, basePath = '/shop'
 
   return (
     <nav aria-label="Pagination" className="flex items-center justify-center gap-1.5 mt-10">
-      <Link
-        href={hrefFor(currentPage - 1)}
-        aria-disabled={currentPage === 1}
-        aria-label="Previous page"
-        className={`flex items-center justify-center w-9 h-9 rounded-lg border text-gray-500 transition-colors ${
-          currentPage === 1
-            ? 'pointer-events-none opacity-40 border-gray-200'
-            : 'border-gray-200 bg-white hover:border-brand-navy hover:text-brand-navy'
-        }`}
-      >
+      <PageArrow href={currentPage > 1 ? hrefFor(currentPage - 1) : undefined} label="Previous page">
         <ChevronLeft className="w-4 h-4" />
-      </Link>
+      </PageArrow>
 
       {pages.map((p, i) =>
         p === '...' ? (
@@ -72,18 +90,9 @@ export default function Pagination({ currentPage, totalPages, basePath = '/shop'
         )
       )}
 
-      <Link
-        href={hrefFor(currentPage + 1)}
-        aria-disabled={currentPage === totalPages}
-        aria-label="Next page"
-        className={`flex items-center justify-center w-9 h-9 rounded-lg border text-gray-500 transition-colors ${
-          currentPage === totalPages
-            ? 'pointer-events-none opacity-40 border-gray-200'
-            : 'border-gray-200 bg-white hover:border-brand-navy hover:text-brand-navy'
-        }`}
-      >
+      <PageArrow href={currentPage < totalPages ? hrefFor(currentPage + 1) : undefined} label="Next page">
         <ChevronRight className="w-4 h-4" />
-      </Link>
+      </PageArrow>
     </nav>
   );
 }

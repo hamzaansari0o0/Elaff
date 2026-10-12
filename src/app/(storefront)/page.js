@@ -5,6 +5,14 @@ import ProductSection from '@/components/home/ProductSection';
 import GlobalReach from '@/components/home/GlobalReach';
 
 import { getProductsByTag, getAllCollections, toCardShape } from '@/lib/products';
+import { pageMetadata, SITE_DESCRIPTION } from '@/lib/seo';
+import FaqSection from '@/components/seo/FaqSection';
+import AnswerBlock from '@/components/seo/AnswerBlock';
+import { homeAnswer } from '@/lib/answerBlocks';
+import { siteFaqs } from '@/lib/faqs';
+
+// No title on purpose: the home page uses the root layout's default title.
+export const metadata = pageMetadata({ description: SITE_DESCRIPTION, path: '/' });
 
 // Re-fetch from MongoDB at most once a minute so admin-added products show up
 // promptly, while still serving a fast cached page for most visitors.
@@ -69,6 +77,9 @@ export default async function Home() {
       {/* Our Partners */}
       <PartnersMarquee />
 
+      {/* Direct answer: what the company is and does */}
+      <AnswerBlock>{homeAnswer()}</AnswerBlock>
+
       {/* Latest On Sale */}
       <ProductSection title="Latest On Sale" products={LATEST_ON_SALE} link="/shop?tag=onSale" />
 
@@ -77,6 +88,11 @@ export default async function Home() {
 
       {/* Our Bestsellers */}
       <ProductSection title="Our Bestsellers" products={BESTSELLERS} link="/shop?tag=bestseller" />
+
+      {/* FAQ — restates facts already on the site (see lib/faqs.js) */}
+      <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+        <FaqSection items={siteFaqs('home')} path="/" />
+      </div>
 
       {/* Global Reach */}
       <GlobalReach />

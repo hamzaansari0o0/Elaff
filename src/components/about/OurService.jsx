@@ -1,7 +1,8 @@
 import { Boxes, Warehouse, FileCheck, Truck, Zap, Link2, MessageCircle, Tag } from 'lucide-react';
 import RevealText from '@/components/ui/RevealText';
 
-const SERVICES = [
+// Exported so the About page's structured data lists exactly these services.
+export const SERVICES = [
   { icon: Boxes, label: 'Customized Cross-Border Procurement' },
   { icon: Warehouse, label: 'International Logistics & Warehousing' },
   { icon: FileCheck, label: 'Customs Clearance Agency Services' },

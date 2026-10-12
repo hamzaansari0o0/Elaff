@@ -2,11 +2,16 @@ import { MessageCircle, Clock, Phone, Mail, MapPin } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import RevealText from '@/components/ui/RevealText';
 import { getCompanySettings } from '@/lib/settings';
+import { pageMetadata, webPageLd, ORGANIZATION_ID } from '@/lib/seo';
+import JsonLd from '@/components/seo/JsonLd';
+import FaqSection from '@/components/seo/FaqSection';
+import { siteFaqs } from '@/lib/faqs';
 
-export const metadata = {
-  title: 'Contact Us | Elaff Trade Co.',
+export const metadata = pageMetadata({
+  title: 'Contact Us',
   description: 'Get in touch with Elaff Trade Co. for product inquiries, wholesale orders, and support.',
-};
+  path: '/contact',
+});
 
 // Without this, Next.js statically renders the page once at build time and
 // admin edits to CompanySettings never show up until the next full deploy.
@@ -25,6 +30,7 @@ export default async function ContactPage() {
 
   return (
     <main className="min-h-screen bg-slate-50">
+      <JsonLd nodes={webPageLd({ type: 'ContactPage', path: '/contact', name: 'Contact Us', about: { '@id': ORGANIZATION_ID } })} />
       <section className="max-w-7xl mx-auto px-4 py-10 md:py-16">
         <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
           <span className="inline-block text-[11px] font-bold text-brand-cta uppercase tracking-widest mb-2">
@@ -105,6 +111,10 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
+
+      <div className="max-w-4xl mx-auto px-4 pb-16">
+        <FaqSection items={siteFaqs('contact', settings)} path="/contact" />
+      </div>
     </main>
   );
 }

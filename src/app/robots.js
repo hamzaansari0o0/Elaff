@@ -1,14 +1,6 @@
-// NEXT_PUBLIC_SITE_URL must be set to the real production domain (in .env /
-// hosting env vars) — falls back to localhost so this still works in dev.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+import { buildRobots } from '@/lib/robotsRules';
 
+// The rules (and the sitemap line, which needs NEXT_PUBLIC_SITE_URL) live in lib/robotsRules.js.
 export default function robots() {
-  return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/admin', '/api'],
-    },
-    sitemap: `${SITE_URL}/sitemap.xml`,
-  };
+  return buildRobots();
 }

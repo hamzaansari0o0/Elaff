@@ -1,9 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import {
-  ChevronRight,
   ShieldCheck,
   Truck,
   Package,
@@ -21,6 +19,10 @@ import {
 import { formatPrice } from '@/lib/formatPrice';
 import { useCart } from '@/context/CartContext';
 import RevealText from '@/components/ui/RevealText';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import { productBreadcrumbs } from '@/lib/breadcrumbs';
+import { optimizedImage } from '@/lib/imageUrl';
+import { productAnswer } from '@/lib/answerBlocks';
 import OrderModal from '@/components/product/OrderModal';
 import ProductProfileTabs from '@/components/product/ProductProfileTabs';
 import InlineInquiryForm from '@/components/product/InlineInquiryForm';
@@ -109,7 +111,13 @@ function GalleryThumb({ item, idx, active, onSelect, product }) {
           </span>
         </>
       ) : (
-        <img src={item.src} alt={`${product.title} thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+        <img
+          src={optimizedImage(item.src, 160)}
+          loading="lazy"
+          decoding="async"
+          alt={`${product.title} thumbnail ${idx + 1}`}
+          className="w-full h-full object-cover"
+        />
       )}
     </button>
   );
@@ -201,8 +209,11 @@ function Gallery({ product }) {
               <span className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-md">
                 <Search className="w-3.5 h-3.5 text-gray-500" />
               </span>
+              {/* The main photo is the page's largest visible element: fetch it first, sized for its box (900px covers the 1.7x hover zoom). */}
               <img
-                src={active.src}
+                src={optimizedImage(active.src, 900)}
+                fetchPriority="high"
+                decoding="async"
                 alt={product.title}
                 className="w-full h-full object-cover transition-transform duration-200"
                 style={zoomStyle}
@@ -269,7 +280,8 @@ function WhyChooseBanner({ product }) {
   );
 }
 
-export default function ProductDetails({ product, related = [], company = null }) {
+// `faq` is a ready-made FAQ section (a server-rendered element) shown under the inquiry form.
+export default function ProductDetails({ product, related = [], company = null, faq = null }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addItem, isInCart } = useCart();
 
@@ -295,22 +307,10 @@ export default function ProductDetails({ product, related = [], company = null }
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-16 font-sans">
-      {/* Breadcrumbs */}
+    <main className="bg-slate-50 min-h-screen pb-16 font-sans">
+      {/* Breadcrumbs: Home > Shop > collection > product (the collection link also gives each collection page a crawlable link from its products) */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
-        <nav className="flex items-center gap-1.5 text-[11px] md:text-xs text-gray-500 font-bold uppercase tracking-widest">
-          <Link href="/" className="hover:text-brand-navy transition-colors">
-            Home
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link href="/shop" className="hover:text-brand-navy transition-colors">
-            Shop
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-gray-800 normal-case font-semibold truncate max-w-55 sm:max-w-none">
-            {product.title}
-          </span>
-        </nav>
+        <Breadcrumbs items={productBreadcrumbs(product)} />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
@@ -338,6 +338,11 @@ export default function ProductDetails({ product, related = [], company = null }
                 {product.title}
               </RevealText>
               {product.category && <p className="text-sm text-gray-500 mb-4">{product.category}</p>}
+
+              {/* Direct answer: what this product is and how to buy it (lib/answerBlocks.js) */}
+              <p className="text-sm text-gray-600 leading-relaxed mb-5">
+                {productAnswer(product, product.collections?.find((c) => c?.title)?.title)}
+              </p>
 
               {quickSpecs.length > 0 && (
                 <div className="grid grid-cols-3 gap-3 mb-5 pb-5 border-b border-gray-100">
@@ -416,6 +421,8 @@ export default function ProductDetails({ product, related = [], company = null }
         {/* Send an Inquiry */}
         <InlineInquiryForm product={product} companyName={company?.companyName} price={price} />
 
+        {faq}
+
         {/* Related Products */}
         {related.length > 0 && (
           <div>
@@ -431,6 +438,6 @@ export default function ProductDetails({ product, related = [], company = null }
       </div>
 
       <OrderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} product={product} company={company} />
-    </div>
+    </main>
   );
 }

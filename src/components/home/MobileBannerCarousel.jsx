@@ -56,7 +56,7 @@ export default function MobileBannerCarousel({ images = [], collections = [] }) 
             return (
               <SwiperSlide key={panel.src + i} className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={panel.src} alt={panel.alt || ''} className="w-full h-full object-[inherit]" />
+                <img src={panel.src} alt={panel.alt || ''} fetchPriority={i === 0 ? 'high' : undefined} decoding="async" className="w-full h-full object-[inherit]" />
 
                 {(panel.title || panel.subtitle) && (
                   <div className="absolute top-0 left-0 right-0 z-10 px-4 pt-5 pointer-events-none">

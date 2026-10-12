@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import RevealText from '@/components/ui/RevealText';
 
-export default function Footer() {
+// `collections` is a short list of { title, slug } for the "Shop Easy" column —
+// see lib/footerLinks.js for how it is chosen.
+export default function Footer({ collections = [] }) {
   return (
     <footer className="bg-brand-navy text-white pt-12 pb-6 mt-16">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-xs">
@@ -33,10 +35,11 @@ export default function Footer() {
             Shop Easy
           </RevealText>
           <ul className="font-bricolage space-y-2.5 font-semibold text-gray-200">
-            <li><Link href="/collection/confectionery" className="hover:underline">Confectioneries</Link></li>
-            <li><Link href="/collection/agricultural" className="hover:underline">Agricultural Products</Link></li>
-            <li><Link href="/collection/beverages" className="hover:underline">Beverages</Link></li>
-            <li><Link href="/collection/tea-coffee" className="hover:underline">Tea and Coffee</Link></li>
+            {collections.map((collection) => (
+              <li key={collection.slug}>
+                <Link href={`/collection/${collection.slug}`} className="hover:underline">{collection.title}</Link>
+              </li>
+            ))}
             <li><Link href="/collections" className="hover:underline">All Collections</Link></li>
           </ul>
         </div>
