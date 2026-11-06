@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PackageSearch, ArrowUpDown } from 'lucide-react';
-import ProductCard from '@/components/ui/ProductCard';
+import OfferCard from '@/components/home/OfferCard';
 import RevealCard from '@/components/ui/RevealCard';
 import Pagination from './Pagination';
 import { startRouteLoading } from '@/lib/routeLoading';
@@ -73,10 +73,13 @@ export default function ShopResults({ cards, total, page, totalPages }) {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 md:gap-6">
+          {/* Same compact cards as the home page strips. Two across on phones; from `sm` up the
+              grid fits as many ~160px+ columns as the width allows, so a card stays about the
+              size it is on the home page whether or not the sidebar is showing. */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:gap-4">
             {cards.map((product, i) => (
               <RevealCard key={product.id} index={i}>
-                <ProductCard product={product} />
+                <OfferCard product={product} />
               </RevealCard>
             ))}
           </div>

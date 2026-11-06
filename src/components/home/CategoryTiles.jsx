@@ -1,28 +1,8 @@
 import Link from 'next/link';
-import {
-  Apple,
-  Baby,
-  Candy,
-  Carrot,
-  Coffee,
-  CupSoda,
-  Droplets,
-  Drumstick,
-  Fish,
-  ShoppingBasket,
-  Snowflake,
-  SprayCan,
-  Sprout,
-  UtensilsCrossed,
-  Wheat,
-  Zap,
-} from 'lucide-react';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { categoryIcon } from '@/components/ui/categoryIcons';
 import HomeCarousel from './HomeCarousel';
 import FadeUp from './FadeUp';
-
-// lib/homeCategories.js picks an icon by name; this maps each name to the real icon.
-const ICONS = { Apple, Baby, Candy, Carrot, Coffee, CupSoda, Droplets, Drumstick, Fish, ShoppingBasket, Snowflake, SprayCan, Sprout, UtensilsCrossed, Wheat, Zap };
 
 // "Browse our categories": one coloured tile per collection that has products, most
 // stocked first. `categories` comes from pickHomeCategories().
@@ -36,7 +16,7 @@ export default function CategoryTiles({ categories }) {
       <FadeUp>
         <HomeCarousel label="Browse our categories" trackClassName="gap-x-3 sm:gap-x-5" arrowTop="36%">
           {categories.map((category) => {
-            const Icon = ICONS[category.icon] ?? ShoppingBasket;
+            const Icon = categoryIcon(category.icon);
             return (
               <li key={category.slug} className="w-[92px] flex-none snap-start sm:w-[116px]">
                 <Link href={`/shop?collection=${category.slug}`} title={category.title} className="group flex flex-col items-center gap-2 text-center">

@@ -1,82 +1,168 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { SlidersHorizontal, ChevronRight, Menu, X } from 'lucide-react';
+import { SlidersHorizontal, ChevronRight, LayoutGrid, Search, X } from 'lucide-react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { categoryIcon } from '@/components/ui/categoryIcons';
+import { prepareShopCategories, filterShopCategories } from '@/lib/shopCategories';
 
-// Keeps the sidebar a fixed, short height regardless of how many collections
-// exist — beyond this many, the rest live in a slide-out drawer (opened via
-// the menu icon next to "Product Groups") instead of growing the list.
-const MAX_VISIBLE_CATEGORIES = 6;
+// A short list doesn't need a filter box; a long one does.
+const FILTER_FROM = 8;
 
-function CategoryLink({ cat, activeSlug, onNavigate }) {
-  const active = activeSlug === cat.slug;
+// One line in the list: coloured icon, name (up to two lines), product count.
+function CategoryRow({ href, active, onNavigate, Icon, color, label, count, rowRef }) {
   return (
     <Link
-      href={`/shop?collection=${cat.slug}`}
+      ref={rowRef}
+      href={href}
       onClick={onNavigate}
-      className={`group relative flex items-center justify-between gap-3 pl-4 pr-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors ${
-        active ? 'bg-brand-navy text-white' : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
+      aria-current={active ? 'page' : undefined}
+      className={`group relative flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors ${
+        active ? 'bg-brand-navy text-white' : 'text-gray-700 hover:bg-slate-100'
       }`}
     >
-      {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 rounded-full bg-brand-amber" />}
-      <span className="truncate">{cat.title}</span>
-      <span
-        className={`shrink-0 font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-          active ? 'bg-white/15 text-white/80' : 'bg-slate-100 text-gray-400 group-hover:bg-white'
-        }`}
-      >
-        {cat.count.replace(' PRODUCTS', '')}
+      {active && <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-amber" />}
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white" style={{ backgroundColor: color }}>
+        <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
       </span>
+      <span className="line-clamp-2 min-w-0 flex-1 text-[13px] font-semibold leading-tight">{label}</span>
+      {count != null && (
+        <span
+          className={`shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-semibold ${
+            active ? 'bg-white/15 text-white/80' : 'bg-slate-100 text-gray-500 group-hover:bg-white'
+          }`}
+        >
+          {count}
+        </span>
+      )}
     </Link>
   );
 }
 
-function AllProductsLink({ isAllProducts, onNavigate }) {
+// The searchable, scrollable list shared by the desktop card and the mobile drawer. It fills
+// whatever height its parent gives it and scrolls inside that, so the list can be as long as
+// it needs to be without making the page, the card or the drawer longer.
+function CategoryPanel({ categories, activeSlug, isAllProducts, onNavigate, listClassName = '' }) {
+  const [query, setQuery] = useState('');
+  const listRef = useRef(null);
+  const activeRef = useRef(null);
+
+  const matches = useMemo(() => filterShopCategories(categories, query), [categories, query]);
+  const filtering = query.trim() !== '';
+
+  // Keep the selected category in sight: when the list first appears, and again whenever the
+  // selection changes (including back/forward navigation). It is centred only if it is not
+  // already fully visible, so clicking a row you can see never makes the list jump.
+  useEffect(() => {
+    const list = listRef.current;
+    const row = activeRef.current;
+    if (!list || !row) return;
+    const top = row.offsetTop;
+    const bottom = top + row.offsetHeight;
+    if (top < list.scrollTop || bottom > list.scrollTop + list.clientHeight) {
+      list.scrollTop = top - (list.clientHeight - row.offsetHeight) / 2;
+    }
+  }, [activeSlug, isAllProducts]);
+
   return (
-    <Link
-      href="/shop"
-      onClick={onNavigate}
-      className={`group relative flex items-center justify-between pl-4 pr-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-colors ${
-        isAllProducts ? 'bg-brand-navy text-white' : 'text-gray-600 hover:bg-slate-50 hover:text-brand-navy'
-      }`}
-    >
-      {isAllProducts && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 rounded-full bg-brand-amber" />}
-      <span>All Products</span>
-    </Link>
+    <div className="flex min-h-0 flex-1 flex-col">
+      {categories.length > FILTER_FROM && (
+        <label className="relative mb-2 block shrink-0">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          <input
+            type="text"
+            inputMode="search"
+            autoComplete="off"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter categories"
+            aria-label="Filter categories"
+            className="w-full rounded-lg border border-gray-200 bg-slate-50 py-2 pl-9 pr-8 text-base text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-brand-navy focus:bg-white lg:text-xs"
+          />
+          {filtering && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              aria-label="Clear filter"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 transition-colors hover:text-gray-700"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </label>
+      )}
+
+      {/* data-lenis-prevent: the site's smooth-scroll library would otherwise take over the
+          mouse wheel and scroll the page instead of this list. */}
+      <nav
+        ref={listRef}
+        data-lenis-prevent
+        aria-label="Product categories"
+        className={`thin-scrollbar relative -mr-1 min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain pr-1 ${listClassName}`}
+      >
+        {!filtering && (
+          <CategoryRow
+            rowRef={isAllProducts ? activeRef : undefined}
+            href="/shop"
+            active={isAllProducts}
+            onNavigate={onNavigate}
+            Icon={LayoutGrid}
+            color="#475569"
+            label="All Products"
+          />
+        )}
+        {matches.map((category) => {
+          const active = category.slug === activeSlug;
+          return (
+            <CategoryRow
+              key={category.slug}
+              rowRef={active ? activeRef : undefined}
+              href={`/shop?collection=${category.slug}`}
+              active={active}
+              onNavigate={onNavigate}
+              Icon={categoryIcon(category.icon)}
+              color={category.color}
+              label={category.title}
+              count={category.count}
+            />
+          );
+        })}
+        {filtering && matches.length === 0 && (
+          <p className="px-3 py-6 text-center text-xs text-gray-400">No categories match &ldquo;{query.trim()}&rdquo;</p>
+        )}
+      </nav>
+    </div>
   );
 }
 
-// Shared "slides in from the left" panel used by both the mobile Product
-// Groups drawer and the desktop More Categories drawer. scrollbar-hide keeps
-// the body scrollable without an ugly visible scrollbar.
-function SlideDrawer({ isOpen, onClose, title, children, responsiveClass = '' }) {
+// Slides in from the left on phones and tablets (the desktop card is hidden below `lg`).
+// Hiding is doubled up (transform + visibility) so a stuck/not-yet-applied transform can't
+// leave it open and clickable on top of the page.
+function MobileDrawer({ isOpen, onClose, children }) {
   useLockBodyScroll(isOpen);
 
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 ${responsiveClass} ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          isOpen ? 'visible opacity-100' : 'pointer-events-none invisible opacity-0'
         }`}
         onClick={onClose}
       />
-      {/* Hiding is doubled up (transform + visibility) so a stuck/not-yet-applied
-          transform can't leave this open and clickable on top of the page. */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 w-[82%] max-w-sm bg-white z-50 shadow-2xl overflow-y-auto scrollbar-hide transform transition-[transform,visibility] duration-300 ease-in-out ${responsiveClass} ${
-          isOpen ? 'translate-x-0 visible' : '-translate-x-full invisible pointer-events-none'
+        className={`fixed bottom-0 left-0 top-0 z-50 flex w-[82%] max-w-sm transform flex-col bg-white shadow-2xl transition-[transform,visibility] duration-300 ease-in-out lg:hidden ${
+          isOpen ? 'visible translate-x-0' : 'pointer-events-none invisible -translate-x-full'
         }`}
         aria-hidden={!isOpen}
       >
-        <div className="flex items-center justify-between p-5 bg-brand-navy text-white sticky top-0 z-10">
-          <span className="font-fraunces font-black text-sm uppercase tracking-wide">{title}</span>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10 transition-colors" aria-label="Close menu">
-            <X className="w-5 h-5" />
+        <div className="flex shrink-0 items-center justify-between bg-brand-navy p-5 text-white">
+          <span className="font-fraunces text-sm font-black uppercase tracking-wide">Categories</span>
+          <button onClick={onClose} className="rounded-full p-1 transition-colors hover:bg-white/10" aria-label="Close menu">
+            <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="p-4 flex flex-col gap-1">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col p-3">{children}</div>
       </aside>
     </>
   );
@@ -84,76 +170,54 @@ function SlideDrawer({ isOpen, onClose, title, children, responsiveClass = '' })
 
 export default function ShopSidebar({ categoryCards, activeSlug, isAllProducts }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const categories = useMemo(() => prepareShopCategories(categoryCards, activeSlug), [categoryCards, activeSlug]);
 
-  const activeLabel = isAllProducts
-    ? 'All Products'
-    : categoryCards.find((c) => c.slug === activeSlug)?.title || 'Filtered';
-
-  const visibleCats = categoryCards.slice(0, MAX_VISIBLE_CATEGORIES);
-  const hiddenCats = categoryCards.slice(MAX_VISIBLE_CATEGORIES);
+  const activeLabel = isAllProducts ? 'All Products' : categories.find((c) => c.slug === activeSlug)?.title || 'Filtered';
 
   return (
     <>
-      {/* Mobile & tablet: trigger button */}
+      {/* Phones & tablets: a bar that opens the drawer */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden w-full flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3.5 mb-5 shadow-sm active:scale-[0.99] transition-transform"
+        className="mb-5 flex w-full items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3.5 shadow-sm transition-transform active:scale-[0.99] lg:hidden"
       >
         <span className="flex items-center gap-2 text-sm font-bold text-gray-800">
-          <SlidersHorizontal className="w-4 h-4 text-brand-navy" />
-          Product Groups
+          <SlidersHorizontal className="h-4 w-4 text-brand-navy" />
+          Categories
         </span>
-        <span className="flex items-center gap-1 text-xs font-bold text-brand-navy uppercase tracking-wide">
-          {activeLabel}
-          <ChevronRight className="w-4 h-4" />
+        <span className="flex min-w-0 items-center gap-1 text-xs font-bold uppercase tracking-wide text-brand-navy">
+          <span className="truncate">{activeLabel}</span>
+          <ChevronRight className="h-4 w-4 shrink-0" />
         </span>
       </button>
 
-      {/* Desktop: static sticky sidebar — only the first 6 categories, ever */}
-      <aside className="hidden lg:block lg:w-64 shrink-0">
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 lg:sticky lg:top-28 shadow-sm">
-          <div className="flex items-center gap-2 px-2 mb-3 pb-3 border-b border-dashed border-gray-200">
-            {hiddenCats.length > 0 && (
-              <button
-                onClick={() => setIsMoreOpen(true)}
-                aria-label="More categories"
-                className="p-1 -ml-1 rounded-md text-gray-500 hover:text-brand-navy hover:bg-slate-50 transition-colors"
-              >
-                <Menu className="w-4 h-4" />
-              </button>
-            )}
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan" />
-            <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest">Product Groups</h2>
+      {/* Desktop: a card that stays in view while the page scrolls. Its height is capped to the
+          window, so every category is reachable by scrolling the list inside it. */}
+      <aside className="hidden shrink-0 lg:block lg:w-64">
+        <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)]">
+          <div className="flex shrink-0 items-center justify-between px-4 pb-3 pt-4">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-cyan" />
+              <h2 className="text-xs font-black uppercase tracking-widest text-gray-900">Categories</h2>
+            </div>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 font-mono text-[10px] font-semibold text-gray-500">{categories.length}</span>
           </div>
-          <nav className="flex flex-col gap-1">
-            <AllProductsLink isAllProducts={isAllProducts} />
-            {visibleCats.map((cat) => (
-              <CategoryLink key={cat.slug} cat={cat} activeSlug={activeSlug} />
-            ))}
-          </nav>
+          <div className="flex min-h-0 flex-1 flex-col px-3 pb-3">
+            <CategoryPanel categories={categories} activeSlug={activeSlug} isAllProducts={isAllProducts} />
+          </div>
         </div>
       </aside>
 
-      {/* Desktop: overflow categories, sliding in from the left */}
-      <SlideDrawer isOpen={isMoreOpen} onClose={() => setIsMoreOpen(false)} title={`More Categories (${hiddenCats.length})`}>
-        {hiddenCats.map((cat) => (
-          <CategoryLink key={cat.slug} cat={cat} activeSlug={activeSlug} onNavigate={() => setIsMoreOpen(false)} />
-        ))}
-      </SlideDrawer>
-
-      {/* Mobile & tablet: off-canvas drawer with every category */}
-      <SlideDrawer
-        isOpen={isMobileOpen}
-        onClose={() => setIsMobileOpen(false)}
-        title="Product Groups"
-        responsiveClass="lg:hidden"
-      >
-        <AllProductsLink isAllProducts={isAllProducts} onNavigate={() => setIsMobileOpen(false)} />
-        {categoryCards.map((cat) => (
-          <CategoryLink key={cat.slug} cat={cat} activeSlug={activeSlug} onNavigate={() => setIsMobileOpen(false)} />
-        ))}
-      </SlideDrawer>
+      <MobileDrawer isOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)}>
+        {/* Bottom padding keeps the last rows clear of the floating WhatsApp / chat buttons. */}
+        <CategoryPanel
+          categories={categories}
+          activeSlug={activeSlug}
+          isAllProducts={isAllProducts}
+          onNavigate={() => setIsMobileOpen(false)}
+          listClassName="pb-20"
+        />
+      </MobileDrawer>
     </>
   );
 }

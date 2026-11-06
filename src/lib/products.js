@@ -203,6 +203,7 @@ export async function getCategoryCards() {
     const stat = statsById.get(c._id.toString());
     return {
       title: c.title.toUpperCase(),
+      name: c.title, // the admin's own capitalisation, for places that don't shout
       slug: c.slug,
       image: c.image || stat?.sampleImage?.[0] || '',
       count: `${stat?.count || 0} PRODUCTS`,
