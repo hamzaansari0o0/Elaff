@@ -2,9 +2,12 @@ import BannerPanels from '@/components/home/BannerPanels';
 import MobileBannerCarousel from '@/components/home/MobileBannerCarousel';
 import PartnersMarquee from '@/components/home/PartnersMarquee';
 import ProductSection from '@/components/home/ProductSection';
+import CategoryTiles from '@/components/home/CategoryTiles';
+import BrandTiles from '@/components/home/BrandTiles';
 import GlobalReach from '@/components/home/GlobalReach';
 
-import { getProductsByTag, getAllCollections, toCardShape } from '@/lib/products';
+import { getProductsByTag, getAllCollections, getCategoryCards, getHomeBrands, toCardShape } from '@/lib/products';
+import { pickHomeCategories } from '@/lib/homeCategories';
 import { pageMetadata, SITE_DESCRIPTION } from '@/lib/seo';
 import FaqSection from '@/components/seo/FaqSection';
 import AnswerBlock from '@/components/seo/AnswerBlock';
@@ -19,16 +22,19 @@ export const metadata = pageMetadata({ description: SITE_DESCRIPTION, path: '/' 
 export const revalidate = 60;
 
 export default async function Home() {
-  const [onSale, weeklyFeatured, bestsellers, collections] = await Promise.all([
+  const [onSale, weeklyFeatured, bestsellers, collections, categoryCards, brands] = await Promise.all([
     getProductsByTag('onSale'),
     getProductsByTag('weeklyFeatured'),
     getProductsByTag('bestseller'),
     getAllCollections(),
+    getCategoryCards(),
+    getHomeBrands(),
   ]);
 
   const LATEST_ON_SALE = onSale.map(toCardShape);
   const WEEKLY_FEATURED = weeklyFeatured.map(toCardShape);
   const BESTSELLERS = bestsellers.map(toCardShape);
+  const CATEGORIES = pickHomeCategories(collections, categoryCards);
 
   // Banner panel images — the component renders however many it's given, in order.
   const bannerImages = [
@@ -80,6 +86,9 @@ export default async function Home() {
       {/* Direct answer: what the company is and does */}
       <AnswerBlock>{homeAnswer()}</AnswerBlock>
 
+      {/* Browse our categories — one tile per collection that has products */}
+      <CategoryTiles categories={CATEGORIES} />
+
       {/* Latest On Sale */}
       <ProductSection title="Latest On Sale" products={LATEST_ON_SALE} link="/shop?tag=onSale" />
 
@@ -88,6 +97,9 @@ export default async function Home() {
 
       {/* Our Bestsellers */}
       <ProductSection title="Our Bestsellers" products={BESTSELLERS} link="/shop?tag=bestseller" />
+
+      {/* Discover our brands — logos of the brands the catalogue carries, each linking to that brand's products */}
+      <BrandTiles brands={brands} />
 
       {/* FAQ — restates facts already on the site (see lib/faqs.js) */}
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">

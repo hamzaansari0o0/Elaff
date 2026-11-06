@@ -4,7 +4,12 @@ import { cache } from 'react';
 import { connectDB } from './mongodb';
 import Product from '@/models/Product';
 import Collection from '@/models/Collection';
-import { formatPrice } from './formatPrice';
+
+import { pickHomeBrands } from './homeBrands';
+
+// Moved to its own database-free module so it can be unit-tested; re-exported
+// here so every existing `import { toCardShape } from '@/lib/products'` keeps working.
+export { toCardShape } from './cardShape';
 
 // Strip Mongoose-specific types (ObjectId, Date) into plain JSON, and expose `id`
 // alongside `_id` so components can use either.
@@ -16,21 +21,6 @@ function serialize(doc) {
 
 export function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-// Shapes a full product document into the compact card format ProductCard expects.
-export function toCardShape(p) {
-  return {
-    id: p.id,
-    slug: p.slug,
-    title: p.title,
-    category: (p.category || '').toUpperCase(),
-    price: formatPrice(p.price, p.priceUnit),
-    priceValue: typeof p.price === 'number' ? p.price : null,
-    oldPrice: formatPrice(p.oldPrice, ''),
-    image: p.images?.[0] || '',
-    badge: p.badge || undefined,
-  };
 }
 
 // --- PRODUCT HELPERS ---
@@ -219,6 +209,14 @@ export async function getCategoryCards() {
       productCount: stat?.count || 0, // numeric form of `count`, for sorting and filtering
     };
   });
+}
+
+// Homepage "Discover our brands" row: the brands (from lib/homeBrands.js) that at least
+// one active product's title names. Only titles are read, so this stays a tiny query.
+export async function getHomeBrands() {
+  await connectDB();
+  const products = await Product.find({ status: 'active' }).select('title').lean();
+  return pickHomeBrands(products.map((p) => p.title));
 }
 
 // Homepage "shop by category" mini-lists — a few real products per collection,

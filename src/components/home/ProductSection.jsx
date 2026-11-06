@@ -1,13 +1,13 @@
-'use client';
-
-import { motion } from 'framer-motion';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { FreeMode } from 'swiper/modules';
 import SectionHeader from '@/components/ui/SectionHeader';
-import ProductCard from '@/components/ui/ProductCard';
+import HomeCarousel from './HomeCarousel';
+import FadeUp from './FadeUp';
+import OfferCard from './OfferCard';
 
-import 'swiper/css';
-import 'swiper/css/free-mode';
+// How many cards fit across at each screen width — 2 (plus a peek of the third, to show
+// it scrolls) on phones, then 3, 4, 5 and 6. Each width is the row's width minus the
+// gaps (1rem each) divided by the card count, so a row always ends exactly at its edge.
+const CARD =
+  'flex-none snap-start w-[calc((100%_-_1rem)/2.15)] sm:w-[calc((100%_-_2rem)/3)] md:w-[calc((100%_-_3rem)/4)] lg:w-[calc((100%_-_4rem)/5)] xl:w-[calc((100%_-_5rem)/6)]';
 
 export default function ProductSection({ title, products, link }) {
   // Nothing tagged for this section in the admin yet — skip the section entirely
@@ -18,36 +18,16 @@ export default function ProductSection({ title, products, link }) {
     <section className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       <SectionHeader title={title} link={link} />
 
-      {/* Horizontal swipe on mobile/tablet, settles into a full row on desktop.
-          Animated as one group (not per-card) since per-slide scroll reveals
-          would fight with Swiper's own horizontal transforms. */}
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '0px 0px -80px 0px' }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <Swiper
-          modules={[FreeMode]}
-          freeMode={true}
-          grabCursor={true}
-          spaceBetween={16}
-          slidesPerView={1.15}
-          breakpoints={{
-            480: { slidesPerView: 1.6, spaceBetween: 16 },
-            640: { slidesPerView: 2.2, spaceBetween: 20 },
-            1024: { slidesPerView: 3.2, spaceBetween: 24 },
-            1280: { slidesPerView: 4, spaceBetween: 24 },
-          }}
-          className="mt-4! md:mt-6! pb-2!"
-        >
+      <FadeUp>
+        {/* The arrows sit level with the middle of the photo, not the whole card. */}
+        <HomeCarousel label={title} arrowTop="30%">
           {products.map((product) => (
-            <SwiperSlide key={product.id} className="h-auto">
-              <ProductCard product={product} />
-            </SwiperSlide>
+            <li key={product.id} className={CARD}>
+              <OfferCard product={product} />
+            </li>
           ))}
-        </Swiper>
-      </motion.div>
+        </HomeCarousel>
+      </FadeUp>
     </section>
   );
 }
