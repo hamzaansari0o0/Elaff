@@ -209,7 +209,7 @@ export default function ShopSidebar({ categoryCards, activeSlug, isAllProducts }
       </aside>
 
       <MobileDrawer isOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)}>
-        {/* Bottom padding keeps the last rows clear of the floating WhatsApp / chat buttons. */}
+        {/* Bottom padding gives the last rows some breathing room above the screen edge. */}
         <CategoryPanel
           categories={categories}
           activeSlug={activeSlug}

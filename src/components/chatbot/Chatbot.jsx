@@ -8,7 +8,7 @@ const GREETING = "Hi! I'm the Elaff assistant. Ask me anything about our product
 const SESSION_STORAGE_KEY = 'elaff_chat_session_id';
 const SWIPE_THRESHOLD = 20; // px of horizontal drag before the front/back buttons swap
 // Falls back to this number when the admin hasn't set CompanySettings.whatsapp yet.
-const DEFAULT_WHATSAPP_NUMBER = '923084888399';
+const DEFAULT_WHATSAPP_NUMBER = '8618219441950';
 
 const HINT_TEXT = {
   chat: 'Ask this AI agent to find products or get store info',

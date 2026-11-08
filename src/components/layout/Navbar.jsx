@@ -254,7 +254,7 @@ export default function Navbar({ collections = [] }) {
         <div className="p-5 border-t border-gray-100 bg-slate-50 text-[11px] font-bricolage space-y-3">
           <div className="flex items-center gap-2 text-gray-700 font-semibold">
             <Phone className="w-4 h-4 text-brand-navy" />
-            <a href="tel:+923084888399" className="hover:underline">+92 308 4888399</a>
+            <a href="tel:+8618219441950" className="hover:underline">+86 18219441950</a>
           </div>
         </div>
 

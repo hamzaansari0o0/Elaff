@@ -235,7 +235,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={form.whatsapp}
                       onChange={(e) => set('whatsapp', e.target.value.replace(/[^\d]/g, ''))}
-                      placeholder="923084888399"
+                      placeholder="8618219441950"
                       className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-brand-navy font-mono"
                     />
                   </div>

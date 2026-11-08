@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, MapPin } from 'lucide-react';
 import RevealText from '@/components/ui/RevealText';
 
 // `collections` is a short list of { title, slug } for the "Shop Easy" column —
@@ -57,11 +57,7 @@ export default function Footer({ collections = [] }) {
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-amber-400" />
-              <span><strong>TEL:</strong> +92 308 4888399</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-amber-400" />
-              <span><strong>WHATSAPP:</strong> +92 308 4888399</span>
+              <span><strong>TEL:</strong> +86 18219441950</span>
             </div>
           </div>
         </div>

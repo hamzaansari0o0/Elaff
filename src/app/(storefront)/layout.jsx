@@ -2,7 +2,6 @@ import { MotionConfig } from 'framer-motion';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
-import Chatbot from '@/components/chatbot/Chatbot';
 import AnalyticsTracker from '@/components/analytics/AnalyticsTracker';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import { getCompanySettings } from '@/lib/settings';
@@ -45,8 +44,9 @@ export default async function StorefrontLayout({ children }) {
           <Footer collections={footerCollections} />
         </SmoothScroll>
 
-        {/* AI Chatbot + WhatsApp widget — every storefront page, not just the home page */}
-        <Chatbot whatsappNumber={companySettings.whatsapp} />
+        {/* The AI chatbot + WhatsApp buttons (bottom-right) are switched off. To bring them back,
+            import Chatbot from '@/components/chatbot/Chatbot' and render
+            <Chatbot whatsappNumber={companySettings.whatsapp} /> here. */}
       </MotionConfig>
     </CartProvider>
   );
